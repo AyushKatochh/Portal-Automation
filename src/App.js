@@ -1,24 +1,24 @@
-import logo from './logo.svg';
+// src/App.js
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AppProvider } from './Context/AppContext';
+import Homepage from './components/Homepage'; // Fixed import
+import ApprovalProcess from './components/ApprovalProcess';
+import SignIn from './components/SignIn';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/approval-process" element={<ApprovalProcess />} />
+          {/* Add other routes for New Institute and Forgot Password */}
+        </Routes>
+      </Router>
+    </AppProvider>
   );
 }
 
