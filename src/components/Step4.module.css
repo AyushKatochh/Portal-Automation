@@ -1,0 +1,16 @@
+/* src/components/Step4.module.css */
+.step4Container {
+    /* Add any container styles */
+  }
+  
+  .programTable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .programTable th,
+  .programTable td {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    text-align: left;
+  }

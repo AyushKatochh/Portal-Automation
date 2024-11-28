@@ -15,7 +15,6 @@ function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/approval-process" element={<ApprovalProcess />} />
-          {/* Add other routes for New Institute and Forgot Password */}
         </Routes>
       </Router>
     </AppProvider>

@@ -1,0 +1,61 @@
+/* src/components/ApprovalProcess.module.css */
+.approvalProcessPage {
+    /* Add any necessary styles for the page */
+  }
+  
+  .navbar {
+    background-color: #f0f0f0;
+    padding: 1rem;
+    position: relative; /* Add this to position the line */
+  }
+  
+  .stepsList {
+    display: flex;
+    justify-content: space-between; /* Change to space-between */
+    list-style: none;
+    padding: 0;
+    width: 100%; /* Add width to control spacing */
+  }
+  
+  .stepItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .stepLink {
+    text-decoration: none;
+    color: #333;
+  }
+  
+  /* src/components/ApprovalProcess.module.css */
+/* ... other styles ... */
+
+.stepCircle {
+    /* ... other styles ... */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #ccc;
+    margin-bottom: 1  0.5rem;
+    position: relative; /* Add this to position the line relative to the circle */
+    z-index: 2; /* Ensure the circles are above the line */
+  }
+  
+  .connectingLine {
+    position: absolute;
+    top: 40%;
+    left: 0px; /* Adjust starting position */
+    width: 100%; /* Adjust width based on circle size and spacing */
+    height: 2px; /* Adjust line thickness */
+    background-color: #ccc; /* Adjust line color */
+    z-index: 1; /* Ensure the line is below the circles */
+    transform: translateY(-50%);
+  }
+
+  .stepLabel {
+    font-size: 0.7rem;
+  }

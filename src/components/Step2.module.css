@@ -1,0 +1,50 @@
+/* src/components/Step2.module.css */
+.step2Container {
+    display: flex;
+  }
+  
+  .leftContainer {
+    width: 30%; /* Adjust as needed */
+    padding: 1rem;
+  }
+  
+  .profilePictureSection {
+    /* Add styles for the profile picture upload section */
+  }
+  
+  .fileInput {
+    display: none; /* Hide the default file input */
+  }
+  
+  .uploadButton {
+    padding: 0.5rem 1rem;
+    background-color: #007bff; /* Example button color */
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .rightContainer {
+    width: 70%; /* Adjust as needed */
+    padding: 1rem;
+  }
+  
+  .inputFields {
+    /* Add styles for the input fields container */
+  }
+  
+  .inputGroup {
+    margin-bottom: 1rem;
+  }
+  
+  .label {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
+  .input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 1  5px;
+  }
