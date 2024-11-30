@@ -1,0 +1,78 @@
+/* src/components/Step7.module.css */
+.step7Container {
+    padding: 2rem;
+    box-sizing: border-box;
+  }
+  
+  .header { /* Added styles for the header */
+    text-align: left;
+    margin-bottom: 1.5rem;
+  }
+  
+  .header h2 { /* Specific styles for the heading */
+    color: #007BFF; /* Bluish color for the heading */
+  }
+  
+  .horizontalLine {
+    width: 100%; /* Adjusted horizontal line width */
+    margin: 0; /* Align with the heading */
+    border: 2px solid #0400ff; /* Bluish color for the horizontal line */
+  }
+  
+  .fileUploadSection {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* Space between file upload fields */
+  }
+  
+  .uploadGroup {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .label {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+  }
+  
+  .inputFile {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s;
+  }
+  
+  .inputFile:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+  }
+
+  .submitSection {
+    text-align: center;
+    margin-top: 2rem;
+  }
+  
+  .submitButton {
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    background-color: #3498db; /* Bluish color */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  .submitButton:hover {
+    background-color: #2980b9; /* Darker blue on hover */
+    transform: scale(1.05); /* Slight scaling effect */
+  }
+  
+  .submitButton:active {
+    background-color: #1c6391; /* Even darker blue on click */
+    transform: scale(1); /* Reset scaling effect */
+  }
+  

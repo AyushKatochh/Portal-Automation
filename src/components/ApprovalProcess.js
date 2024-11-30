@@ -5,6 +5,7 @@ import Step3 from './Step3';
 import Step4 from './Step4';
 import Step5 from './Step5';
 import Step6 from './Step6';
+import Step7 from './Step7';
 import navbarImage from '../assets/banner.jpg';
 
 const ApprovalProcess = () => {
@@ -16,6 +17,7 @@ const ApprovalProcess = () => {
     'Programme',
     'Land Details',
     'Bank Details',
+    'Uplaod File'
   ];
 
   const handleStepClick = (stepNumber) => {
@@ -83,6 +85,8 @@ const ApprovalProcess = () => {
         {currentStep === 3 && <Step4 />}
         {currentStep === 4 && <Step5 />}
         {currentStep === 5 && <Step6 />}
+        {currentStep === 6 && <Step7 />}
+
       </div>
     </div>
     </div>
