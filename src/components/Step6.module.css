@@ -1,5 +1,5 @@
-/* src/components/Step3.module.css */
-.step3Container {
+/* src/components/Step6.module.css */
+.step6Container {
   padding: 3rem 3rem;
   box-sizing: border-box;
   }
@@ -8,13 +8,14 @@
     display: flex; /* Enable flexbox for layout */
     flex-wrap: wrap; /* Allow wrapping of items to the next row */
     column-gap: 10rem; /* Add horizontal space between fields in the same row */
-    row-gap: 2.5rem; /* Add vertical space between rows */
+    row-gap: 2.5rem; /* Add vertical space between rows */ 
   }
   
   .inputGroup {
     flex: 1 1 calc(15% - 1.5rem); /* 25% width with gap adjustment for spacing */
     box-sizing: border-box; /* Ensure padding doesn't affect width */
     margin-bottom: 1rem; /* Additional margin for space between rows */
+ 
   }
   
   .label {
