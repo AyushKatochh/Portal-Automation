@@ -1,42 +1,56 @@
 // src/components/Step7.js
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import styles from './Step7.module.css';
 
 const Step7 = () => {
-  const handleSubmit = () => {
-    alert("Files submitted successfully!");
+  const [files, setFiles] = useState(null);
+
+  const handleFileChange = (event) => {
+    setFiles(event.target.files);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!files || files.length === 0) {
+      alert('Please upload at least one file.');
+      return;
+    }
+
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      formData.append('files', files[i]);
+    }
+
+    try {
+      const response = await axios.post('http://localhost:5000/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      alert(response.data.message);
+    } catch (error) {
+      console.error('Error uploading files:', error);
+    }
   };
 
   return (
-    <div className={styles.step7Container}>
-      <div className={styles.header}>
-        <h2>Upload File</h2>
-        <hr className={styles.horizontalLine} />
-      </div>
-      <div className={styles.fileUploadSection}>
-        {[
-          "Affidavit",
-          "Form3 Certificate",
-          "Fire Safety",
-          "Site Plan",
-        ].map((fileType, index) => (
-          <div key={index} className={styles.uploadGroup}>
-            <label htmlFor={fileType.toLowerCase().replace(/\s+/g, '-')} className={styles.label}>
-              {fileType}:
-            </label>
-            <input
-              type="file"
-              id={fileType.toLowerCase().replace(/\s+/g, '-')}
-              className={styles.inputFile}
-            />
-          </div>
-        ))}
-      </div>
-      <div className={styles.submitSection}>
-        <button className={styles.submitButton} onClick={handleSubmit}>
+    <div className={styles.uploadForm}>
+      <h2>Upload File</h2>
+      <form onSubmit={handleSubmit}>
+        <label>Files to be uploaded:</label>
+        <ul>
+          <li>Affidavit</li>
+          <li>Form3 Certificate</li>
+          <li>Fire Safety</li>
+          <li>Site Plan</li>
+        </ul>
+        <input type="file" multiple onChange={handleFileChange} />
+        <button type="submit" className={styles.submitButton}>
           Submit
         </button>
-      </div>
+      </form>
     </div>
   );
 };

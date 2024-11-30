@@ -22,7 +22,7 @@ const SignIn = () => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     if (username === 'test' && password === 'test') {
-      navigate('/approval-process'); 
+      navigate('/HomeLink'); 
     } else {
       alert('Incorrect username or password');
     }
