@@ -1,6 +1,7 @@
 /* src/components/Step4.module.css */
 .step4Container {
-    /* Add any container styles */
+  padding: 3rem 3rem;
+  box-sizing: border-box;
   }
   
   .programTable {
@@ -13,4 +14,19 @@
     border: 1px solid #ccc;
     padding: 0.5rem;
     text-align: left;
+  }
+
+  .header { /* Added styles for the header */
+    text-align: left;
+    margin-bottom: 1.5rem;
+  }
+  
+  .header h2 { /* Specific styles for the heading */
+    color: #007BFF; /* Bluish color for the heading */
+  }
+  
+  .horizontalLine {
+    width: 100%; /* Adjusted horizontal line width */
+    margin: 0; /* Align with the heading */
+    border: 2px solid #0400ff; /* Bluish color for the horizontal line */
   }
