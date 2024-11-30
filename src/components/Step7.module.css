@@ -1,78 +1,95 @@
-/* src/components/Step7.module.css */
-.step7Container {
-    padding: 2rem;
-    box-sizing: border-box;
-  }
-  
-  .header { /* Added styles for the header */
-    text-align: left;
-    margin-bottom: 1.5rem;
-  }
-  
-  .header h2 { /* Specific styles for the heading */
-    color: #007BFF; /* Bluish color for the heading */
-  }
-  
-  .horizontalLine {
-    width: 100%; /* Adjusted horizontal line width */
-    margin: 0; /* Align with the heading */
-    border: 2px solid #0400ff; /* Bluish color for the horizontal line */
-  }
-  
-  .fileUploadSection {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem; /* Space between file upload fields */
-  }
-  
-  .uploadGroup {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .label {
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-  }
-  
-  .inputFile {
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    transition: border-color 0.3s;
-  }
-  
-  .inputFile:focus {
-    border-color: #3498db;
-    outline: none;
-    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+/* Container for the entire form */
+.uploadForm {
+  width: 80%;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+/* Heading Styles */
+.uploadForm h2 {
+  color: #1E90FF;  /* Blue color */
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+
+.uploadForm hr {
+  border: 0;
+  height: 2px;
+  background-color: #1E90FF;  /* Blue color */
+  width: 50%;  /* Adjust width of the line */
+  margin-bottom: 1rem;
+}
+
+/* Label for the file input */
+.uploadForm label {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* List of files to be uploaded */
+.uploadForm ul {
+  list-style: none;
+  padding-left: 0;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.uploadForm li {
+  margin-bottom: 0.5rem;
+}
+
+/* File input styling */
+.uploadForm input[type="file"] {
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* Submit Button Styling */
+.submitButton {
+  background-color: #1E90FF;  /* Blue color */
+  color: white;
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submitButton:hover {
+  background-color: #3b8ee6;  /* Darker blue on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .uploadForm {
+    width: 90%;
   }
 
-  .submitSection {
-    text-align: center;
-    margin-top: 2rem;
+  .uploadForm h2 {
+    font-size: 1.6rem;
   }
-  
+
+  .uploadForm ul {
+    font-size: 0.9rem;
+  }
+
+  .uploadForm input[type="file"] {
+    font-size: 0.9rem;
+  }
+
   .submitButton {
-    padding: 0.8rem 2rem;
-    font-size: 1rem;
-    font-weight: bold;
-    color: white;
-    background-color: #3498db; /* Bluish color */
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
+    padding: 0.7rem 1.5rem;
+    font-size: 0.9rem;
   }
-  
-  .submitButton:hover {
-    background-color: #2980b9; /* Darker blue on hover */
-    transform: scale(1.05); /* Slight scaling effect */
-  }
-  
-  .submitButton:active {
-    background-color: #1c6391; /* Even darker blue on click */
-    transform: scale(1); /* Reset scaling effect */
-  }
-  
+}
