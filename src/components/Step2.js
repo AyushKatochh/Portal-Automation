@@ -6,6 +6,10 @@ const Step2 = () => {
   return (
     <div className={styles.step2Container}>
       <div className={styles.leftContainer}>
+      <div className={styles.header}> {/* Added header container */}
+        <h2>Institute Details</h2>
+        <hr className={styles.horizontalLine} /> {/* Added horizontal line */}
+      </div>
         <div className={styles.profilePictureSection}>
           {/* Add profile picture upload functionality here */}
           <input type="file" accept="image/*" className={styles.fileInput} />

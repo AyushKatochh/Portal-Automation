@@ -5,6 +5,10 @@ import styles from './Step3.module.css';
 const Step3 = () => {
   return (
     <div className={styles.step3Container}>
+      <div className={styles.header}> {/* Added header container */}
+        <h2>Contact</h2>
+        <hr className={styles.horizontalLine} /> {/* Added horizontal line */}
+      </div>
       <div className={styles.inputFields}>
         <div className={styles.inputGroup}>
           <label htmlFor="title" className={styles.label}>

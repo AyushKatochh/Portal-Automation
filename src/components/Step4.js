@@ -13,6 +13,10 @@ const Step4 = () => {
 
   return (
     <div className={styles.step4Container}>
+      <div className={styles.header}> {/* Added header container */}
+        <h2>Program Details</h2>
+        <hr className={styles.horizontalLine} /> {/* Added horizontal line */}
+      </div>
       <table className={styles.programTable}>
         <thead>
           <tr>
