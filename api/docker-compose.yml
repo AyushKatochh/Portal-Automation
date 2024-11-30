@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  pdf-processing-api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./uploads:/app/uploads
+    environment:
+      - UPLOAD_FOLDER=/app/uploads
+    restart: unless-stopped
