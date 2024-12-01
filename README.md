@@ -19,8 +19,8 @@
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/document-processing-api.git
-   cd document-processing-api
+   git clone https://github.com/AyushKatochh/Portal-Automation.git
+   cd api
    ```
 
 2. Create a virtual environment:
@@ -38,6 +38,8 @@
    ```
    GROQ_API_KEY=your_groq_api_key
    ```
+
+5. Run using uvicorn using command `uvicorn app:app --reload `
 
 ## 🌐 Endpoints
 
