@@ -123,7 +123,7 @@ def extract_document_info(document_type: str, text: str, keywords: List[str], cl
         }
 
 # OCR endpoint
-@app.post("/ocr/")
+@app.post("/ocr_and_extract/")
 async def perform_ocr(file: UploadFile = File(...)):
     """
     Perform OCR on uploaded document
