@@ -47,7 +47,8 @@ app.post('/upload', upload.array('files'), async (req, res) => {
         headers: formData.getHeaders(),
       });
 
-      console.log(`Response for file ${file.filename}:`, response.data);
+
+      console.log(`Response for file ${file.filename}:`, JSON.stringify(response.data, null, 2));
 
       responses.push({
         filename: file.filename,
