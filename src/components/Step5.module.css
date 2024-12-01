@@ -45,6 +45,7 @@
 }
 
 .horizontalLine {
+  top: 40%;
   width: 100%; /* Adjusted horizontal line width */
   margin: 0; /* Align with the heading */
   border: 2px solid #0400ff; /* Bluish color for the horizontal line */
