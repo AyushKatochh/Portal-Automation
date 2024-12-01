@@ -1,92 +1,150 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 🛠 Technology Stack
 
-## Available Scripts
+- **Framework**: FastAPI
+- **OCR**: Integrated OCR processing
+- **AI Integration**: OpenAI/Groq API (Llama3 70B model)
+- **Additional Libraries**:
+  - Pydantic (Data validation)
+  - python-dotenv (Environment management)
+  - uvicorn (ASGI Server)
 
-In the project directory, you can run:
+## 📦 Prerequisites
 
-### `npm start`
+- Python 3.8+
+- pip
+- Virtual environment (recommended)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🔧 Installation
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/document-processing-api.git
+   cd document-processing-api
+   ```
 
-### `npm test`
+2. Create a virtual environment:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+   ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### `npm run build`
+4. Create a `.env` file with the following variables:
+   ```
+   GROQ_API_KEY=your_groq_api_key
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🌐 Endpoints
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 1. OCR and Document Extraction
+- **Endpoint**: `/ocr_and_extract/`
+- **Method**: POST
+- **Functionality**: 
+  - Supports image and PDF files
+  - Performs OCR
+  - Extracts structured information
+- **Default Keywords**: 
+  - `issued_date`
+  - `name`
+  - `document_type`
+  - `location`
+  - `certificate_validity`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 2. Signature Validation
+- **Endpoint**: `/validate-signature/`
+- **Method**: POST
+- **Functionality**: 
+  - Validates digital signatures in PDF documents
 
-### `npm run eject`
+### 3. Custom Document Extraction
+- **Endpoint**: `/extract`
+- **Method**: POST
+- **Functionality**:
+  - Process multiple documents
+  - Extract custom keywords
+  - Supports flexible information retrieval
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🚦 API Usage Examples
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### OCR and Extraction
+```python
+import requests
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+url = "http://localhost:5000/ocr_and_extract/"
+with open("document.pdf", "rb") as f:
+    files = {"file": f}
+    response = requests.post(url, files=files)
+print(response.json())
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Custom Extraction
+```python
+import requests
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-
-### Sample Input 
-
-`
-{
+url = "http://localhost:5000/extract"
+payload = {
     "documents": {
-        "Affidavit": {
-            "text": "Page 1:\nCertificate Issued Date\nAccount Reference\nUnique Doc. Reference\nPurchased by\nDescription of Document\nProperty Description\nConsideration Price (Rs.)\n\nFirst Party\n\nSecond Party\n\nStamp Duty Paid By\nStamp Duty Amount(Rs.)\n\nINDIA NON JUDICIAL\n\nGovernment of National Capital Territory of Delhi\n\ne-Stamp\n\nIN-DL87439054391706L\n\n14-Nov-2013 11:18 AM\n\nIMPACC (IV)/ di724603/ DELHI DL-DLH\nSUBIN-DLDL72460372863191213036L\nSIKANDER ALI\n\nArticle 4 Affidavit\n\nNot Applicable\n\n0\n\n(Zero)\n\nSIKANDER ALI\n\nNot Applicable\n\nSIKANDER ALI\n\n10\n\n(Ten only)\n\n1 5S NOV 2013\n\nx at wu nheteseaulnip.con\". Ady vihicldpincy in the Getats on tis Cestiticny and a"
-        },
-        "Fire Safety": {
-            "text": "Page 1:\nAHMEDABAD MUNICIPAL CORPORATION\n\ng AHMEDABAD FIRE AND EMERGENCY SERVICES DEPARTMENT\nDanapith Fire Station (Hqrs.) Nr. AM Corporation, Danapith Anmedabad-380001.\n\nPhone No: 079 22148466/67/68 Fax No:079 22148598\n\nBBM, & , School NOC\n\nDt. 04/07/2018\n\nTO WHOM SO EVER IT MAY CONCERN\n\nThis is to certify that the management of; \" Zebar School for Children.\",\nhaving Ground + 2 Floor school building located at, Opp. Suyog Apartment, B/h.\nCopper Stone, Thaltej, Ahmedabad. Have provided for the required fire Protection\nof the School Building and was inspected today and fire risks observed were of\nvery low category and evacuation in case of emergency cannot be a problem.\n\nThe Fire Service has NO OBJECTION to the above school as it is protected by fire\nfighting appliances.\n\ne Hydrant system with;\nMain Pump (01 Nos.)\nHydrants Valve (08 Nos.)\nButterfly Valve (02 Nos.)\nHose Reel with Hose Drum (06 Nos.)\nHose Box (06 Nos.)\nFire Bridge Inlet (O01 Nos.)\n\nFire Alarm System Installed.\nAutoglo Signages are installed.\n\ne Fire Extinguishers ;\n\n4.5 Kg. Capacity Co2 Type Fire Extinguishers. (11 Nos.)\n5/6 Kg Capacity ABC type Fire Extinguisher. (15 Nos.)\n\nAll Fire equipments installed shall be maintained in working order throughout\nthe validity period of this certificate.\n\nThe Certificate is valid till 31 July — 2019.\n\n[tibe=\nChief Fire Officer\n\nAhmedabad Municipal Corporation"
-        }
+        "resume": {"text": "Full document text here"}
     },
-    "keywords": [
-        "issued_date",
-        "name", 
-        "document_type", 
-        "location",
-        "certificate_validity"
-    ]
+    "keywords": ["name", "email", "experience"]
 }
-`
+response = requests.post(url, json=payload)
+print(response.json())
+```
+
+## 🔒 Security Features
+- CORS middleware
+- File type validation
+- Secure AI client configuration
+- Temporary file cleanup
+
+## 🏃 Running the Application
+
+### Development Mode
+```bash
+uvicorn main:app --reload --host 0.0.0.0 --port 5000
+```
+
+### Production Deployment
+```bash
+python main.py
+```
+
+## 📋 Configuration Options
+
+Customize through environment variables:
+- `UPLOAD_FOLDER`: Directory for temporary file storage
+- `GROQ_API_KEY`: AI service API key
+- Modify `keyword_list` for default extraction keywords
+
+## 🐞 Error Handling
+- Comprehensive error responses
+- Graceful exception handling
+- Informative status codes
+
+## 🔍 Logging and Monitoring
+- Health check endpoint (`/health`)
+- Detailed error logging
+- Performance-oriented design
+
+## 🤝 Contributing
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## 📄 License
+[Specify your license here - MIT/Apache/etc.]
+
+## 📞 Support
+For issues, questions, or support, please open a GitHub issue or contact [your contact information].
+
+---
+
+**Note**: Ensure you have the necessary dependencies and API keys before running the application.
