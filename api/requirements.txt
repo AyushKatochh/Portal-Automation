@@ -1,0 +1,11 @@
+python-multipart==0.0.9
+PyPDF2==3.0.1
+cryptography==42.0.2
+Pillow==10.2.0
+pytesseract==0.3.10
+pdf2image==1.17.0
+fastapi
+uvicorn
+openai
+python-dotenv
+pydantic
