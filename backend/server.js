@@ -1,5 +1,7 @@
 const express = require('express');
+const FormData = require('form-data');
 const multer = require('multer');
+const axios = require("axios");
 const path = require('path');
 const fs = require('fs');
 
@@ -18,19 +20,53 @@ const storage = multer.diskStorage({
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, `${uniqueSuffix}-${file.originalname}`);
+    cb(null, `${file.originalname}`);
   },
 });
 
 const upload = multer({ storage });
 
 // Handle file upload route
-app.post('/upload', upload.array('files'), (req, res) => {
+app.post('/upload', upload.array('files'), async (req, res) => {
   if (!req.files || req.files.length === 0) {
+    console.log('No files were uploaded.');
     return res.status(400).send({ message: 'No files were uploaded.' });
   }
-  res.send({ message: 'Files uploaded successfully!' });
+
+  const responses = [];
+  console.log(`Processing ${req.files.length} file(s)...`);
+
+  for (const file of req.files) {
+    try {
+      const filePath = path.join(uploadDir, file.filename);
+      console.log(`Sending file: ${file.filename} to OCR endpoint...`);
+      const formData = new FormData();
+      formData.append('file', fs.createReadStream(filePath));
+
+      const response = await axios.post('http://localhost:8000/ocr_and_extract', formData, {
+        headers: formData.getHeaders(),
+      });
+
+      console.log(`Response for file ${file.filename}:`, response.data);
+
+      responses.push({
+        filename: file.filename,
+        ocrData: response.data,
+      });
+    } catch (error) {
+      console.error(`Error processing file ${file.filename}:`, error.message);
+      responses.push({
+        filename: file.filename,
+        error: error.message,
+      });
+    }
+  }
+
+  console.log('Final responses:', responses);
+  res.send({
+    message: 'Files processed successfully!',
+    results: responses,
+  });
 });
 
 // Start the server
