@@ -62,90 +62,103 @@ app.post('/test-input', async (req, res) => {
     const results = {}; // Store OCR results for all processed documents
     const errors = {}; // Store errors for failed documents
     let totalDocuments = 0;
-    let processedDocuments = 0;
 
-    // Process each file in the documents folder
-    for (const fileName of files) {
-      const filePath = path.join(documentsFolderPath, fileName);
+    // Function to process files one by one with a delay
+    const processFilesWithDelay = (files, callback) => {
+      let processedDocuments = 0;
 
-      // Check if the file is a valid file (not a directory)
-      if (fs.statSync(filePath).isFile()) {
-        const documentType = getDocumentType(fileName);
-        if (documentType === 'unknown') {
-          console.log(`Skipping file ${fileName}, document type unknown.`);
-          continue; // Skip files with unknown types
+      // Recursive function to process each file with a 30-second delay between requests
+      const processFile = (index) => {
+        if (index >= files.length) {
+          callback();  // All files processed, invoke the callback
+          return;
         }
 
-        // Create a new FormData instance for each file
-        const formData = new FormData();
-        formData.append('file', fs.createReadStream(filePath), { filename: fileName });
-        formData.append('document_type', documentType);
+        const fileName = files[index];
+        const filePath = path.join(documentsFolderPath, fileName);
 
-        totalDocuments++;
-
-        // Get the length of the formData asynchronously before sending the request
-        // eslint-disable-next-line no-loop-func
-        formData.getLength((err, length) => {
-          if (err) {
-            console.error('Error getting form data length:', err);
-            errors[fileName] = 'Error getting form data length';
+        // Check if the file is a valid file (not a directory)
+        if (fs.statSync(filePath).isFile()) {
+          const documentType = getDocumentType(fileName);
+          if (documentType === 'unknown') {
+            console.log(`Skipping file ${fileName}, document type unknown.`);
             processedDocuments++;
-            checkIfFinished();
+            setTimeout(() => processFile(index + 1), 10000); // Wait for 30 seconds before proceeding to the next file
             return;
           }
 
-          // Send form data to the OCR service at localhost:8000/ocr_and_extract
-          axios.post('http://localhost:8000/ocr_and_extract', formData, {
-            headers: {
-              ...formData.getHeaders(),
-              'Content-Length': length,
-            },
-          })
-          .then(response => {
-            // Log the full response to see what was returned
-            console.log(`OCR API response for ${fileName}:`, response.data);
+          // Create a new FormData instance for each file
+          const formData = new FormData();
+          formData.append('file', fs.createReadStream(filePath), { filename: fileName });
+          formData.append('document_type', documentType);
 
-            // Collect results for each document and add them to the results object
-            const ocrResults = response.data.results;
-            if (ocrResults && ocrResults[fileName]) {
-              results[fileName] = ocrResults[fileName];
-            } else {
-              results[fileName] = { message: 'No data found for this document' };
+          totalDocuments++;
+
+          // Get the length of the formData asynchronously before sending the request
+          formData.getLength((err, length) => {
+            if (err) {
+              console.error('Error getting form data length:', err);
+              errors[fileName] = 'Error getting form data length';
+              processedDocuments++;
+              setTimeout(() => processFile(index + 1), 30000); // Wait for 30 seconds before proceeding to the next file
+              return;
             }
-            processedDocuments++;
-            checkIfFinished();
-          })
-          .catch(error => {
-            console.error('Error during OCR request for ' + fileName, error);
-            errors[fileName] = 'OCR request failed';
-            processedDocuments++;
-            checkIfFinished();
+
+            // Send form data to the OCR service at localhost:8000/ocr_and_extract
+            axios.post('http://localhost:8000/ocr_and_extract', formData, {
+              headers: {
+                ...formData.getHeaders(),
+                'Content-Length': length,
+              },
+            })
+            .then(response => {
+              // Log the full response to see what was returned
+              console.log(`OCR API response for ${fileName}:`, response.data);
+
+              // Collect results for each document and add them to the results object
+              const ocrResults = response.data.results;
+              if (ocrResults && ocrResults[fileName]) {
+                results[fileName] = ocrResults[fileName];
+              } else {
+                results[fileName] = { message: 'No data found for this document' };
+              }
+
+              processedDocuments++;
+              setTimeout(() => processFile(index + 1), 30000); // Wait for 30 seconds before processing the next file
+            })
+            .catch(error => {
+              console.error('Error during OCR request for ' + fileName, error);
+              errors[fileName] = 'OCR request failed';
+              processedDocuments++;
+              setTimeout(() => processFile(index + 1), 30000); // Wait for 30 seconds before proceeding to the next file
+            });
           });
-        });
-      }
-    }
+        } else {
+          processedDocuments++;
+          setTimeout(() => processFile(index + 1), 30000); // Wait for 30 seconds before proceeding to the next file
+        }
+      };
 
-    // Helper function to check if all files have been processed
-    function checkIfFinished() {
-      if (processedDocuments === totalDocuments) {
-        res.json({
-          message: `Processed ${totalDocuments} documents from the folder.`,
-          results: results,
-          errors: errors, // Return errors for failed documents
-        });
-      }
-    }
+      // Start processing the first file
+      processFile(0);
+    };
 
-    // If no valid files were found for processing, return an error
-    if (totalDocuments === 0) {
-      return res.status(400).json({ error: 'No valid files found for processing' });
-    }
+    // Call the processFilesWithDelay function and handle the final response when all files are done
+    processFilesWithDelay(files, () => {
+      // All documents processed
+      res.json({
+        message: `Processed ${totalDocuments} documents from the folder.`,
+        results: results,
+        errors: errors, // Return errors for failed documents
+      });
+    });
 
   } catch (error) {
     console.error('Error processing files:', error);
     res.status(500).json({ error: 'File processing failed' });
   }
 });
+
 
 // Start the server
 app.listen(port, () => {
