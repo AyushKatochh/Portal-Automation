@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
+import axios from 'axios';  // You'll need axios to send HTTP requests
 import styles from './Step7.module.css';
 
 const Step7 = () => {
   const [documents, setDocuments] = useState([
     'Affidavit',
-    'Form3 Certificate',
+    'MOU',
     'Fire Safety',
-    'Site Plan',
+    'Architect Certificate',
+    'Land Conversion',
   ]);
   const [uploadedDocs, setUploadedDocs] = useState({});
   const [selectedDoc, setSelectedDoc] = useState('');
   const [previewDoc, setPreviewDoc] = useState(null);
+  const [isLoading, setIsLoading] = useState(false); // Loading state
 
   const handleDropdownChange = (event) => {
     setSelectedDoc(event.target.value);
@@ -37,6 +40,35 @@ const Step7 = () => {
       delete updatedDocs[docName];
       return updatedDocs;
     });
+  };
+
+  // Check if all documents are uploaded
+  const allDocsUploaded = documents.every((doc) => uploadedDocs[doc]);
+
+  const handleSubmit = async () => {
+    if (!allDocsUploaded) return; // Prevent submission if documents are missing
+
+    setIsLoading(true);  // Show the loader
+
+    // Prepare form data to send to backend
+    const formData = new FormData();
+    Object.entries(uploadedDocs).forEach(([docName, file]) => {
+      formData.append(docName, file);
+    });
+
+    try {
+      // Make the POST request to upload files
+      const response = await axios.post('/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log('Files uploaded successfully:', response.data);
+    } catch (error) {
+      console.error('Error uploading files:', error);
+    } finally {
+      setIsLoading(false);  // Hide the loader once upload is complete
+    }
   };
 
   return (
@@ -99,6 +131,20 @@ const Step7 = () => {
             className={styles.previewIframe}
             title="Document Preview"
           ></iframe>
+        </div>
+      )}
+
+      {/* Submit button, only visible when all documents are uploaded */}
+      {allDocsUploaded && (
+        <button className={styles.submitButton} onClick={handleSubmit}>
+          Submit
+        </button>
+      )}
+
+      {/* Loading indicator */}
+      {isLoading && (
+        <div className={styles.loaderContainer}>
+          <img src="../assets/loader.gif" alt="Loading..." className={styles.loader} />
         </div>
       )}
     </div>

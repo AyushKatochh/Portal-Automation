@@ -111,3 +111,16 @@
   border: none;
   border-radius: 6px;
 }
+
+.loaderContainer {
+  position: fixed; /* Use fixed positioning to cover the whole viewport */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white; /* Set background color to white */
+  z-index: 100; /* Ensure the loader is on top */
+}
