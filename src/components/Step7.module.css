@@ -1,19 +1,20 @@
 /* Container for the entire form */
 .uploadForm {
-  width: 70%;
+  width: 75%;
   margin: 2rem auto;
   padding: 2rem;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  background-color: #fdfdfd;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
+  font-family: Arial, sans-serif;
 }
 
 /* Heading Styles */
 .uploadForm h2 {
   color: #1E90FF;
-  font-size: 2rem;
-  margin-bottom: 1rem;
+  font-size: 2.2rem;
+  margin-bottom: 1.5rem;
   text-align: center;
   font-weight: bold;
 }
@@ -22,86 +23,108 @@
   border: 0;
   height: 3px;
   background-color: #1E90FF;
-  width: 60%;
+  width: 50%;
   margin: 1rem auto;
-  border-radius: 3px;
+  border-radius: 4px;
 }
 
-/* Dropdown and file input */
+/* Dropdown and file input container */
 .dropdownContainer {
   display: flex;
   gap: 1rem;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
+/* Dropdown styling */
 .dropdown {
-  padding: 0.5rem;
+  padding: 0.6rem;
   font-size: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
   width: 60%;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease;
 }
 
+.dropdown:focus {
+  border-color: #1E90FF;
+  outline: none;
+}
+
+/* File input styling */
 .fileInput {
-  padding: 0.5rem;
+  padding: 0.6rem;
   font-size: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fdfdfd;
+  transition: border-color 0.3s ease;
 }
 
-/* Uploaded documents */
+.fileInput:focus {
+  border-color: #1E90FF;
+  outline: none;
+}
+
+/* Uploaded documents section */
 .uploadedDocsContainer {
-  margin-top: 1rem;
+  margin-top: 2rem;
 }
 
 .uploadedDocRow {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  background-color: #fff;
+  padding: 0.8rem 1rem;
+  background-color: #ffffff;
   border: 1px solid #ddd;
-  border-radius: 6px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
 }
 
 .docName {
   font-size: 1rem;
   font-weight: bold;
-  color: #555;
+  color: #1E90FF;
   cursor: pointer;
+  text-decoration: none;
+}
+
+.docName:hover {
   text-decoration: underline;
 }
 
+/* Edit button styling */
 .editButton {
   background-color: #ff6347;
   color: white;
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .editButton:hover {
-  background-color: #ff2d1a;
+  background-color: #e8413a;
 }
 
-/* Preview Window */
+/* Preview window styling */
 .previewWindow {
   margin-top: 2rem;
   padding: 1rem;
-  background-color: #fff;
+  background-color: #f9f9f9;
   border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .previewWindow h3 {
-  color: #333;
-  font-size: 1.2rem;
+  color: #444;
+  font-size: 1.4rem;
   margin-bottom: 1rem;
 }
 
@@ -110,4 +133,42 @@
   height: 300px;
   border: none;
   border-radius: 6px;
+}
+
+/* Submit button */
+.submitButton {
+  display: block;
+  margin: 2rem auto 0;
+  background-color: #1E90FF;
+  color: white;
+  padding: 0.8rem 2rem;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submitButton:hover {
+  background-color: #147ae3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .uploadForm {
+    width: 90%;
+  }
+
+  .dropdown {
+    width: 100%;
+  }
+
+  .uploadedDocRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .editButton {
+    margin-top: 0.5rem;
+  }
 }
