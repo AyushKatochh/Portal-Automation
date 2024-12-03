@@ -7,6 +7,8 @@ import HomeLink from './components/HomeLink';
 import Footer from './components/Footer';
 import ApprovalProcess from './components/ApprovalProcess';
 import SignIn from './components/SignIn';
+import ScrutinyPage from './components/ScrutinyPage';
+import ScrutinyCommittee from './components/ScrutinyCommittee';
 import './App.css';
 
 function App() {
@@ -18,6 +20,8 @@ function App() {
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/approval-process" element={<ApprovalProcess />} />
           <Route path="/HomeLink" element={<HomeLink />} />
+          <Route path="/scrutiny" element={<ScrutinyPage />} />
+          <Route path="/scrutiny-committee" element={<ScrutinyCommittee />} />
         </Routes>
       </Router>
       <Footer />
