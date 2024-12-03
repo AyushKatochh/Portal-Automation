@@ -9,116 +9,189 @@ import pytesseract
 from pdf2image import convert_from_path
 import os
 
-def validate_pdf_signature(pdf_path: str) -> Dict[str, Any]:
-    """
-    Validate digital signatures in a PDF and return detailed information.
-    """
-    result = {
-        "file_path": pdf_path,
-        "has_signatures": False,
-        "validation_time": datetime.now().isoformat(),
-        "signatures": [],
-        "status": "success",
-        "message": ""
-    }
-    
-    try:
-        with open(pdf_path, 'rb') as file:
-            pdf_reader = PyPDF2.PdfReader(file)
-            
-            # Check for AcroForm signatures
-            if hasattr(pdf_reader, 'AcroForm') and pdf_reader.AcroForm:
-                for field in pdf_reader.AcroForm.get('/Fields', []):
-                    if field.get('/FT') == '/Sig' and field.get('/V'):
-                        result["has_signatures"] = True
-                        sig_dict = field['/V']
-                        sig_info = extract_signature_info(sig_dict)
-                        result["signatures"].append(sig_info)
-            
-            # Check for document-level certification
-            if '/Perms' in pdf_reader.trailer['/Root']:
-                perms = pdf_reader.trailer['/Root']['/Perms']
-                if '/DocMDP' in perms:
-                    result["has_signatures"] = True
-                    result["signatures"].append({
-                        "type": "certification_signature",
-                        "validation_status": "certification_present",
-                        "details": "Document contains a certification signature"
-                    })
-            
-            if not result["signatures"]:
-                result["message"] = "No digital signatures found in the PDF"
-            else:
-                result["message"] = f"Found {len(result['signatures'])} signature(s)"
-                
-    except FileNotFoundError:
-        result["status"] = "error"
-        result["message"] = "PDF file not found"
-    except Exception as e:
-        result["status"] = "error"
-        result["message"] = f"Error analyzing PDF: {str(e)}"
-    
-    return result
+import datetime
+import sys
 
-def extract_signature_info(sig_dict: Dict) -> Dict[str, Any]:
-    """
-    Extract signature information from a signature dictionary.
-    """
-    sig_info = {
-        "type": "digital_signature",
-        "subfilter": decode_pdf_string(sig_dict.get('/SubFilter', '')),
-        "signer_info": {},
-        "timestamp": None,
-        "location": decode_pdf_string(sig_dict.get('/Location', '')),
-        "reason": decode_pdf_string(sig_dict.get('/Reason', '')),
-        "validation_status": "unknown"
-    }
-    
-    # Extract certificate information
-    if '/Cert' in sig_dict:
-        sig_info["signer_info"] = extract_certificate_info(sig_dict['/Cert'])
-    
-    # Extract timestamp
-    if '/M' in sig_dict:
-        sig_info["timestamp"] = decode_pdf_string(sig_dict['/M'])
-    
-    # Validate signature
-    sig_info.update(validate_signature(sig_dict))
-    
-    return sig_info
+from asn1crypto import cms
+from dateutil.parser import parse
+from pypdf import PdfReader
 
-def extract_certificate_info(cert_data: bytes) -> Dict[str, Any]:
-    """
-    Extract information from a certificate.
-    """
-    try:
-        if isinstance(cert_data, bytes):
-            cert = load_der_x509_certificate(cert_data)
-            return {
-                "subject": str(cert.subject),
-                "issuer": str(cert.issuer),
-                "serial_number": str(cert.serial_number),
-                "valid_from": cert.not_valid_before.isoformat(),
-                "valid_until": cert.not_valid_after.isoformat(),
-                "verification_status": "valid" if datetime.now() < cert.not_valid_after else "expired"
-            }
-    except Exception as cert_error:
-        return {"error": str(cert_error)}
-    return {}
 
-def validate_signature(sig_dict: Dict) -> Dict[str, str]:
+class AttrClass:
+    """Abstract helper class"""
+
+    def __init__(self, data, cls_name=None):
+        self._data = data
+        self._cls_name = cls_name
+
+    def __getattr__(self, name):
+        try:
+            value = self._data[name]
+        except KeyError:
+            value = None
+        else:
+            if isinstance(value, dict):
+                return AttrClass(value, cls_name=name.capitalize() or self._cls_name)
+        return value
+
+    def __values_for_str__(self):
+        """Values to show for "str" and "repr" methods"""
+        return [
+            (k, v) for k, v in self._data.items()
+            if isinstance(v, (str, int, datetime.datetime))
+        ]
+
+    def __str__(self):
+        """String representation of object"""
+        values = ", ".join([
+            f"{k}={v}" for k, v in self.__values_for_str__()
+        ])
+        return f"{self._cls_name or self.__class__.__name__}({values})"
+
+    def __repr__(self):
+        return f"<{self}>"
+
+
+class Signature(AttrClass):
+    """Signature helper class
+
+    Attributes:
+        type (str): 'timestamp' or 'signature'
+        signing_time (datetime, datetime): when user has signed
+            (user HW's clock)
+        signer_name (str): the signer's common name
+        signer_contact_info (str, None): the signer's email / contact info
+        signer_location (str, None): the signer's location
+        signature_type (str): ETSI.cades.detached, adbe.pkcs7.detached, ...
+        certificate (Certificate): the signers certificate
+        digest_algorithm (str): the digest algorithm used
+        message_digest (bytes): the digest
+        signature_algorithm (str): the signature algorithm used
+        signature_bytes (bytest): the raw signature
     """
-    Validate a signature dictionary.
+
+    @property
+    def signer_name(self):
+        return (
+            self._data.get('signer_name') or
+            getattr(self.certificate.subject, 'common_name', '')
+        )
+
+
+class Subject(AttrClass):
+    """Certificate subject helper class
+
+    Attributes:
+        common_name (str): the subject's common name
+        given_name (str): the subject's first name
+        surname (str): the subject's surname
+        serial_number (str): subject's identifier (may not exist)
+        country (str): subject's country
     """
-    try:
-        if '/Contents' in sig_dict and '/ByteRange' in sig_dict:
-            return {"validation_status": "signature_present"}
-        return {"validation_status": "invalid_format"}
-    except Exception as validation_error:
-        return {
-            "validation_status": "validation_error",
-            "validation_error": str(validation_error)
-        }
+    pass
+
+
+class Certificate(AttrClass):
+    """Signer's certificate helper class
+
+    Attributes:
+        version (str): v3 (= X509v3)
+        serial_number (int): the certificate's serial number
+        subject (object): signer's subject details
+        issuer (object): certificate issuer's details
+        signature (object): certificate signature
+        extensions (list[OrderedDict]): certificate extensions
+        validity (object): validity (not_before, not_after)
+        subject_public_key_info (object): public key info
+        issuer_unique_id (object, None): issuer unique id
+        subject_uniqiue_id (object, None): subject unique id
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.subject = Subject(self._data['subject'])
+
+    def __values_for_str__(self):
+        return (
+            super().__values_for_str__() +
+            [('common_name', self.subject.common_name)]
+        )
+
+
+def parse_pkcs7_signatures(signature_data: bytes):
+    """Parse a PKCS7 / CMS / CADES signature"""
+    content_info = cms.ContentInfo.load(signature_data).native
+    if content_info['content_type'] != 'signed_data':
+        return None
+    content = content_info['content']
+    certificates = content['certificates']
+    # each PKCS7 / CMS / CADES could have several signatures
+    signer_infos = content['signer_infos']
+    for signer_info in signer_infos:
+        # the sid key should point to the certificates collection
+        sid = signer_info['sid']
+        digest_algorithm = signer_info['digest_algorithm']['algorithm']
+        signature_algorithm = signer_info['signature_algorithm']['algorithm']
+        signature_bytes = signer_info['signature']
+        # signed attributes is a list of key, value pairs
+        # oversimplification: normally we have no repeated attributes
+        signed_attrs = {
+            sa['type']: sa['values'][0] for sa in signer_info['signed_attrs']}
+        # find matching certificate, only for issuer / serial number
+        for cert in certificates:
+            cert = cert['tbs_certificate']
+            if (
+                sid['serial_number'] == cert['serial_number'] and
+                sid['issuer'] == cert['issuer']
+            ):
+                break
+        else:
+            raise RuntimeError(
+                f"Couldn't find certificate in certificates collection: {sid}")
+        yield dict(
+            sid=sid,
+            certificate=Certificate(cert),
+            digest_algorithm=digest_algorithm,
+            signature_algorithm=signature_algorithm,
+            signature_bytes=signature_bytes,
+            signer_info=signer_info,
+            **signed_attrs,
+        )
+
+
+def get_pdf_signatures(filename):
+    """Parse PDF signatures"""
+    reader = PdfReader(filename)
+    fields = reader.get_fields().values()
+    signature_field_values = [
+        f.value for f in fields if f.field_type == '/Sig']
+    for v in signature_field_values:
+        # - signature datetime (not included in pkcs7) in format:
+        #   D:YYYYMMDDHHmmss[offset]
+        #   where offset is +/-HH'mm' difference to UTC.
+        v_type = v['/Type']
+        if v_type in ('/Sig', '/DocTimeStamp'):  # unknow types are skipped
+            is_timestamp = v_type == '/DocTimeStamp'
+            try:
+                signing_time = parse(v['/M'][2:].strip("'").replace("'", ":"))
+            except KeyError:
+                signing_time = None
+            # - used standard for signature encoding, in my case:
+            # - get PKCS7/CMS/CADES signature package encoded in ASN.1 / DER format
+            raw_signature_data = v['/Contents']
+            # if is_timestamp:
+            for attrdict in parse_pkcs7_signatures(raw_signature_data):
+                if attrdict:
+                    attrdict.update(dict(
+                        type='timestamp' if is_timestamp else 'signature',
+                        signer_name=v.get('/Name'),
+                        signer_contact_info=v.get('/ContactInfo'),
+                        signer_location=v.get('/Location'),
+                        signing_time=signing_time or attrdict.get('signing_time'),
+                        signature_type=v['/SubFilter'][1:],  # ETSI.CAdES.detached, ...
+                        signature_handler=v['/Filter'][1:],
+                        raw=raw_signature_data,
+                    ))
+                    yield Signature(attrdict)
 
 def decode_pdf_string(value: Any) -> str:
     """

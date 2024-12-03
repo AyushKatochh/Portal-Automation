@@ -11,7 +11,7 @@ import uvicorn
 
 # Import existing utility functions (these would be in a separate utils.py)
 from utils import (
-    validate_pdf_signature,
+    get_pdf_signatures,
     process_document_for_ocr,
     cleanup_file
 )
@@ -211,19 +211,40 @@ async def validate_signature(file: UploadFile = File(...)):
             status_code=400,
             detail="Uploaded file must be a PDF."
         )
+    
 
     # Save the uploaded file
     file_path = os.path.join(UPLOAD_FOLDER, file.filename)
+    signatures_info = []
     try:
         with open(file_path, "wb") as f:
             f.write(await file.read())
 
-        # Validate signatures
-        result = validate_pdf_signature(file_path)
-        return JSONResponse(content=result, status_code=200)
+        for signature in get_pdf_signatures(file_path):
+            certificate = signature.certificate
+            subject = certificate.subject
 
+            signature_info = {
+                "type": str(signature.type),
+                "signature": str(signature),
+                "signer_name": str(signature.signer_name),
+                "signing_time": str(signature.signing_time),
+                "certificate": {
+                    "validity": {
+                        "not_before": str(certificate.validity.not_before),
+                        "not_after": str(certificate.validity.not_after),
+                    },
+                    "issuer": str(certificate.issuer),
+                    "subject": {
+                        "common_name": str(subject.common_name),
+                        "serial_number": str(subject.serial_number),
+                    }
+                }
+            }
+            signatures_info.append(signature_info)
+        return JSONResponse(content={"signatures": signatures_info}, status_code=200)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        return JSONResponse(content={"error": "No Valid digital signature", "details": str(e)}, status_code=500)
     finally:
         cleanup_file(file_path)
 

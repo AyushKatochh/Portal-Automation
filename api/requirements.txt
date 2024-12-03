@@ -9,3 +9,6 @@ uvicorn
 openai
 python-dotenv
 pydantic
+asn1crypto
+python-dateutil
+pypdf
