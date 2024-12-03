@@ -1,4 +1,3 @@
-
 import os
 import json
 from typing import Dict, Any, List
@@ -194,6 +193,42 @@ async def perform_ocr(
         raise HTTPException(status_code=500, detail=str(e))
     finally:
         cleanup_file(file_path)
+
+
+# # Signature validation endpoint
+@app.post("/validate-signature/")
+async def validate_signature(file: UploadFile = File(...)):
+    """
+    Validate digital signatures in a PDF document
+    Args:
+        file (UploadFile): Uploaded PDF file
+    Returns:
+        JSONResponse with signature validation results
+    """
+    # Validate file type
+    if file.content_type != "application/pdf":
+        raise HTTPException(
+            status_code=400,
+            detail="Uploaded file must be a PDF."
+        )
+
+    # Save the uploaded file
+    file_path = os.path.join(UPLOAD_FOLDER, file.filename)
+    try:
+        with open(file_path, "wb") as f:
+            f.write(await file.read())
+
+        # Validate signatures
+        result = validate_pdf_signature(file_path)
+        return JSONResponse(content=result, status_code=200)
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        cleanup_file(file_path)
+
+
+
 
 # Extraction endpoint
 @app.post("/extract")
