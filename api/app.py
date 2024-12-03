@@ -1,14 +1,13 @@
 import os
 import json
 from typing import Dict, Any, List
-from fastapi import FastAPI, HTTPException, UploadFile, File
+from fastapi import FastAPI, HTTPException, UploadFile, File, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 from openai import OpenAI
 import uvicorn
-from dotenv import load_dotenv
 
 # Import existing utility functions (these would be in a separate utils.py)
 from utils import (
@@ -23,7 +22,7 @@ load_dotenv()
 # Initialize FastAPI application
 app = FastAPI(
     title="Comprehensive Document Processing API",
-    description="AI-powered document processing, OCR, signature validation, and information extraction service",
+    description="AI-powered document processing, OCR, and information extraction service",
     version="2.0.0"
 )
 
@@ -40,35 +39,27 @@ app.add_middleware(
 UPLOAD_FOLDER = "./uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# Custom OCRResult class for structured data
-class OCRResult:
-    def __init__(self, documents, keywords):
-        self.documents = documents
-        self.keywords = keywords
-
 # Pydantic models for request validation
 class DocumentData(BaseModel):
     text: str = Field(..., min_length=10, description="Document text content")
 
 class ExtractionRequest(BaseModel):
     documents: Dict[str, DocumentData]
-    keywords: List[str] = Field(default_factory=list, description="Optional keywords to extract")
+    keywords: List[str] = Field(..., description="Keywords to extract")
 
 # OpenAI/Groq Client Configuration
 def get_ai_client():
     """Initialize and return the AI client"""
-    from openai import OpenAI  # Import OpenAI here if necessary
     return OpenAI(
         base_url="https://api.groq.com/openai/v1",
         api_key=os.getenv("GROQ_API_KEY")
     )
 
 # Function for extracting document information
-def extract_document_info(document_type: str, text: str, keywords: List[str], client: OpenAI) -> Dict[str, Any]:
+def extract_document_info(text: str, keywords: List[str], client: OpenAI) -> Dict[str, Any]:
     """
     Extract structured information from a document using AI
     Args:
-        document_type (str): Type of document being processed
         text (str): Raw text content of the document
         keywords (List[str]): Keywords to extract values for
         client (OpenAI): AI client for processing
@@ -76,67 +67,94 @@ def extract_document_info(document_type: str, text: str, keywords: List[str], cl
         Dict containing extracted information
     """
     try:
-        # Construct prompt for structured extraction
-        keywords_prompt = f"Extract values for the following keywords: {', '.join(keywords)}" if keywords else ""
+        # Construct prompt for structured extraction with more explicit instructions
+        keywords_list = ", ".join(keywords)
         prompt = f"""
-        Extract structured information from the following {document_type}:
+        You are an expert document information extractor. 
+        Extract ONLY the following specific keywords: {keywords_list}
 
-        Document Text: {text}
+        Document Text:
+        {text}
 
-        {keywords_prompt}
+        IMPORTANT EXTRACTION GUIDELINES:
+        1. Return a clean, valid JSON object
+        2. Use null for any missing information
+        3. If a keyword is not found, set its value to null
+        4. Do NOT invent or fabricate information
+        5. Extract precisely what is in the document
+        6. Keep the JSON structure simple and flat
 
-        Provide a JSON response with key details. 
-        Guidelines:
-        - Extract core information relevant to the document type
-        - Use clear, concise key names
-        - Handle missing information gracefully
-        - If keywords are provided, return their values
-        - Ensure valid JSON output
+        Strictly return a JSON with these keys: {keywords_list}
         """
 
-        # Call AI model for extraction
+        # Call AI model for extraction with more conservative settings
         response = client.chat.completions.create(
             model="llama3-70b-8192",
             messages=[
-                {"role": "system", "content": "You are an expert document information extractor. Respond with precise, structured JSON."},
+                {"role": "system", "content": "You are an expert document information extractor. Always return valid, precise JSON."},
                 {"role": "user", "content": prompt}
             ],
             response_format={"type": "json_object"},
             max_tokens=1000,
-            temperature=0.2
+            temperature=0.1,
+            top_p=0.9
         )
 
         # Parse and return extracted information
-        extracted_data = json.loads(response.choices[0].message.content)
+        raw_content = response.choices[0].message.content
+        
+        # Additional parsing and validation
+        try:
+            extracted_data = json.loads(raw_content)
+        except json.JSONDecodeError:
+            # Attempt to clean and parse the JSON
+            import re
+            cleaned_content = re.sub(r'[\n\r]', '', raw_content)
+            extracted_data = json.loads(cleaned_content)
+
+        # Ensure all keywords are present, even if null
+        for keyword in keywords:
+            if keyword not in extracted_data:
+                extracted_data[keyword] = None
+
         return {
-            "type": document_type,
             "extracted_data": extracted_data,
-            "keyword_values": {keyword: extracted_data.get(keyword, None) for keyword in keywords} if keywords else {}
+            "keyword_values": {keyword: extracted_data.get(keyword, None) for keyword in keywords}
         }
 
     except Exception as e:
-        # Handle extraction errors
+        # Comprehensive error handling
         return {
-            "type": document_type,
-            "error": str(e),
-            "keyword_values": {keyword: None for keyword in keywords} if keywords else {}
+            "error": f"Extraction Error: {str(e)}",
+            "keyword_values": {keyword: None for keyword in keywords}
         }
 
 # OCR endpoint
 @app.post("/ocr_and_extract/")
-async def perform_ocr(file: UploadFile = File(...)):
+async def perform_ocr(
+    file: UploadFile = File(...), 
+    keywords: List[str] = Query(...)
+):
     """
-    Perform OCR on uploaded document
+    Perform OCR on uploaded document with flexible keyword extraction
     Args:
         file (UploadFile): Uploaded image or PDF file
+        keywords (List[str]): Specific keywords to extract
     Returns:
-        JSONResponse with extracted text
+        JSONResponse with extracted text and information
     """
     # Validate file type
     if not (file.content_type.startswith("image/") or file.content_type == "application/pdf"):
         raise HTTPException(
             status_code=400,
             detail="Uploaded file must be an image or a PDF."
+        )
+
+    # Validate that keywords are provided
+    if not keywords:
+        raise HTTPException(
+            status_code=400,
+            detail="Must provide keywords to extract"
         )
 
     # Save the uploaded file
@@ -155,24 +173,20 @@ async def perform_ocr(file: UploadFile = File(...)):
 
         # Perform AI extraction
         client = get_ai_client()
-        keyword_list = ["issued_date", "name", "document_type", "location", "certificate_validity"]
-        ocr_result = OCRResult(documents={document_name: {"text": extracted_text}}, keywords=keyword_list)
-
         results = {}
-        for doc_type, doc_data in ocr_result.documents.items():
-            extracted_info = extract_document_info(
-                doc_type,
-                doc_data['text'],
-                ocr_result.keywords,
-                client
-            )
-            results[doc_type] = extracted_info
+        extracted_info = extract_document_info(
+            extracted_text,
+            keywords,
+            client
+        )
+        results[document_name] = extracted_info
 
         return {
             "status": "success",
             "results": results,
             "total_documents": len(results),
-            "keywords": keyword_list
+            "keywords": keywords,
+            "extracted_text": extracted_text
         }
 
     except Exception as e:
@@ -180,7 +194,8 @@ async def perform_ocr(file: UploadFile = File(...)):
     finally:
         cleanup_file(file_path)
 
-# Signature validation endpoint
+
+# # Signature validation endpoint
 @app.post("/validate-signature/")
 async def validate_signature(file: UploadFile = File(...)):
     """
@@ -212,13 +227,16 @@ async def validate_signature(file: UploadFile = File(...)):
     finally:
         cleanup_file(file_path)
 
+
+
+
 # Extraction endpoint
 @app.post("/extract")
 def process_document_extraction(request: ExtractionRequest):
     """
     Main extraction endpoint to process multiple documents
     Args:
-        request (ExtractionRequest): Request containing documents to extract and optional keywords
+        request (ExtractionRequest): Request containing documents to extract and keywords
     Returns:
         Dict with extraction results
     """
@@ -228,14 +246,13 @@ def process_document_extraction(request: ExtractionRequest):
 
         # Process each document
         results = {}
-        for doc_type, doc_data in request.documents.items():
+        for doc_name, doc_data in request.documents.items():
             extracted_info = extract_document_info(
-                doc_type,
                 doc_data.text,
                 request.keywords,
                 client
             )
-            results[doc_type] = extracted_info
+            results[doc_name] = extracted_info
 
         return {
             "status": "success",
@@ -256,21 +273,11 @@ async def root():
         Dict with API details
     """
     return {
-        "message": "Comprehensive Document Processing API is running",
+        "message": "Flexible Document Processing API is running",
         "endpoints": {
-            "OCR": "/ocr/",
-            "Signature Validation": "/validate-signature/",
+            "OCR and Extract": "/ocr_and_extract/",
             "Information Extraction": "/extract"
         }
-    }
-
-# Health check endpoint
-@app.get("/health")
-def health_check():
-    """Simple health check endpoint"""
-    return {
-        "status": "healthy",
-        "message": "Document Processing API is operational"
     }
 
 # Main entry point
@@ -285,3 +292,87 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
