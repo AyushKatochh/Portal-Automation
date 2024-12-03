@@ -1,90 +1,67 @@
 const express = require('express');
-const FormData = require('form-data');
 const multer = require('multer');
-const axios = require("axios");
 const path = require('path');
+const app = express();
 const fs = require('fs');
 
-const app = express();
-const PORT = 5000;
-
-// Create a folder called 'documents' if it doesn't exist
-const uploadDir = path.join(__dirname, 'documents');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
-}
-
-// Set up Multer for file storage
+// Set up multer for file uploads
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
+  destination: function (req, file, cb) {
+    cb(null, 'documents/'); // Files will be stored in the 'documents' directory
   },
-  filename: (req, file, cb) => {
-    cb(null, `${file.originalname}`);
-  },
+  filename: function (req, file, cb) {
+    // You can customize the filename here if needed
+    cb(null, file.originalname); 
+  }
 });
 
-const upload = multer({ storage });
+const upload = multer({ storage: storage });
 
-// Store the OCR results
-let extractedData = [];
-
-// Handle file upload route
-app.post('/upload', upload.array('files'), async (req, res) => {
-  if (!req.files || req.files.length === 0) {
-    console.log('No files were uploaded.');
-    return res.status(400).send({ message: 'No files were uploaded.' });
+// Handle file uploads
+app.post('/upload', upload.any(), (req, res) => {
+  try {
+    console.log('Files uploaded successfully:', req.files);
+    res.status(200).send('Files uploaded successfully!');
+  } catch (error) {
+    console.error('Error uploading files:', error);
+    res.status(500).send('Error uploading files.');
   }
-
-  const responses = [];
-  console.log(`Processing ${req.files.length} file(s)...`);
-
-  for (const file of req.files) {
-    try {
-      const filePath = path.join(uploadDir, file.filename);
-      console.log(`Sending file: ${file.filename} to OCR endpoint...`);
-      const formData = new FormData();
-      formData.append('file', fs.createReadStream(filePath));
-
-      const response = await axios.post('http://localhost:8000/ocr_and_extract', formData, {
-        headers: formData.getHeaders(),
-      });
-
-      console.log(`Response for file ${file.filename}:`, JSON.stringify(response.data, null, 2));
-
-      responses.push({
-        filename: file.filename,
-        ocrData: response.data,
-      });
-
-      // Store the extracted data globally (you can use a database or session for persistence)
-      extractedData = responses;
-
-    } catch (error) {
-      console.error(`Error processing file ${file.filename}:`, error.message);
-      responses.push({
-        filename: file.filename,
-        error: error.message,
-      });
-    }
-  }
-
-  console.log('Final responses:', responses);
-  res.send({
-    message: 'Files processed successfully!',
-    results: responses,
-  });
 });
 
-// Route to get extracted text data
-app.get('/get_extracted_text', (req, res) => {
-  if (extractedData.length === 0) {
-    return res.status(404).send({ message: 'No extracted data available.' });
+app.post('/submit', (req, res) => {
+  try {
+    console.log('Submit request received:', req.body); 
+
+    // 1. Get the document types from the request body
+    const documentTypes = req.body.documentTypes;
+
+    // 2. Create an object to store the extracted data
+    const extractedData = {};
+
+    // 3. Assuming you have access to the extracted data from the OCR service
+    //    (This is just an example, replace with your actual logic)
+    documentTypes.forEach(docType => {
+      const filePath = path.join(__dirname, 'documents', `${docType}.txt`); // Assuming extracted data is in .txt files
+      if (fs.existsSync(filePath)) {
+        extractedData[docType] = fs.readFileSync(filePath, 'utf-8');
+      } else {
+        extractedData[docType] = 'Data not found'; 
+      }
+    });
+
+    // 4. Now you have the extractedData object, you can:
+    //    - Log it to the console
+    console.log('Extracted Data:', extractedData);
+    //    - Save it to a database
+    //    - Send it back to the frontend if needed
+
+    res.status(200).send('Submit request successful!'); 
+  } catch (error) {
+    console.error('Error in submit route:', error);
+    res.status(500).send('Error processing submit request.');
   }
-  res.json(extractedData);
 });
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(5000, () => {
+  console.log('Server listening on port 5000');
 });
