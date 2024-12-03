@@ -26,6 +26,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+// Store the OCR results
+let extractedData = [];
+
 // Handle file upload route
 app.post('/upload', upload.array('files'), async (req, res) => {
   if (!req.files || req.files.length === 0) {
@@ -47,13 +50,16 @@ app.post('/upload', upload.array('files'), async (req, res) => {
         headers: formData.getHeaders(),
       });
 
-
       console.log(`Response for file ${file.filename}:`, JSON.stringify(response.data, null, 2));
 
       responses.push({
         filename: file.filename,
         ocrData: response.data,
       });
+
+      // Store the extracted data globally (you can use a database or session for persistence)
+      extractedData = responses;
+
     } catch (error) {
       console.error(`Error processing file ${file.filename}:`, error.message);
       responses.push({
@@ -68,6 +74,14 @@ app.post('/upload', upload.array('files'), async (req, res) => {
     message: 'Files processed successfully!',
     results: responses,
   });
+});
+
+// Route to get extracted text data
+app.get('/get_extracted_text', (req, res) => {
+  if (extractedData.length === 0) {
+    return res.status(404).send({ message: 'No extracted data available.' });
+  }
+  res.json(extractedData);
 });
 
 // Start the server

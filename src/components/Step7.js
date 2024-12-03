@@ -1,56 +1,106 @@
-// src/components/Step7.js
 import React, { useState } from 'react';
-import axios from 'axios';
 import styles from './Step7.module.css';
 
 const Step7 = () => {
-  const [files, setFiles] = useState(null);
+  const [documents, setDocuments] = useState([
+    'Affidavit',
+    'Form3 Certificate',
+    'Fire Safety',
+    'Site Plan',
+  ]);
+  const [uploadedDocs, setUploadedDocs] = useState({});
+  const [selectedDoc, setSelectedDoc] = useState('');
+  const [previewDoc, setPreviewDoc] = useState(null);
 
-  const handleFileChange = (event) => {
-    setFiles(event.target.files);
+  const handleDropdownChange = (event) => {
+    setSelectedDoc(event.target.value);
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    if (!files || files.length === 0) {
-      alert('Please upload at least one file.');
-      return;
+  const handleFileChange = (event) => {
+    if (selectedDoc && event.target.files[0]) {
+      setUploadedDocs((prevDocs) => ({
+        ...prevDocs,
+        [selectedDoc]: event.target.files[0],
+      }));
+      setSelectedDoc(''); // Reset dropdown after upload
     }
+  };
 
-    const formData = new FormData();
-    for (let i = 0; i < files.length; i++) {
-      formData.append('files', files[i]);
-    }
+  const handlePreview = (docName) => {
+    setPreviewDoc(uploadedDocs[docName]);
+  };
 
-    try {
-      const response = await axios.post('http://localhost:5000/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      alert(response.data.message);
-    } catch (error) {
-      console.error('Error uploading files:', error);
-    }
+  const handleReupload = (docName) => {
+    setPreviewDoc(null); // Close preview window if open
+    setUploadedDocs((prevDocs) => {
+      const updatedDocs = { ...prevDocs };
+      delete updatedDocs[docName];
+      return updatedDocs;
+    });
   };
 
   return (
     <div className={styles.uploadForm}>
-      <h2>Upload File</h2>
-      <form onSubmit={handleSubmit}>
-        <label>Files to be uploaded:</label>
-        <ul>
-          <li>Affidavit</li>
-          <li>Form3 Certificate</li>
-          <li>Fire Safety</li>
-          <li>Site Plan</li>
-        </ul>
-        <input type="file" multiple onChange={handleFileChange} />
-        <button type="submit" className={styles.submitButton}>
-          Submit
-        </button>
-      </form>
+      <h2>Upload Documents</h2>
+      <hr />
+
+      {/* Dropdown and file input */}
+      <div className={styles.dropdownContainer}>
+        <select
+          value={selectedDoc}
+          onChange={handleDropdownChange}
+          className={styles.dropdown}
+        >
+          <option value="">Select Document</option>
+          {documents
+            .filter((doc) => !uploadedDocs[doc])
+            .map((doc) => (
+              <option key={doc} value={doc}>
+                {doc}
+              </option>
+            ))}
+        </select>
+        {selectedDoc && (
+          <input
+            type="file"
+            accept=".pdf,.png,.jpg,.jpeg"
+            onChange={handleFileChange}
+            className={styles.fileInput}
+          />
+        )}
+      </div>
+
+      {/* Uploaded documents */}
+      <div className={styles.uploadedDocsContainer}>
+        {Object.entries(uploadedDocs).map(([docName, file]) => (
+          <div key={docName} className={styles.uploadedDocRow}>
+            <span
+              className={styles.docName}
+              onClick={() => handlePreview(docName)}
+            >
+              {docName}: {file.name}
+            </span>
+            <button
+              className={styles.editButton}
+              onClick={() => handleReupload(docName)}
+            >
+              Edit
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {/* Preview window */}
+      {previewDoc && (
+        <div className={styles.previewWindow}>
+          <h3>Preview: {previewDoc.name}</h3>
+          <iframe
+            src={URL.createObjectURL(previewDoc)}
+            className={styles.previewIframe}
+            title="Document Preview"
+          ></iframe>
+        </div>
+      )}
     </div>
   );
 };

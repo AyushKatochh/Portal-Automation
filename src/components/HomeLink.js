@@ -1,8 +1,7 @@
-// src/components/HomeLink.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './HomeLink.module.css';
-import { FaFileAlt, FaEdit, FaCheckCircle, FaCalendarAlt } from 'react-icons/fa';
+import { FaFileAlt, FaEdit, FaCheckCircle, FaCalendarAlt, FaUserShield } from 'react-icons/fa';
 import loaderGif from '../assets/loader.gif'; // Ensure you have a loader GIF in the assets folder
 
 const HomeLink = () => {
@@ -71,6 +70,18 @@ const HomeLink = () => {
             <h2 className={styles.cardTitle}>Extension of Application</h2>
             <p className={styles.cardDescription}>
               Apply for an extension of your existing application.
+            </p>
+          </div>
+
+          {/* Card: Admin Panel */}
+          <div
+            className={styles.card}
+            onClick={() => navigate('/scrutiny-committee')}
+          >
+            <FaUserShield className={styles.icon} />
+            <h2 className={styles.cardTitle}>Admin Panel</h2>
+            <p className={styles.cardDescription}>
+              Manage administrative tasks and settings.
             </p>
           </div>
         </div>
