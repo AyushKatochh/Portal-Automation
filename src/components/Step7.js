@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';  // You'll need axios to send HTTP requests
+import axios from 'axios'; // You'll need axios to send HTTP requests
 import styles from './Step7.module.css';
+import Loader from "../assets/loader.gif";
 
 const Step7 = () => {
   const [documents, setDocuments] = useState([
@@ -14,6 +15,7 @@ const Step7 = () => {
   const [selectedDoc, setSelectedDoc] = useState('');
   const [previewDoc, setPreviewDoc] = useState(null);
   const [isLoading, setIsLoading] = useState(false); // Loading state
+  const [successMessage, setSuccessMessage] = useState(''); // Success message state
 
   const handleDropdownChange = (event) => {
     setSelectedDoc(event.target.value);
@@ -48,7 +50,8 @@ const Step7 = () => {
   const handleSubmit = async () => {
     if (!allDocsUploaded) return; // Prevent submission if documents are missing
 
-    setIsLoading(true);  // Show the loader
+    setIsLoading(true); // Show the loader
+    setSuccessMessage(''); // Clear any previous success message
 
     // Prepare form data to send to backend
     const formData = new FormData();
@@ -63,11 +66,23 @@ const Step7 = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('Files uploaded successfully:', response.data);
+
+      if (response.status === 200) {
+        console.log('Files uploaded successfully:', response.data);
+
+        // Set success message
+        setSuccessMessage(
+          'Your files have been successfully submitted for verification. Please check the status for updates.'
+        );
+
+        // Clear uploaded documents
+        setUploadedDocs({});
+      }
     } catch (error) {
       console.error('Error uploading files:', error);
+      setSuccessMessage('There was an error submitting your files. Please try again.');
     } finally {
-      setIsLoading(false);  // Hide the loader once upload is complete
+      setIsLoading(false); // Hide the loader once upload is complete
     }
   };
 
@@ -144,7 +159,14 @@ const Step7 = () => {
       {/* Loading indicator */}
       {isLoading && (
         <div className={styles.loaderContainer}>
-          <img src="../assets/loader.gif" alt="Loading..." className={styles.loader} />
+          <img src={Loader} alt="Loading..." className={styles.loader} />
+        </div>
+      )}
+
+      {/* Success message */}
+      {successMessage && (
+        <div className={styles.successMessage}>
+          {successMessage}
         </div>
       )}
     </div>
