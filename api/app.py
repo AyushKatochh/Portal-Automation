@@ -1,7 +1,7 @@
 import os
 import json
 from typing import Dict, Any, List
-from fastapi import FastAPI, HTTPException, UploadFile, File
+from fastapi import FastAPI, HTTPException, UploadFile, File,Body
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
@@ -184,7 +184,7 @@ def extract_document_info(document_type: str, text: str, keywords: List[str], cl
         }
 # OCR endpoint
 @app.post("/ocr_and_extract/")
-async def perform_ocr(file: UploadFile = File(...), document_type: str = ""):
+async def perform_ocr(file: UploadFile = File(...), document_type: str = Body(...)):
     """
     Perform OCR on uploaded document
     Args:
