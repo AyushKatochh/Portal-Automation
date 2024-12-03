@@ -1,7 +1,7 @@
 import os
 import json
 from typing import Dict, Any, List
-from fastapi import FastAPI, HTTPException, UploadFile, File, Query
+from fastapi import FastAPI, HTTPException, UploadFile, File, Query, Body
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
@@ -35,6 +35,61 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+
+# Directory to temporarily store uploaded files
+UPLOAD_FOLDER = "./uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# Comprehensive document type to keywords mapping
+DOCUMENT_KEYWORDS = {
+    "fire_safety_certificate": [
+        "certificate_number", "issuing_authority", "issuance_date", 
+        "expiry_date", "fire_equipment_details"
+    ],
+    "land_conversion_certificate": [
+        "certificate_number", "issuing_authority", "issue_date", 
+        "validity_period", "applicant_name", "contact_information", 
+        "location", "area_of_land"
+    ],
+    "affidavit": [
+        "stamp_paper_type", "notary_registration_number", 
+        "oath_commissioner_name", "verification_place", 
+        "verification_date", "executant_name", "executant_designation"
+    ],
+    "bank_certificate": [
+        "account_holder_name", "account_number", "bank_name", 
+        "bank_address", "fdr_details", "balance_verification", 
+        "certificate_date", "certificate_place"
+    ],
+    "architect_certificate": [
+        "approval_authority", "approval_number", "approval_date", 
+        "room_details", "occupancy_certificate", "structural_stability_certificate"
+    ],
+    "mou_document": [
+        "indian_institute_name", "foreign_institute_name", 
+        "document_reference_number", "date_of_issue", 
+        "event_date", "event_time", "venue", "purpose", 
+        "key_participants"
+    ],
+    "occupancy_certificate": [
+        "memo_number", "date_of_issue", "holding_number", 
+        "street", "ward_number", "building_type"
+    ]
+}
+
+class OCRResult:
+    def __init__(self, documents, document_type):
+        self.documents = documents
+        self.document_type = document_type
+        self.keywords = DOCUMENT_KEYWORDS.get(document_type, [])
+        
 # Directory to temporarily store uploaded files
 UPLOAD_FOLDER = "./uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -131,17 +186,14 @@ def extract_document_info(text: str, keywords: List[str], client: OpenAI) -> Dic
 
 # OCR endpoint
 @app.post("/ocr_and_extract/")
-async def perform_ocr(
-    file: UploadFile = File(...), 
-    keywords: List[str] = Query(...)
-):
+async def perform_ocr(file: UploadFile = File(...), document_type: str = Body(...)):
     """
-    Perform OCR on uploaded document with flexible keyword extraction
+    Perform OCR on uploaded document
     Args:
         file (UploadFile): Uploaded image or PDF file
-        keywords (List[str]): Specific keywords to extract
+        document_type (str): Type of document for keyword extraction
     Returns:
-        JSONResponse with extracted text and information
+        JSONResponse with extracted text
     """
     # Validate file type
     if not (file.content_type.startswith("image/") or file.content_type == "application/pdf"):
@@ -150,11 +202,11 @@ async def perform_ocr(
             detail="Uploaded file must be an image or a PDF."
         )
 
-    # Validate that keywords are provided
-    if not keywords:
+    # Validate document type
+    if not document_type or document_type not in DOCUMENT_KEYWORDS:
         raise HTTPException(
             status_code=400,
-            detail="Must provide keywords to extract"
+            detail=f"Invalid document type. Must be one of: {', '.join(DOCUMENT_KEYWORDS.keys())}"
         )
 
     # Save the uploaded file
@@ -173,27 +225,33 @@ async def perform_ocr(
 
         # Perform AI extraction
         client = get_ai_client()
-        results = {}
-        extracted_info = extract_document_info(
-            extracted_text,
-            keywords,
-            client
+        keyword_list = DOCUMENT_KEYWORDS.get(document_type, [])
+        ocr_result = OCRResult(
+            documents={document_name: {"text": extracted_text, "document_type": document_type}}, 
+            document_type=document_type
         )
-        results[document_name] = extracted_info
+
+        results = {}
+        for doc_type, doc_data in ocr_result.documents.items():
+            extracted_info = extract_document_info(
+                # document_type,
+                doc_data['text'],
+                keyword_list,
+                client
+            )
+            results[doc_type] = extracted_info
 
         return {
             "status": "success",
             "results": results,
             "total_documents": len(results),
-            "keywords": keywords,
-            "extracted_text": extracted_text
+            "keywords": keyword_list
         }
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     finally:
         cleanup_file(file_path)
-
 
 # # Signature validation endpoint
 @app.post("/validate-signature/")
