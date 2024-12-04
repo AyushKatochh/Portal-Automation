@@ -12,3 +12,4 @@ pydantic
 asn1crypto
 python-dateutil
 pypdf
+groq
