@@ -1,95 +1,126 @@
 /* Container for the entire form */
 .uploadForm {
-  width: 80%;
+  width: 70%;
   margin: 2rem auto;
   padding: 2rem;
-  background-color: #fff;
+  background-color: #f9f9f9;
   border: 1px solid #ddd;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
 }
 
 /* Heading Styles */
 .uploadForm h2 {
-  color: #1E90FF;  /* Blue color */
+  color: #1E90FF;
   font-size: 2rem;
-  margin-bottom: 0.5rem;
-  text-align: left;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: bold;
 }
 
 .uploadForm hr {
   border: 0;
-  height: 2px;
-  background-color: #1E90FF;  /* Blue color */
-  width: 50%;  /* Adjust width of the line */
+  height: 3px;
+  background-color: #1E90FF;
+  width: 60%;
+  margin: 1rem auto;
+  border-radius: 3px;
+}
+
+/* Dropdown and file input */
+.dropdownContainer {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
   margin-bottom: 1rem;
 }
 
-/* Label for the file input */
-.uploadForm label {
-  font-size: 1.1rem;
-  font-weight: bold;
-  color: #333;
-}
-
-/* List of files to be uploaded */
-.uploadForm ul {
-  list-style: none;
-  padding-left: 0;
-  font-size: 1rem;
-  margin-bottom: 1rem;
-  color: #333;
-}
-
-.uploadForm li {
-  margin-bottom: 0.5rem;
-}
-
-/* File input styling */
-.uploadForm input[type="file"] {
+.dropdown {
   padding: 0.5rem;
-  margin-bottom: 1rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 60%;
+}
+
+.fileInput {
+  padding: 0.5rem;
   font-size: 1rem;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
 
-/* Submit Button Styling */
-.submitButton {
-  background-color: #1E90FF;  /* Blue color */
-  color: white;
-  padding: 0.8rem 2rem;
+/* Uploaded documents */
+.uploadedDocsContainer {
+  margin-top: 1rem;
+}
+
+.uploadedDocRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.docName {
   font-size: 1rem;
+  font-weight: bold;
+  color: #555;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.editButton {
+  background-color: #ff6347;
+  color: white;
   border: none;
+  padding: 0.5rem 1rem;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-.submitButton:hover {
-  background-color: #3b8ee6;  /* Darker blue on hover */
+.editButton:hover {
+  background-color: #ff2d1a;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .uploadForm {
-    width: 90%;
-  }
+/* Preview Window */
+.previewWindow {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
 
-  .uploadForm h2 {
-    font-size: 1.6rem;
-  }
+.previewWindow h3 {
+  color: #333;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
 
-  .uploadForm ul {
-    font-size: 0.9rem;
-  }
+.previewIframe {
+  width: 100%;
+  height: 300px;
+  border: none;
+  border-radius: 6px;
+}
 
-  .uploadForm input[type="file"] {
-    font-size: 0.9rem;
-  }
-
-  .submitButton {
-    padding: 0.7rem 1.5rem;
-    font-size: 0.9rem;
-  }
+.loaderContainer {
+  position: fixed; /* Use fixed positioning to cover the whole viewport */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white; /* Set background color to white */
+  z-index: 100; /* Ensure the loader is on top */
 }

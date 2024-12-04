@@ -5,6 +5,7 @@ import { AppProvider } from './Context/AppContext';
 import Homepage from './components/Homepage'; // Fixed import
 import HomeLink from './components/HomeLink';
 import Footer from './components/Footer';
+import ScrutinyCommittee from './components/ScrutinyCommittee';
 import ApprovalProcess from './components/ApprovalProcess';
 import SignIn from './components/SignIn';
 import './App.css';
@@ -18,6 +19,7 @@ function App() {
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/approval-process" element={<ApprovalProcess />} />
           <Route path="/HomeLink" element={<HomeLink />} />
+          <Route path="/scrutiny-committee" element={<ScrutinyCommittee />} />
         </Routes>
       </Router>
       <Footer />

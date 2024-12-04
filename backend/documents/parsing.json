@@ -1,0 +1,65 @@
+{
+  "affidavit": {
+    "stamp_paper_type": null,
+    "notary_registration_number": null,
+    "oath_commissioner_name": null,
+    "verification_place": null,
+    "verification_date": null,
+    "executant_name": "Chief Fire Officer",
+    "executant_designation": null
+  },
+  "architect_certificate": {
+    "approval_authority": "Ahmedabad Municipal Corporation",
+    "approval_number": null,
+    "approval_date": "04/07/2018",
+    "room_details": null,
+    "occupancy_certificate": null,
+    "structural_stability_certificate": null
+  },
+  "fire_safety_certificate": {
+    "certificate_number": null,
+    "issuing_authority": "Ahmedabad Municipal Corporation",
+    "issuance_date": "04/07/2018",
+    "expiry_date": "31/07/2019",
+    "fire_equipment_details": {
+      "hydrant_system": {
+        "main_pump": 1,
+        "hydrants_valve": 8,
+        "butterfly_valve": 2,
+        "hose_reel_with_hose_drum": 6,
+        "hose_box": 6,
+        "fire_bridge_inlet": 1
+      },
+      "fire_alarm_system": "Installed",
+      "autoglo_signages": "Installed",
+      "fire_extinguishers": {
+        "co2_type": 11,
+        "abc_type": 15
+      }
+    }
+  },
+  "land_conversion_certificate": {
+    "certificate_number": null,
+    "issuing_authority": "Office of the Sub-Divisional Land and Land Reforms Officer, Asansol, Dist. Burdwan",
+    "issue_date": "30/06/2016",
+    "validity_period": null,
+    "applicant_name": "Smt. Rita Keshri",
+    "contact_information": "River Side Road, near Neheru Park, P.O. Burnpur, P.S. Hirapur, Dist. Burdwan",
+    "location": "Hirapur",
+    "area_of_land": "0.11 Acres"
+  },
+  "mou_document": {
+    "indian_institute_name": "Zebar School for Children",
+    "foreign_institute_name": null,
+    "document_reference_number": null,
+    "date_of_issue": "04/07/2018",
+    "event_date": null,
+    "event_time": null,
+    "venue": "Opp. Suyog Apartment, B/h. Copper Stone, Thaltej, Ahmedabad",
+    "purpose": "Fire NOC",
+    "key_participants": [
+      "Chief Fire Officer",
+      "Ahmedabad Municipal Corporation"
+    ]
+  }
+}
