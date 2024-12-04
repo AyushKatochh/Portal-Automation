@@ -3,6 +3,9 @@ from fastapi import FastAPI, HTTPException, UploadFile, File, Body
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
+from openai import OpenAI
+from groq import Groq
+import uvicorn
 
 from utils import (
     DOCUMENT_KEYWORDS,
