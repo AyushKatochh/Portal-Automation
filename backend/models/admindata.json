@@ -81,3 +81,242 @@
     }
   ]
   
+
+
+  
+
+  {
+    "document_type": "land_conversion_certificate",
+    "combined_result": {
+      "document_type": "land_conversion_certificate",
+      "ocr_extraction": {
+        "certificate_number": null,
+        "issuing_authority": "Office of the Sub-Divisional Land and Land Reforms Officer, Asansol, Dist. Burdwan",
+        "issue_date": "30/06/2016",
+        "validity_period": null,
+        "applicant_name": "Smt. Rita Keshri",
+        "contact_information": "W/O- Satish Kumar Keshri, of River Side Road, near Neheru Park, P.O. Burnpur, P.S. Hirapur, Dist. Burdwan",
+        "location": "Hirapur, Dist. Burdwan",
+        "area_of_land": "0.11 Acres"
+      },
+      "signatures": [
+        {
+          "type": "signature",
+          "signature": "Signature(digest_algorithm=sha256, signature_algorithm=rsassa_pkcs1v15, content_type=data, type=signature, signer_contact_info=, signer_location=, signing_time=2024-12-03 09:38:12-05:00, signature_type=adbe.pkcs7.detached, signature_handler=Adobe.PPKLite)",
+          "signer_name": "DigiSigner",
+          "signing_time": "2024-12-03 09:38:12-05:00",
+          "certificate": {
+            "validity": {
+              "not_before": "2023-03-18 08:42:20+00:00",
+              "not_after": "2026-03-17 08:42:19+00:00"
+            },
+            "issuer": "Issuer(country_name=CH, organization_name=WISeKey, common_name=WISeKey CertifyID Personal GB CA 3)",
+            "subject": {
+              "common_name": "DigiSigner",
+              "serial_number": "None"
+            }
+          }
+        }
+      ]
+    },
+    "validation_result": {
+      "overall_validity": true,
+      "confidence_score": 95,
+      "field_validations": {
+        "document_type": {
+          "is_valid": true,
+          "confidence_score": 100,
+          "notes": "Matches the expected document type 'land_conversion_certificate'."
+        },
+        "issuing_authority": {
+          "is_valid": true,
+          "confidence_score": 95,
+          "notes": "Valid issuing authority with a clear mention of the office and location."
+        },
+        "issue_date": {
+          "is_valid": true,
+          "confidence_score": 100,
+          "notes": "Valid date format 'DD/MM/YYYY'."
+        },
+        "validity_period": {
+          "is_valid": false,
+          "confidence_score": 0,
+          "notes": "Field is empty/null, expected a valid date range or duration."
+        },
+        "applicant_name": {
+          "is_valid": true,
+          "confidence_score": 100,
+          "notes": "Valid applicant name with a clear mention of the person's name."
+        },
+        "contact_information": {
+          "is_valid": true,
+          "confidence_score": 100,
+          "notes": "Valid contact information with a clear mention of the address."
+        },
+        "location": {
+          "is_valid": true,
+          "confidence_score": 100,
+          "notes": "Valid location with a clear mention of the area and district."
+        },
+        "area_of_land": {
+          "is_valid": true,
+          "confidence_score": 100,
+          "notes": "Valid area of land with a clear mention of the measurement unit."
+        },
+        "signatures": {
+          "is_valid": true,
+          "confidence_score": 95,
+          "notes": "Valid digital signature with a clear mention of the signer's name, signing time, and certificate details."
+        }
+      },
+      "validation_notes": "The document appears to be a valid land conversion certificate with all necessary information. However, the validity period is missing, which might be essential for determining the certificate's expiration date.",
+      "potential_issues": [
+        "Validity period is empty/null, which may affect the certificate's usability.",
+        "The digital signature's certificate validity period is not explicitly linked to the certificate's issue date or validity period."
+      ]
+    }
+  }
+
+
+
+
+
+
+  {
+    "document_type": "fire_safety_certificate",
+    "combined_result": {
+      "document_type": "fire_safety_certificate",
+      "ocr_extraction": {
+        "certificate_number": null,
+        "issuing_authority": "Ahmedabad Municipal Corporation",
+        "issuance_date": "04/07/2018",
+        "expiry_date": "31/07/2019",
+        "fire_equipment_details": {
+          "hydrant_system": {
+            "main_pump": 1,
+            "hydrants_valve": 8,
+            "butterfly_valve": 2,
+            "hose_reel_with_hose_drum": 6,
+            "hose_box": 6,
+            "fire_bridge_inlet": 1
+          },
+          "fire_alarm_system": "Installed",
+          "autoglo_signages": "Installed",
+          "fire_extinguishers": {
+            "co2_type": 11,
+            "abc_type": 15
+          }
+        }
+      },
+      "signatures": [
+        {
+          "type": "signature",
+          "signature": "Signature(digest_algorithm=sha256, signature_algorithm=rsassa_pkcs1v15, content_type=data, type=signature, signer_contact_info=, signer_location=, signing_time=2024-12-03 08:00:01-05:00, signature_type=adbe.pkcs7.detached, signature_handler=Adobe.PPKLite)",
+          "signer_name": "DigiSigner",
+          "signing_time": "2024-12-03 08:00:01-05:00",
+          "certificate": {
+            "validity": {
+              "not_before": "2023-03-18 08:42:20+00:00",
+              "not_after": "2026-03-17 08:42:19+00:00"
+            },
+            "issuer": "Issuer(country_name=CH, organization_name=WISeKey, common_name=WISeKey CertifyID Personal GB CA 3)",
+            "subject": {
+              "common_name": "DigiSigner",
+              "serial_number": "None"
+            }
+          }
+        }
+      ]
+    },
+    "validation_result": {
+      "overall_validity": true,
+      "confidence_score": 95,
+      "field_validations": {
+        "document_type": {
+          "is_valid": true,
+          "confidence_score": 100,
+          "notes": "matches expected document type"
+        },
+        "ocr_extraction.certificate_number": {
+          "is_valid": false,
+          "confidence_score": 0,
+          "notes": "null value, expected a valid certificate number"
+        },
+        "ocr_extraction.issuing_authority": {
+          "is_valid": true,
+          "confidence_score": 100,
+          "notes": "matches expected format for issuing authority"
+        },
+        "ocr_extraction.issuance_date": {
+          "is_valid": true,
+          "confidence_score": 100,
+          "notes": "matches expected format for date (DD/MM/YYYY)"
+        },
+        "ocr_extraction.expiry_date": {
+          "is_valid": true,
+          "confidence_score": 100,
+          "notes": "matches expected format for date (DD/MM/YYYY)"
+        },
+        "ocr_extraction.fire_equipment_details.hyrant_system": {
+          "is_valid": true,
+          "confidence_score": 100,
+          "notes": "matches expected format for hydrant system details"
+        },
+        "ocr_extraction.fire_equipment_details.fire_alarm_system": {
+          "is_valid": true,
+          "confidence_score": 100,
+          "notes": "matches expected format for fire alarm system"
+        },
+        "ocr_extraction.fire_equipment_details.autoglo_signages": {
+          "is_valid": true,
+          "confidence_score": 100,
+          "notes": "matches expected format for autoglo signages"
+        },
+        "ocr_extraction.fire_equipment_details.fire_extinguishers": {
+          "is_valid": true,
+          "confidence_score": 100,
+          "notes": "matches expected format for fire extinguishers"
+        },
+        "signatures[0].type": {
+          "is_valid": true,
+          "confidence_score": 100,
+          "notes": "matches expected signature type"
+        },
+        "signatures[0].signature": {
+          "is_valid": true,
+          "confidence_score": 100,
+          "notes": "matches expected signature format"
+        },
+        "signatures[0].signer_name": {
+          "is_valid": true,
+          "confidence_score": 100,
+          "notes": "matches expected signer name"
+        },
+        "signatures[0].signing_time": {
+          "is_valid": true,
+          "confidence_score": 100,
+          "notes": "matches expected signing time format"
+        },
+        "signatures[0].certificate.validity": {
+          "is_valid": true,
+          "confidence_score": 100,
+          "notes": "matches expected certificate validity format"
+        },
+        "signatures[0].certificate.issuer": {
+          "is_valid": true,
+          "confidence_score": 100,
+          "notes": "matches expected certificate issuer format"
+        },
+        "signatures[0].certificate.subject": {
+          "is_valid": true,
+          "confidence_score": 100,
+          "notes": "matches expected certificate subject format"
+        }
+      },
+      "validation_notes": "The document appears to be a valid fire safety certificate with all required fields present. However, the certificate number is missing.",
+      "potential_issues": [
+        "Certificate number is missing",
+        "Verify the authenticity of the signature and certificate"
+      ]
+    }
+  }

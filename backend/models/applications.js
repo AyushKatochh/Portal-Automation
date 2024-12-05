@@ -22,8 +22,10 @@ const applicationSchema = new mongoose.Schema({
     uploads:[{
         filename:{type: String},
         url:{type: String},
+        doc_id: [{ type: mongoose.Schema.Types.ObjectId, ref: 'DocResult', required: true }],
+
     }],
-    institute_id: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Institute', required: false }], // allocated applications
+    institute_id: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Institute', required: true }], // allocated applications
     
   });
   
