@@ -1,93 +1,88 @@
-// src/components/Step3.js
-import React from 'react';
-import styles from './Step3.module.css';
+import React, { useState } from "react";
+import styles from "./Step3.module.css";
 
 const Step3 = () => {
+  const [contactDetails, setContactDetails] = useState({
+    title: "",
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    address: "",
+    designation: "",
+    state: "",
+    city: "",
+    postalCode: "",
+    stdCode: "",
+    mobileNumber: "",
+    emailAddress: "",
+  });
+
+  const handleChange = (e) => {
+    setContactDetails({ ...contactDetails, [e.target.id]: e.target.value });
+  };
+
+  const handleSave = async () => {
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    console.log("LocalStorage Data:", userData);
+  
+    if (!userData || !userData.userName || !userData.instituteName) {
+      alert("User data not found in localStorage.");
+      return;
+    }
+  
+    try {
+      const response = await fetch("http://localhost:5000/save-contact-details", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Institute-Name": userData.instituteName, // Send instituteName in the headers
+        },
+        body: JSON.stringify({
+          userName: userData.userName, // Pass the userName from localStorage
+          contactDetails, // Pass the contactDetails to save
+        }),
+      });
+  
+      const result = await response.json();
+      console.log("Response:", result);
+  
+      if (response.ok) {
+        alert("Details saved successfully!");
+      } else {
+        alert(result.message || "Failed to save details.");
+      }
+    } catch (error) {
+      console.error("Error saving details:", error);
+      alert("An error occurred while saving details.");
+    }
+  };
+  
+
   return (
     <div className={styles.step3Container}>
-      <div className={styles.header}> {/* Added header container */}
+      <div className={styles.header}>
         <h2>Contact</h2>
-        <hr className={styles.horizontalLine} /> {/* Added horizontal line */}
+        <hr className={styles.horizontalLine} />
       </div>
       <div className={styles.inputFields}>
-        <div className={styles.inputGroup}>
-          <label htmlFor="title" className={styles.label}>
-            Title:
-          </label>
-          <select id="title" className={styles.input}>
-            <option value="Mr.">Mr.</option>
-            <option value="Ms.">Ms.</option>
-            <option value="Dr.">Dr.</option>
-          </select>
-        </div>
-        <div className={styles.inputGroup}>
-          <label htmlFor="firstName" className={styles.label}>
-            First Name:
-          </label>
-          <input type="text" id="firstName" className={styles.input} />
-        </div>
-        {/* Add other input fields similarly */}
-        <div className={styles.inputGroup}>
-            <label htmlFor="middleName" className={styles.label}>
-            Middle Name:
+        {Object.keys(contactDetails).map((key) => (
+          <div className={styles.inputGroup} key={key}>
+            <label htmlFor={key} className={styles.label}>
+              {key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1")}:
             </label>
-            <input type="text" id="middleName" className={styles.input} />
-        </div>
-        <div className={styles.inputGroup}>
-            <label htmlFor="lastName" className={styles.label}>
-            Last Name:
-            </label>
-            <input type="text" id="lastName" className={styles.input} />
-        </div>
-        <div className={styles.inputGroup}>
-            <label htmlFor="address" className={styles.label}>
-            Address:
-            </label>
-            <input type="text" id="address" className={styles.input} />
-        </div>
-        <div className={styles.inputGroup}>
-            <label htmlFor="designation" className={styles.label}>
-            Designation:
-            </label>
-            <input type="text" id="designation" className={styles.input} />
-        </div>
-        <div className={styles.inputGroup}>
-            <label htmlFor="state" className={styles.label}>
-            State/UT:
-            </label>
-            <input type="text" id="state" className={styles.input} />
-        </div>
-        <div className={styles.inputGroup}>
-            <label htmlFor="city" className={styles.label}>
-            Town/City/Village:
-            </label>
-            <input type="text" id="city" className={styles.input} />
-        </div>
-        <div className={styles.inputGroup}>
-            <label htmlFor="postalCode" className={styles.label}>
-            Postal Code:
-            </label>
-            <input type="text" id="postalCode" className={styles.input} />
-        </div>
-        <div className={styles.inputGroup}>
-            <label htmlFor="stdCode" className={styles.label}>
-            STD Code:
-            </label>
-            <input type="text" id="stdCode" className={styles.input} />
-        </div>
-        <div className={styles.inputGroup}>
-            <label htmlFor="mobileNumber" className={styles.label}>
-            Mobile Number:
-            </label>
-            <input type="text" id="mobileNumber" className={styles.input} />
-        </div>
-        <div className={styles.inputGroup}>
-            <label htmlFor="emailAddress" className={styles.label}>
-            Email Address:
-            </label>
-            <input type="email" id="emailAddress" className={styles.input} />
-        </div>
+            <input
+              type={key === "emailAddress" ? "email" : "text"}
+              id={key}
+              className={styles.input}
+              value={contactDetails[key]}
+              onChange={handleChange}
+            />
+          </div>
+        ))}
       </div>
+      <button onClick={handleSave} className={styles.saveButton}>
+        Save Details
+      </button>
     </div>
   );
 };

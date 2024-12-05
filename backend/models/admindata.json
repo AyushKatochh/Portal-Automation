@@ -1,0 +1,83 @@
+[
+    {
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "password": "hashedpassword1",
+      "userName": "johndoe123",
+      "committee": "Scrutiny",
+      "applicatins": []
+    },
+    {
+      "name": "Jane Smith",
+      "email": "jane.smith@example.com",
+      "password": "hashedpassword2",
+      "userName": "janesmith321",
+      "committee": "Rescrutiny",
+      "applicatins": []
+    },
+    {
+      "name": "Robert Brown",
+      "email": "robert.brown@example.com",
+      "password": "hashedpassword3",
+      "userName": "robertbrown789",
+      "committee": "Expert Visit",
+      "applicatins": []
+    },
+    {
+      "name": "Emily Davis",
+      "email": "emily.davis@example.com",
+      "password": "hashedpassword4",
+      "userName": "emilydavis456",
+      "committee": "Scrutiny",
+      "applicatins": []
+    },
+    {
+      "name": "Michael Wilson",
+      "email": "michael.wilson@example.com",
+      "password": "hashedpassword5",
+      "userName": "michaelwilson654",
+      "committee": "Scrutiny",
+      "applicatins": []
+    },
+    {
+      "name": "Sophia Martinez",
+      "email": "sophia.martinez@example.com",
+      "password": "hashedpassword6",
+      "userName": "sophiamartinez987",
+      "committee": "Rescrutiny",
+      "applicatins": []
+    },
+    {
+      "name": "James Anderson",
+      "email": "james.anderson@example.com",
+      "password": "hashedpassword7",
+      "userName": "jamesanderson852",
+      "committee": "Expert Visit",
+      "applicatins": []
+    },
+    {
+      "name": "Olivia Taylor",
+      "email": "olivia.taylor@example.com",
+      "password": "hashedpassword8",
+      "userName": "oliviataylor951",
+      "committee": "Executive",
+      "applicatins": []
+    },
+    {
+      "name": "William Thomas",
+      "email": "william.thomas@example.com",
+      "password": "hashedpassword9",
+      "userName": "williamthomas753",
+      "committee": "Scrutiny",
+      "applicatins": []
+    },
+    {
+      "name": "Mia Johnson",
+      "email": "mia.johnson@example.com",
+      "password": "hashedpassword10",
+      "userName": "miajohnson159",
+      "committee": "Rescrutiny",
+      "applicatins": []
+    }
+  ]
+  
