@@ -43,7 +43,123 @@ app.add_middleware(
 UPLOAD_FOLDER = "./uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# Comprehensive document type to keywords mapping
+@app.post("/process-and-validate/")
+async def process_document_comprehensively(file: UploadFile = File(...), document_type: str = File(...)):
+
+    # Validate file type
+    if not (file.content_type.startswith("image/") or file.content_type == "application/pdf"):
+        raise HTTPException(
+            status_code=400,
+            detail="Uploaded file must be an image or a PDF."
+        )
+
+    # Validate document type
+    if not document_type or document_type not in DOCUMENT_KEYWORDS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid document type. Must be one of: {', '.join(DOCUMENT_KEYWORDS.keys())}"
+        )
+
+    # Save the uploaded file
+    file_path = os.path.join(UPLOAD_FOLDER, file.filename)
+    document_name = os.path.basename(file_path)
+
+    try:
+        # Save file
+        with open(file_path, "wb") as f:
+            f.write(await file.read())
+
+        # Perform OCR extraction
+        client = get_ai_client()
+        keyword_list = DOCUMENT_KEYWORDS.get(document_type, [])
+        
+        # Extract text via OCR
+        extracted_text = process_document_for_ocr(
+            file_path,
+            is_pdf=(file.content_type == "application/pdf")
+        )
+
+        # Perform information extraction
+        extracted_info = extract_document_info(
+            extracted_text,
+            keyword_list,
+            client
+        )
+
+        # Validate signatures (if PDF)
+        signatures_info = []
+        if file.content_type == "application/pdf":
+            try:
+                for signature in get_pdf_signatures(file_path):
+                    certificate = signature.certificate
+                    subject = certificate.subject
+
+                    signature_details = {
+                        "type": str(signature.type),
+                        "signature": str(signature),
+                        "signer_name": str(signature.signer_name),
+                        "signing_time": str(signature.signing_time),
+                        "certificate": {
+                            "validity": {
+                                "not_before": str(certificate.validity.not_before),
+                                "not_after": str(certificate.validity.not_after),
+                            },
+                            "issuer": str(certificate.issuer),
+                            "subject": {
+                                "common_name": str(subject.common_name),
+                                "serial_number": str(subject.serial_number),
+                            }
+                        }
+                    }
+                    signatures_info.append(signature_details)
+            except Exception as sig_error:
+                # signatures_info = [{"error": str(sig_error)}]
+                        # except Exception as sig_error:
+                return JSONResponse(
+                    content={
+                        "status": "error", 
+                        "message": f"Signature Validation Failed: {str(sig_error)}"
+                    }, 
+                    status_code=400
+                )
+
+        # Combine results
+        combined_result = {
+            "document_type": document_type,
+            "ocr_extraction": extracted_info['extracted_data'],
+            "signatures": signatures_info
+        }
+        
+
+ 
+        validation_result = validator.validate_document(
+                    document_type=combined_result['document_type'],
+                    json_data=combined_result
+                )
+        # return validation_result
+        #     except Exception as e:
+        #     raise HTTPException(status_code=500, detail=str(e))
+        
+        final_result={
+                "document_type":document_type,
+                "combined_result":combined_result,
+                "validation_result":validation_result,
+                
+            }
+        
+        return JSONResponse(content=final_result, status_code=200)
+
+    except Exception as e:
+        return JSONResponse(
+            content={
+                "status": "error", 
+                "message": str(e)
+            }, 
+            status_code=500
+        )
+    finally:
+        # Always cleanup the uploaded file
+        cleanup_file(file_path)
 @app.post("/validate-document", response_model=dict)
 async def validate_document(request: DocumentValidationRequest):
     """
@@ -135,7 +251,6 @@ async def process_document_comprehensively(file: UploadFile = File(...), documen
 
         # Combine results
         combined_result = {
-            "status": "success",
             "document_type": document_type,
             "ocr_extraction": extracted_info['extracted_data'],
             "signatures": signatures_info

@@ -1,46 +1,68 @@
-// src/components/SignIn.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import aicteLogo from '../assets/aicte_logo.png';
-import leftImage from '../assets/signu-in-table.png'; 
+import leftImage from '../assets/signu-in-table.png';
 import styles from './SignIn.module.css';
-import LoadingIcon from '../assets/loader.gif'; 
+import LoadingIcon from '../assets/loader.gif';
 
 const SignIn = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    setIsLoading(true); // Show the loader
-
-    // Simulate a delay of 2 seconds
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    if (username === 'test' && password === 'test') {
-      navigate('/HomeLink'); 
-    } else {
-      alert('Incorrect username or password');
+    setIsLoading(true);
+    setError(''); 
+  
+    try {
+      const response = await fetch('http://localhost:5000/authenticate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userName: username, password }), 
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+  
+        // Store ONLY necessary user data in local storage
+        localStorage.setItem('userData', JSON.stringify({ 
+          userName: data.institute.userName, 
+          instituteName: data.institute.name 
+        }));
+  
+        navigate('/HomeLink'); 
+      } else {
+        // Handle authentication error (extract the error message)
+        const errorData = await response.json(); 
+        setError(errorData.message || 'Incorrect username or password'); 
+      }
+    } catch (error) {
+      // Handle network errors or other exceptions
+      console.error("Error during authentication:", error); // Log for debugging
+      setError('An error occurred. Please try again later.'); 
+    } finally {
+      setIsLoading(false); 
     }
-
-    setIsLoading(false); // Hide the loader
   };
 
   return (
     <div className={styles.signInPage}>
       <img src={leftImage} alt="Left" className={styles.leftImage} />
-      <div className={styles.signInContainer}> 
-        {isLoading && ( 
+      <div className={styles.signInContainer}>
+        {isLoading && (
           <div className={styles.loaderContainer}>
             <img src={LoadingIcon} alt="Loading" className={styles.loadingIcon} />
           </div>
         )}
         <img src={aicteLogo} alt="AICTE Logo" className={styles.aicteLogo} />
         <form onSubmit={handleSubmit} className={styles.form}>
+          {error && <div className={styles.error}>{error}</div>} {/* Display error message */}
           <input
             type="text"
             placeholder="Username"
@@ -51,12 +73,12 @@ const SignIn = () => {
           <input
             type="password"
             placeholder="Password"
-            className={styles.inputField}
+            className={styles.inputField} 
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
           <button type="submit" className={styles.signInButton} disabled={isLoading}>
-            {isLoading ? ( 
+            {isLoading ? (
               <img src={LoadingIcon} alt="Loading" className={styles.loadingIcon} />
             ) : (
               'Sign In'
