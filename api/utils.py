@@ -22,25 +22,25 @@ from openai import OpenAI
 
 DOCUMENT_KEYWORDS = {
     "fire_safety_certificate": [
-        "certificate_number", "issuing_authority", "issuance_date", 
+        "certificate_name","certificate_number", "issuing_authority", "issuance_date", 
         "expiry_date", "fire_equipment_details"
     ],
     "land_conversion_certificate": [
-        "certificate_number", "issuing_authority", "issue_date", "applicant_name", "contact_information", 
+        "certificate_name","certificate_number", "issuing_authority", "issue_date", "applicant_name", "contact_information", 
         "location", "area_of_land"
     ],
     "affidavit": [
-        "stamp_paper_type", "notary_registration_number", 
+        "certificate_name","stamp_paper_type", "notary_registration_number", 
         "oath_commissioner_name", "verification_place", 
         "verification_date", "executant_name", "executant_designation"
     ],
     "bank_certificate": [
-        "account_holder_name", "account_number", "bank_name", 
+        "certificate_name","account_holder_name", "account_number", "bank_name", 
         "bank_address", "fdr_details", "balance_verification", 
         "certificate_date", "certificate_place"
     ],
     "architect_certificate": [
-        "approval_authority", "approval_number", "approval_date", 
+        "certificate_name","approval_authority", "approval_number", "approval_date", 
         "room_details", "occupancy_certificate", "structural_stability_certificate"
     ],
     "mou_document": [
@@ -50,7 +50,7 @@ DOCUMENT_KEYWORDS = {
         "key_participants"
     ],
     "occupancy_certificate": [
-        "memo_number", "date_of_issue", "holding_number", 
+       "certificate_name", "memo_number", "date_of_issue", "holding_number", 
         "street", "ward_number", "building_type"
     ]
 }
@@ -225,14 +225,17 @@ class GroqDocumentValidator:
         validation_instructions = {
             "Fire Safety Certificate": """
             Validation Criteria for Fire Safety Certificate:
+            -Certificate Name: Ensure the Name of the certificate is a Fire Safety one.
             - Certificate Number: Validate for proper format and uniqueness.
             - Issuing Authority: Ensure the authority details are correct and valid.
             - Issuance Date & Expiry Date: Confirm validity period and format.
             - Authorized Signature and Seal: Verify the presence and authenticity of the signature and seal.
-            - Fire Equipment Details: Check for accurate and complete equipment information.
+            - Fire Equipment Details: Check for accurate and complete equipment information.(Compulsory else document shall be considered invalid)
+            if Fire Equipment Detail is not mentioned or Null, the document is invalid
             """,
             "Land Conversion Certificate": """
             Validation Criteria for Land Conversion Certificate:
+            - Certificate Name: Ensure the Name of the certificate is a Land Conversion.
             - Certificate Number: Verify proper format and uniqueness.
             - Issuing Authority: Ensure the government authority details are correct.
             - Issue Date : Confirm issue date, and renewal requirements.
@@ -243,12 +246,14 @@ class GroqDocumentValidator:
             """,
             "Affidavit 2": """
             Validation Criteria for Affidavit 2:
+            - Certificate Name: Ensure the Name of the certificate is a Affidavit.
             - Non-Judicial Stamp Paper: Confirm value (Rs. 100/-) and judicial details.
             - Notary Public & Oath Commissioner: Validate registration number, seals, and signatures.
             - Verification Details: Ensure the place, date, and executant's information are correct.
             """,
             "Bank Certificate": """
             Validation Criteria for Bank Certificate:
+            - Certificate Name: Ensure the Name of the certificate is a Bank Certificate.
             - Account Holder Name & Account Number: Validate for accuracy and consistency.
             - Bank Name & Address: Confirm bank details are correct and current.
             - FDR Details: Check the number, deposit date, maturity date, and amount.
@@ -257,12 +262,14 @@ class GroqDocumentValidator:
             """,
             "Architect Certificate": """
             Validation Criteria for Architect Certificate:
+            - Certificate Name: Ensure the Name of the certificate is a Architect Certificate.
             - Approval Authority: Validate the name, number, and date of approval.
             - Room Details: Check the number, type, area, and construction details.
             - Occupancy & Structural Stability Certificates: Confirm authenticity and validity.
             """,
             "MoU Document": """
             Validation Criteria for MoU Document:
+            
             - Names of Institutes: Confirm the names and roles of both Indian and foreign institutes.
             - Document Reference Number & Date of Issue: Validate for proper identification.
             - Event Details: Confirm the date, time, venue, and purpose of the event.
@@ -271,6 +278,7 @@ class GroqDocumentValidator:
             """,
             "Occupancy Certificate": """
             Validation Criteria for Occupancy Certificate:
+            - Certificate Name: Ensure the Name of the certificate is a Mou Document
             - Memo No. & Date of Issue: Verify for uniqueness and correctness.
             - Holding No. & Location: Confirm property details are accurate.
             - Building Type: Validate against the specified purpose.
