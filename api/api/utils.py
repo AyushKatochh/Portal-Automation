@@ -18,29 +18,35 @@ from dateutil.parser import parse
 from pypdf import PdfReader
 from groq import Groq
 from openai import OpenAI
+from datetime import timedelta
+from pymongo import MongoClient
 
+MONGO_URI = 'mongodb+srv://AyushKatoch:ayush2002@cluster0.72gtk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+client = MongoClient(MONGO_URI)
+db = client['aicte']
+admins_collection = db['admins']
 
 DOCUMENT_KEYWORDS = {
     "fire_safety_certificate": [
-        "certificate_number", "issuing_authority", "issuance_date", 
+        "document_name","certificate_number", "issuing_authority", "issuance_date", 
         "expiry_date", "fire_equipment_details"
     ],
     "land_conversion_certificate": [
-        "certificate_number", "issuing_authority", "issue_date", "applicant_name", "contact_information", 
+        "document_name","certificate_number", "issuing_authority", "issue_date", "applicant_name", "contact_information", 
         "location", "area_of_land"
     ],
     "affidavit": [
-        "stamp_paper_type", "notary_registration_number", 
+        "document_name","stamp_paper_type", "notary_registration_number", 
         "oath_commissioner_name", "verification_place", 
         "verification_date", "executant_name", "executant_designation"
     ],
     "bank_certificate": [
-        "account_holder_name", "account_number", "bank_name", 
+        "document_name","account_holder_name", "account_number", "bank_name", 
         "bank_address", "fdr_details", "balance_verification", 
         "certificate_date", "certificate_place"
     ],
     "architect_certificate": [
-        "approval_authority", "approval_number", "approval_date", 
+        "document_name","approval_authority", "approval_number", "approval_date", 
         "room_details", "occupancy_certificate", "structural_stability_certificate"
     ],
     "mou_document": [
@@ -50,7 +56,7 @@ DOCUMENT_KEYWORDS = {
         "key_participants"
     ],
     "occupancy_certificate": [
-        "memo_number", "date_of_issue", "holding_number", 
+       "document_name", "memo_number", "date_of_issue", "holding_number", 
         "street", "ward_number", "building_type"
     ]
 }
@@ -201,6 +207,14 @@ class GroqDocumentValidator:
             # Parse the JSON response
             validation_result = json.loads(llm_response)
 
+            # Enforce overall validity based on document type match
+            uploaded_doc_type = json_data.get('document_type', '').lower()
+            expected_doc_type = document_type.lower()
+            
+            if uploaded_doc_type != expected_doc_type:
+                validation_result['overall_validity'] = False
+                validation_result['validation_notes'] = f"Document type mismatch. Expected {expected_doc_type}, got {uploaded_doc_type}"
+
             # Post-process confidence scores
             for field, result in validation_result.get("field_validations", {}).items():
                 if "confidence_score" in result:
@@ -217,107 +231,142 @@ class GroqDocumentValidator:
     def _prepare_validation_prompt(self, document_type: str, json_data: Dict[Any, Any]) -> str:
         """
         Prepare a detailed prompt for LLM-based validation
-        :param document_type: Type of document
-        :param json_data: JSON data to validate
-        :return: Validation prompt
         """
-        # Validation rules based on the document type
-        validation_instructions = {
-            "Fire Safety Certificate": """
-            Validation Criteria for Fire Safety Certificate:
-            - Certificate Number: Validate for proper format and uniqueness.
-            - Issuing Authority: Ensure the authority details are correct and valid.
-            - Issuance Date & Expiry Date: Confirm validity period and format.
-            - Authorized Signature and Seal: Verify the presence and authenticity of the signature and seal.
-            - Fire Equipment Details: Check for accurate and complete equipment information.
-            """,
-            "Land Conversion Certificate": """
-            Validation Criteria for Land Conversion Certificate:
-            - Certificate Number: Verify proper format and uniqueness.
-            - Issuing Authority: Ensure the government authority details are correct.
-            - Issue Date : Confirm issue date, and renewal requirements.
-            - Name of the Applicant & Contact Information: Verify correctness and completeness.
-            - Location & Area of Land: Ensure accurate geographical and size information.
-            - From (Owner) - To (Institute): Validate ownership transfer details.
-            - Competent Authority's Seal and Signature: Confirm authenticity.
-            """,
-            "Affidavit 2": """
-            Validation Criteria for Affidavit 2:
-            - Non-Judicial Stamp Paper: Confirm value (Rs. 100/-) and judicial details.
-            - Notary Public & Oath Commissioner: Validate registration number, seals, and signatures.
-            - Verification Details: Ensure the place, date, and executant's information are correct.
-            """,
-            "Bank Certificate": """
-            Validation Criteria for Bank Certificate:
-            - Account Holder Name & Account Number: Validate for accuracy and consistency.
-            - Bank Name & Address: Confirm bank details are correct and current.
-            - FDR Details: Check the number, deposit date, maturity date, and amount.
-            - Balance Verification: Confirm the reported balance matches the records.
-            - Bank Manager’s Signature, Name & Seal: Validate for authenticity.
-            """,
-            "Architect Certificate": """
-            Validation Criteria for Architect Certificate:
-            - Approval Authority: Validate the name, number, and date of approval.
-            - Room Details: Check the number, type, area, and construction details.
-            - Occupancy & Structural Stability Certificates: Confirm authenticity and validity.
-            """,
-            "MoU Document": """
-            Validation Criteria for MoU Document:
-            - Names of Institutes: Confirm the names and roles of both Indian and foreign institutes.
-            - Document Reference Number & Date of Issue: Validate for proper identification.
-            - Event Details: Confirm the date, time, venue, and purpose of the event.
-            - Key Participants: Ensure the participants' names and designations are correct.
-            - Signature and Seal: Validate the authorized signatory and institutional seal.
-            """,
-            "Occupancy Certificate": """
-            Validation Criteria for Occupancy Certificate:
-            - Memo No. & Date of Issue: Verify for uniqueness and correctness.
-            - Holding No. & Location: Confirm property details are accurate.
-            - Building Type: Validate against the specified purpose.
-            - Signature and Seal: Confirm authenticity of the certificate.
-            """
-        }
+        # First, check if the uploaded document type matches the expected type
+        uploaded_doc_type = json_data.get('document_name', '').lower()
+        
 
-        specific_instructions = validation_instructions.get(document_type, "No specific validation instructions available.")
+        expected_doc_type = document_type.lower()
+
+        # Validation rules based on the document type
+        validation_guidelines = {
+                "fire_safety_certificate": {
+                "required_fields": [
+                "document_type",
+                "certificate_number",
+                "issuing_authority",
+                "issuance_date",
+                "expiry_date",
+                "fire_equipment_details"
+                ],
+                "validation_criteria": """
+                Validation Criteria for Fire Safety Certificate:
+                - Certificate Number must be unique and from a recognized authority
+                - Validate issuance and expiry dates
+                - Confirm comprehensive fire equipment details
+                """
+                },
+                "land_conversion_certificate": {
+                "required_fields": [
+                "document_type",
+                "certificate_number",
+                "issuing_authority",
+                "issue_date",
+                "applicant_name",
+                "location",
+                "area_of_land"
+                ],
+                "validation_criteria": """
+                Validation Criteria for Land Conversion Certificate:
+                - Ensure document type is exactly 'Land Conversion Certificate'
+                - Validate certificate number and issuing authority
+                - Confirm applicant details and land location
+                - Check area of land specifications
+                """
+                },
+                "affidavit": {
+                "required_fields": [
+                "document_type",
+                "stamp_paper_type",
+                "notary_registration_number",
+                "oath_commissioner_name",
+                "verification_place",
+                "verification_date",
+                "executant_name",
+                "executant_designation"
+                ],
+                "validation_criteria": """
+                Validation Criteria for Affidavit:
+                - Ensure document type is exactly 'Affidavit'
+                - Validate stamp paper details
+                - Confirm notary registration number
+                - Check verification details and executant information
+                """
+                },
+                "bank_certificate": {
+                "required_fields": [
+                "document_type",
+                "account_holder_name",
+                "account_number",
+                "bank_name",
+                "bank_address",
+                "fdr_details",
+                "balance_verification",
+                "certificate_date",
+                "certificate_place"
+                ],
+                "validation_criteria": """
+                Validation Criteria for Bank Certificate:
+                - Ensure document type is exactly 'Bank Certificate'
+                - Validate account holder and account details
+                - Confirm bank information
+                - Check FDR and balance verification details
+                """
+                }
+            }
+
+        # Prepare specific validation instructions
+        specific_instructions = validation_guidelines.get(expected_doc_type, {})
 
         prompt = f"""
-            Perform a comprehensive semantic validation of the following document:
+        CRITICAL VALIDATION RULES:
+        1. Document Type Matching: 
+           - Uploaded Document Type: {uploaded_doc_type}
+           - Expected Document Type: {expected_doc_type}
+           - STRICT REQUIREMENT: Should be Same.
+           - If types do NOT match, document is INVALID
 
-            Document Type: {document_type}
-            Document Data: {json.dumps(json_data, indent=2)}
+        Perform comprehensive semantic validation:
 
-{specific_instructions}
+        Document Type: {document_type}
+        Document Data: {json.dumps(json_data, indent=2)}
 
-            Response Format (MUST be a valid JSON):
-{{
-                "overall_validity": true/false,
-                "confidence_score": 0-100,
-                "field_validations": {{
-                    "field_name": {{
-                        "is_valid": true/false,
-                        "confidence_score": 0-100,
-                        "notes": "string"
-                    }}
-                }},
-                "validation_notes": "string with overall observations",
-                "potential_issues": ["list", "of", "potential", "problems"]
-}}
+        Validation Criteria:
+        {specific_instructions.get('validation_criteria', 'No specific validation criteria')}
 
-            Provide a thorough, precise, and structured validation response.
-            """
+        Required Fields: {specific_instructions.get('required_fields', [])}
+
+        Response Format (MUST be valid JSON):
+        {{
+            "overall_validity": true/false,
+            "confidence_score": 0-100,
+            "field_validations": {{
+                "document_type": {{
+                    "is_valid": true/false,
+                    "confidence_score": 0-100,
+                    "notes": "Type matching result"
+                }}
+            }},
+            "validation_notes": "Overall validation observations. keep it positive if confidence score is good else give it negative",
+            "potential_issues": ["list of potential problems"]
+        }}
+
+        VALIDATION PROCESS:
+        1. Check document type match first
+        2. If types match, perform detailed field validation
+        3. If types do NOT match, set overall_validity to FALSE
+        """
         return prompt
 
     def _adjust_confidence_score(self, score: int, field: str) -> int:
         """
-        Adjust confidence scores dynamically based on field importance and validation rules
-        :param score: Original confidence score
-        :param field: Field being validated
-        :return: Adjusted confidence score
+        Dynamically adjust confidence scores
         """
-        critical_fields = ["certificate_number", "issuing_authority", "authorized_signature"]
+        critical_fields = ["document_type", "certificate_number", "issuing_authority"]
         if field in critical_fields and score > 90:
-            return max(score - 5, 85)  # Slight penalty for critical fields
+            return max(score - 5, 85)
         return score
+
 
 validator = GroqDocumentValidator()
 
@@ -418,6 +467,44 @@ def extract_document_info(text: str, keywords: List[str], client: OpenAI) -> Dic
         }
 
 
+def get_members():
+    """
+    Retrieve members from the Scrutiny committee
+    
+    Returns:
+        List of members with their task details
+    """
+    member = []
+    admins = list(admins_collection.find({"committee": "Scrutiny"}))
+    for admin in admins:
+        admin_id = str(admin.get('_id'))
+        no_of_tasks = len(admin.get('applications', []))
+        if admin.get('applications'):
+            latest_deadline = max(app['deadline'] for app in admin['applications'])
+        else:
+            latest_deadline = datetime.min  # No applications allocated yet
+        member.append([admin_id, no_of_tasks, latest_deadline])
+    return member
+
+def allocate_task(members):
+    """
+    Allocate a task to the member with the least burden
+    
+    Args:
+        members (List): List of members and their task details
+    
+    Returns:
+        Updated list of members with task allocation
+    """
+    # Sort by number of tasks (ascending), then by earliest deadline
+    members.sort(key=lambda x: (x[1], x[2]))
+    
+    # Select the member with the least burden
+    selected_member = members[0]
+    selected_member[1] += 1  # Increment task count
+    selected_member[2] += timedelta(days=2)  # Extend deadline by 2 days
+
+    return members
 
 def parse_pkcs7_signatures(signature_data: bytes):
     """Parse a PKCS7 / CMS / CADES signature"""
