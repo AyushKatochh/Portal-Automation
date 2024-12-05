@@ -2,6 +2,7 @@ import os
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from pymongo import MongoClient
 from dotenv import load_dotenv
 import uvicorn
 
@@ -16,8 +17,9 @@ from utils import (
     extract_document_info,
     OCRResult,
     ExtractionRequest,
-    validator
-    
+    validator,
+    get_members,
+    allocate_task
 )
 
 # Load environment variables
@@ -42,6 +44,37 @@ app.add_middleware(
 # Directory to temporarily store uploaded files
 UPLOAD_FOLDER = "./uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+MONGO_URI = 'mongodb+srv://AyushKatoch:ayush2002@cluster0.72gtk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+client = MongoClient(MONGO_URI)
+db = client['aicte']
+admins_collection = db['admins']
+
+
+@app.get("/schedule_scrutiny")
+async def get_next_deadline():
+    """
+    Retrieve the next available member and their new deadline
+    
+    Returns:
+        Dict containing member ID and new deadline
+    """
+    try:
+        # Get current members
+        members = get_members()
+        
+        # Allocate task (which sorts and selects the least burdened member)
+        updated_members = allocate_task(members)
+        
+        # Select the first member (least burdened)
+        selected_member = updated_members[0]
+        
+        return {
+            "admin_id": selected_member[0],
+            "new_deadline": selected_member[2]
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.post("/process-and-validate/")
 async def process_document_comprehensively(file: UploadFile = File(...), document_type: str = File(...)):
@@ -160,6 +193,7 @@ async def process_document_comprehensively(file: UploadFile = File(...), documen
     finally:
         # Always cleanup the uploaded file
         cleanup_file(file_path)
+        
 @app.post("/validate-document", response_model=dict)
 async def validate_document(request: DocumentValidationRequest):
     """
@@ -333,6 +367,7 @@ async def root():
     return {
         "message": "Flexible Document Processing API is running",
         "endpoints": {
+            "Task Allocation for Scrutiny Members":"/schedule_scrutiny",
             "Comprehensive Processing": "/process_document/",
             "OCR and Extract": "/ocr_and_extract/",
             "Signature Validation": "/validate-signature/",

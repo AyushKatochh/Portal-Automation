@@ -18,7 +18,13 @@ from dateutil.parser import parse
 from pypdf import PdfReader
 from groq import Groq
 from openai import OpenAI
+from datetime import timedelta
+from pymongo import MongoClient
 
+MONGO_URI = 'mongodb+srv://AyushKatoch:ayush2002@cluster0.72gtk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+client = MongoClient(MONGO_URI)
+db = client['aicte']
+admins_collection = db['admins']
 
 DOCUMENT_KEYWORDS = {
     "fire_safety_certificate": [
@@ -461,6 +467,44 @@ def extract_document_info(text: str, keywords: List[str], client: OpenAI) -> Dic
         }
 
 
+def get_members():
+    """
+    Retrieve members from the Scrutiny committee
+    
+    Returns:
+        List of members with their task details
+    """
+    member = []
+    admins = list(admins_collection.find({"committee": "Scrutiny"}))
+    for admin in admins:
+        admin_id = str(admin.get('_id'))
+        no_of_tasks = len(admin.get('applications', []))
+        if admin.get('applications'):
+            latest_deadline = max(app['deadline'] for app in admin['applications'])
+        else:
+            latest_deadline = datetime.min  # No applications allocated yet
+        member.append([admin_id, no_of_tasks, latest_deadline])
+    return member
+
+def allocate_task(members):
+    """
+    Allocate a task to the member with the least burden
+    
+    Args:
+        members (List): List of members and their task details
+    
+    Returns:
+        Updated list of members with task allocation
+    """
+    # Sort by number of tasks (ascending), then by earliest deadline
+    members.sort(key=lambda x: (x[1], x[2]))
+    
+    # Select the member with the least burden
+    selected_member = members[0]
+    selected_member[1] += 1  # Increment task count
+    selected_member[2] += timedelta(days=2)  # Extend deadline by 2 days
+
+    return members
 
 def parse_pkcs7_signatures(signature_data: bytes):
     """Parse a PKCS7 / CMS / CADES signature"""
