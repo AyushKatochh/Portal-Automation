@@ -14,7 +14,7 @@ const Homepage = () => {
   const handleLoginClick = async () => {
     setIsLoading(true); // Show loader
     await new Promise(resolve => setTimeout(resolve, 2000)); // 2-second delay
-    navigate('/sign-in'); // Navigate to sign-in page
+    navigate('/sign-up'); // Navigate to sign-in page
   };
 
   return (

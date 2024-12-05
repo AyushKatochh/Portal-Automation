@@ -26,8 +26,7 @@ DOCUMENT_KEYWORDS = {
         "expiry_date", "fire_equipment_details"
     ],
     "land_conversion_certificate": [
-        "certificate_number", "issuing_authority", "issue_date", 
-        "validity_period", "applicant_name", "contact_information", 
+        "certificate_number", "issuing_authority", "issue_date", "applicant_name", "contact_information", 
         "location", "area_of_land"
     ],
     "affidavit": [
@@ -236,7 +235,7 @@ class GroqDocumentValidator:
             Validation Criteria for Land Conversion Certificate:
             - Certificate Number: Verify proper format and uniqueness.
             - Issuing Authority: Ensure the government authority details are correct.
-            - Issue Date & Validity Period: Confirm issue date, validity, and renewal requirements.
+            - Issue Date : Confirm issue date, and renewal requirements.
             - Name of the Applicant & Contact Information: Verify correctness and completeness.
             - Location & Area of Land: Ensure accurate geographical and size information.
             - From (Owner) - To (Institute): Validate ownership transfer details.
