@@ -225,7 +225,7 @@ class GroqDocumentValidator:
         validation_instructions = {
             "Fire Safety Certificate": """
             Validation Criteria for Fire Safety Certificate:
-            -Certificate Name: Ensure the Name of the certificate is a Fire Safety one.
+            - Certificate Name: Ensure the Name of the certificate is a Fire Safety one.
             - Certificate Number: Validate for proper format and uniqueness.
             - Issuing Authority: Ensure the authority details are correct and valid.
             - Issuance Date & Expiry Date: Confirm validity period and format.
