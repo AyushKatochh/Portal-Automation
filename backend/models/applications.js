@@ -7,11 +7,10 @@ const applicationSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
-    landDetail: {
-        location: { type: String },
-        totalArea: { type: String },
+    instituteName: {
+      type: String,
     },
-    contactDetail: {
+    contactDetails: {
         title: { type: String },
         firstName: { type: String },
         middleName: { type: String },
@@ -24,18 +23,45 @@ const applicationSchema = new mongoose.Schema({
         stdCode: { type: String },
         mobileNumber: { type: String },
         emailAddress: { type: String },
-    },
-    bankDetail: {
+      },
+      landDetails: {
+        location: { type: String },
+        hillyArea: { type: String },
+        totalArea: { type: Number },
+        fsi: { type: Number },
+        numberOfPlaces: { type: Number },
+        landPieces: {
+          landPieceArea1: { type: Number },
+          landPieceArea2: { type: Number },
+          landPieceArea3: { type: Number },
+        },
+        landRegistrationNo: { type: String },
+        dateOfRegistration: { type: Date },
+      },
+      bankDetails: {
         bankName: { type: String },
+        bankIfscCode: { type: String },
+        bankAccountNumber: { type: String },
+        accountHolderName: { type: String },
         branchName: { type: String },
-    },
+        branchCode: { type: String },
+        bankAddress: { type: String },
+        bankState: { type: String },
+        bankPin: { type: String },
+      },
     uploads: [
         {
             filename: { type: String },
             url: { type: String },
+            docResult_id:{ type: mongoose.Schema.Types.ObjectId, ref: "DocResult", required:true},
+            docName:{type: String},
+            is_verified:{ type: Boolean, default: false },
+            remark:{ type: String },
+
         },
     ],
-    institute_id: [{ type: mongoose.Schema.Types.ObjectId, ref: "Institute", required: false }],
+    institute_id:{ type: mongoose.Schema.Types.ObjectId, ref: "Institute", required:true},
+    logs_id:{ type: mongoose.Schema.Types.ObjectId, ref: "Logs", required:true},
 });
   
   

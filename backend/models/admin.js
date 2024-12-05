@@ -25,7 +25,11 @@ const adminSchema = new mongoose.Schema({
       required: true,
       enum:['Scrutiny','Rescrutiny','Expert Visit', 'Executive']
     },
-    applicatins: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Application', required: false }], // allocated applications
+    applications: [{
+      application_id:{ type: mongoose.Schema.Types.ObjectId, ref: 'Application', required: false },
+      deadline:{type:Date},
+      status:{type:String, enum:['Pending','In Progress','Approved','Rejected']}
+    }], // allocated applications
     
   });
   

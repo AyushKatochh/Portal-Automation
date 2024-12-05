@@ -118,7 +118,7 @@ async def process_document_comprehensively(file: UploadFile = File(...), documen
                 return JSONResponse(
                     content={
                         "status": "error", 
-                        "message": f"Signature Validation Failed: {str(sig_error)}"
+                        "message":"Signature Validation Failed"
                     }, 
                     status_code=400
                 )

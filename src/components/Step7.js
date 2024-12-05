@@ -16,6 +16,7 @@ const Step7 = () => {
   const [uploadedDocuments, setUploadedDocuments] = useState({});
   const [selectedOption, setSelectedOption] = useState(null);
   const [previewDoc, setPreviewDoc] = useState(null);
+  const [file, setfile] = useState(null)
 
   const handleDropdownChange = (event) => {
     const selectedKey = event.target.value;
@@ -24,23 +25,10 @@ const Step7 = () => {
   };
 
   const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    if (file && selectedOption) {
-      const formData = new FormData();
-      formData.append('files', file); // Ensure 'files' matches the server-side field name
-  
-      // Perform the upload
-      axios.post('http://localhost:5000/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }).then(response => {
-        console.log('Upload successful:', response.data);
-      }).catch(error => {
-        console.error('Error uploading documents:', error);
-      });
-  
-      // Update state as before
+    const fileUploaded = event.target.files[0];
+    setfile(fileUploaded)
+
+   
       setUploadedDocuments((prev) => ({
         ...prev,
         [selectedOption.key]: { file, label: selectedOption.label },
@@ -50,30 +38,33 @@ const Step7 = () => {
         prev.filter((option) => option.key !== selectedOption.key)
       );
       setSelectedOption(null); // Reset selection after upload
-    }
+    
   };
+  ;
 
   const handleDocumentSubmit = async (docKey) => {
     try {
-      const file = uploadedDocuments[docKey].file;
+      
       const formData = new FormData();
-      formData.append('files', file);
+    formData.append('file', file); // Key should be 'file' to match backend
 
-      // Send the document to validate endpoint
-      const response = await axios.post('http://localhost:5000/validate-document', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+    console.log(file); // Check if the file object is valid
+    console.log(formData); // Verify the formData object contains the file
 
-      if (response.data.isValid) {
-        alert(`${uploadedDocuments[docKey].label} is a valid document.`);
+    const response = await axios.post('http://localhost:5000/validate-document', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+      if (response.status=200) {
+        alert(`${uploadedDocuments[docKey].label} document saved.`);
       } else {
-        alert(`${uploadedDocuments[docKey].label} is not valid.`);
+        alert(`${uploadedDocuments[docKey].label} is not digitally signed.`);
       }
     } catch (error) {
       console.error('Error validating document:', error);
-      alert('Error validating document. Please try again.');
+      alert(`${uploadedDocuments[docKey].label} is not digitally signed.`);
     }
   };
 
@@ -132,7 +123,7 @@ const Step7 = () => {
                   className={styles.docName}
                   onClick={() => handleDocumentClick(key)}
                 >
-                  {uploadedDocuments[key].label}: {uploadedDocuments[key].file.name}
+                  {uploadedDocuments[key].label}: {uploadedDocuments[key]?.file?.name}
                 </span>
                 <button
                   className={styles.editButton}
@@ -163,6 +154,7 @@ const Step7 = () => {
           ></iframe>
         </div>
       )}
+
     </div>
   );
 };
