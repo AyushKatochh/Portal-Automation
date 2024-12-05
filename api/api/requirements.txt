@@ -13,3 +13,6 @@ asn1crypto
 python-dateutil
 pypdf
 groq
+pymongo
+matplotlib
+seaborn
