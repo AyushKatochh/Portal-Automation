@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
-const Executive = () => {
+const TrackApplication = () => {
   const [application, setApplication] = useState(null);
   const { applicationId } = useParams();
 
@@ -35,4 +35,4 @@ const Executive = () => {
   );
 };
 
-export default Executive;
+export default TrackApplication;

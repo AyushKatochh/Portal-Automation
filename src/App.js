@@ -10,7 +10,11 @@ import SignIn from './components/SignIn';
 import ScrutinyPage from './components/ScrutinyPage';
 import SignUp from "./components/SignUp"
 import ScrutinyCommittee from './components/ScrutinyCommittee';
+import MyApplication from './screens/MyApplications'
+
 import './App.css';
+import TrackApplication from './screens/TrackApplication';
+import ExistingApplication from './screens/ExistingApplication';
 
 function App() {
   return (
@@ -25,6 +29,9 @@ function App() {
           <Route path="/HomeLink" element={<HomeLink />} />
           <Route path="/scrutiny" element={<ScrutinyPage />} />
           <Route path="/scrutiny-committee" element={<ScrutinyCommittee />} />
+          <Route path="/track-application/:applicationId" element={<TrackApplication />} />
+          <Route path="/existing-application" element={<ExistingApplication />} />
+          <Route path="/my-application" element={<MyApplication />} />
         </Routes>
       </Router>
       <Footer />

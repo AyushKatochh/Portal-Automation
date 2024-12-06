@@ -28,6 +28,7 @@ app.use("/api", require("./routes/login"));
 app.use("/api", require("./routes/adminapplications"));
 app.use("/api", require("./routes/createApplication"));
 app.use("/api", require("./routes/verifications"));
+app.use("/api", require("./routes/getData"));
 
 
 app.post('/upload', (req, res) => {

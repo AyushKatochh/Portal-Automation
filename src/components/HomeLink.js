@@ -44,6 +44,13 @@ const HomeLink = () => {
     }
   };
 
+  const handleExistingApplication=()=>{
+    navigate(`/existing-application`)
+  }
+
+  const handleMyApplication=()=>{
+    navigate(`/my-application`)
+  }
   return (
     <div className={styles.homeLinkContainer}>
       <h1 className={styles.header}>Welcome to the Portal</h1>
@@ -68,7 +75,7 @@ const HomeLink = () => {
           {/* Card: Existing Application */}
           <div
             className={styles.card}
-            onClick={() => alert('Navigating to Existing Application')}
+            onClick={handleExistingApplication}
           >
             <FaEdit className={styles.icon} />
             <h2 className={styles.cardTitle}>Existing Application</h2>
@@ -80,7 +87,7 @@ const HomeLink = () => {
           {/* Card: My Application */}
           <div
             className={styles.card}
-            onClick={() => alert('Navigating to My Application')}
+            onClick={handleMyApplication}
           >
             <FaCheckCircle className={styles.icon} />
             <h2 className={styles.cardTitle}>My Application</h2>
@@ -98,18 +105,6 @@ const HomeLink = () => {
             <h2 className={styles.cardTitle}>Extension of Application</h2>
             <p className={styles.cardDescription}>
               Apply for an extension of your existing application.
-            </p>
-          </div>
-
-          {/* Card: Admin Panel */}
-          <div
-            className={styles.card}
-            onClick={() => navigate('/scrutiny-committee')}
-          >
-            <FaUserShield className={styles.icon} />
-            <h2 className={styles.cardTitle}>Admin Panel</h2>
-            <p className={styles.cardDescription}>
-              Manage administrative tasks and settings.
             </p>
           </div>
         </div>
