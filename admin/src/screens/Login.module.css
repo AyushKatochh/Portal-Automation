@@ -1,0 +1,144 @@
+/* Container with full-page background image */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Ensure the container covers the full viewport height */
+    position: relative;
+    background-image: url('../assets/login_cover.jpg'); /* Replace with your image path */
+    background-size: cover; /* Ensure the entire image is visible */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #f4f4f4; /* Optional: Fallback color in case the image doesn't load */
+  }
+  
+  /* Overlay to create blur effect */
+  .container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: inherit; /* Use the same background image */
+    background-size: cover; /* Ensure the image is fully displayed */
+    background-position: center;
+    background-repeat: no-repeat; /* Adjust blur intensity */
+    z-index: 1; /* Layer it below the content */
+  }
+  
+  /* Content container remains above the blur */
+  .container > * {
+    position: relative;
+    z-index: 2; /* Ensure content stays above the blurred background */
+  }
+  
+  /* Sticky Navbar */
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent navbar */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Ensure the navbar is above other elements */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .navbar img {
+    width: auto;
+    height: 100%;
+    object-fit: contain;
+  }
+  
+  /* Semi-transparent Login Box */
+  .loginBox {
+    background-color: rgba(255, 255, 255, 0.85); /* Transparent white background */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    width: 320px;
+    text-align: center;
+    backdrop-filter: blur(0.5px); /* Optional: Add blur to background within the box */
+  }
+  
+  /* Login Icon Inside the Login Box */
+  .loginBox img {
+    position: relative;
+    margin: 0 auto;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+  }
+  
+  /* Input Group with Side-by-Side Icons */
+  .inputGroup {
+    margin-bottom: 15px;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .inputGroup input {
+    flex: 1;
+    margin-right: 5px;
+    padding: 10px;
+    padding-left: 35px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  .inputGroup .fa-icon {
+    position: absolute;
+    left: 10px;
+    color: #007bff;
+    font-size: 1.2rem;
+  }
+  
+  .loginButton {
+    background-color: #007bff;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1rem;
+  }
+  
+  .loginButton:hover {
+    background-color: #0069d9;
+  }
+
+  .loaderOverlay {
+    position: fixed; /* Make the loader overlay fill the screen */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Ensure the loader is above other content */
+}
+
+.loader {
+    text-align: center;
+}
+
+.loaderImage {
+    width: 100px; /* Adjust the size of the loader image */
+    height: 100px;
+    object-fit: contain;
+}
+  
