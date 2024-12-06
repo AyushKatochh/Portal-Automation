@@ -7,6 +7,7 @@ const Applications = () => {
     const navigate = useNavigate();
     
     const adminId = localStorage.getItem('adminId');
+    const adminCommittee = localStorage.getItem('adminCommittee');
     const adminName = localStorage.getItem('adminName');
     const adminUsername = localStorage.getItem('adminUsername');
 
@@ -24,7 +25,15 @@ const Applications = () => {
     }, []);
 
     const handleViewDetails = (applicationId) => {
-        navigate(`/application/${applicationId}`);
+        if(adminCommittee==='Scrutiny'){
+            navigate(`/scrutiny/${applicationId}`);
+        }else if(adminCommittee==='Expert Visit'){
+            navigate(`/evc/${applicationId}`);
+
+        }else if(adminCommittee==='Executive'){
+            navigate(`/executive/${applicationId}`);
+
+        }
     };
 
     return (

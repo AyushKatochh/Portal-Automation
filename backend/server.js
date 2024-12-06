@@ -27,6 +27,8 @@ app.use(fileUpload());
 app.use("/api", require("./routes/login"));
 app.use("/api", require("./routes/adminapplications"));
 app.use("/api", require("./routes/createApplication"));
+app.use("/api", require("./routes/verifications"));
+
 
 app.post('/upload', (req, res) => {
   if (!req.files || !req.files.file) { // Access the file using req.files.file

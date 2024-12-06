@@ -12,10 +12,11 @@ const Login = () => {
 
         try {
             const response = await axios.post('http://localhost:5000/api/admin/login', { email, password });
-            const { id, username,name } = response.data;
+            const { id, username,name,committee } = response.data;
 
             localStorage.setItem('adminId', id);
             localStorage.setItem('adminName', name)
+            localStorage.setItem('adminCommittee', committee)
             localStorage.setItem('adminUsername', username);
             navigate('/applications');
         } catch (err) {

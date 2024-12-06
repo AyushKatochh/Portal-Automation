@@ -1,6 +1,5 @@
 const axios = require('axios');
 const express = require('express');
-const mongoose = require('mongoose');
 const Application = require('../models/applications'); // Adjust path as needed
 const Institute = require('../models/institute'); // Adjust path as needed
 const Admin = require('../models/admin'); // Adjust the path as needed
@@ -127,6 +126,7 @@ router.post('/submit-application', async (req, res) => {
     }
 
     application.logs_id = newLog._id;
+    application.is_complete=true
     await application.save();
 
     // Step 5: Respond with success
