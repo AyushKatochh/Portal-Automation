@@ -21,7 +21,7 @@ function App() {
           <Route path="/sign-up" element={<SignUp />} />
 
           <Route path="/sign-in" element={<SignIn />} />
-          <Route path="/approval-process" element={<ApprovalProcess />} />
+          <Route path="/approval-process/:applicationId" element={<ApprovalProcess />} />
           <Route path="/HomeLink" element={<HomeLink />} />
           <Route path="/scrutiny" element={<ScrutinyPage />} />
           <Route path="/scrutiny-committee" element={<ScrutinyCommittee />} />

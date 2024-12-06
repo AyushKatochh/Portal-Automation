@@ -61,7 +61,8 @@ const applicationSchema = new mongoose.Schema({
         },
     ],
     institute_id:{ type: mongoose.Schema.Types.ObjectId, ref: "Institute", required:true},
-    logs_id:{ type: mongoose.Schema.Types.ObjectId, ref: "Logs", required:true},
+    logs_id:{ type: mongoose.Schema.Types.ObjectId, ref: "Logs"},
+    is_complete:{type:Boolean, default:false}
 });
   
   

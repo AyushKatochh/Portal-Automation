@@ -8,12 +8,40 @@ const HomeLink = () => {
   const navigate = useNavigate(); // React Router hook for navigation
   const [isLoading, setIsLoading] = useState(false); // State for lazy loading
 
-  const handleNewApplicationClick = () => {
+  const handleNewApplicationClick = async () => {
     setIsLoading(true); // Show loader
-    setTimeout(() => {
+
+    try {
+      const userData = JSON.parse(localStorage.getItem('userData'));
+      if (!userData || !userData.instituteId) {
+        throw new Error('Institute ID not found in local storage.');
+      }
+
+      const response = await fetch('http://localhost:5000/api/create-application', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          instituteId: userData.instituteId,
+          type: 'New Application', // Example type, you can adjust this
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to create application.');
+      }
+
+      // Navigate to the next page with applicationId as a parameter
+      navigate(`/approval-process/${data.applicationId}`);
+    } catch (error) {
+      console.error('Error creating application:', error.message);
+      alert(error.message);
+    } finally {
       setIsLoading(false); // Hide loader
-      navigate('/approval-process'); // Navigate after 2 seconds
-    }, 2000);
+    }
   };
 
   return (

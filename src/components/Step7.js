@@ -6,11 +6,14 @@ const DOCUMENT_KEYWORDS = {
   // Same as before...
 };
 
-const Step7 = () => {
+const Step7 = ({applicationId}) => {
   const [dropdownOptions, setDropdownOptions] = useState([
     { label: 'Affidavit', key: 'affidavit' },
-    { label: 'Form3 Certificate', key: 'form3' },
-    { label: 'Fire Safety', key: 'fire_safety' },
+    { label: 'Land Conversion Certificate', key: 'land_conversion_certificate' },
+    { label: 'Bank Certificate [3]', key: 'bank_certificate' },
+    { label: 'Architect Certificate [2]', key: 'architect_certificate' },
+    { label: 'MOU Document', key: 'mou_document' },
+    { label: 'Fire Safety Certificate', key: 'fire_safety_certificate' },
     { label: 'Site Plan', key: 'site_plan' },
   ]);
   const [uploadedDocuments, setUploadedDocuments] = useState({});
@@ -37,34 +40,36 @@ const Step7 = () => {
       setDropdownOptions((prev) =>
         prev.filter((option) => option.key !== selectedOption.key)
       );
-      setSelectedOption(null); // Reset selection after upload
-    
-  };
-  ;
-
-  const handleDocumentSubmit = async (docKey) => {
-    try {
       
-      const formData = new FormData();
-    formData.append('file', file); // Key should be 'file' to match backend
-
-    console.log(file); // Check if the file object is valid
-    console.log(formData); // Verify the formData object contains the file
-
-    const response = await axios.post('http://localhost:5000/validate-document', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-
-      if (response.status=200) {
-        alert(`${uploadedDocuments[docKey].label} document saved.`);
-      } else {
+    };
+    ;
+    
+    const handleDocumentSubmit = async (docKey) => {
+      try {
+        
+        const formData = new FormData();
+        formData.append('file', file); // Key should be 'file' to match backend
+        formData.append('applicationId', applicationId); // Add applicationId
+        formData.append('docName', selectedOption.key); // Add key
+        
+        console.log(file); // Check if the file object is valid
+        console.log(formData); // Verify the formData object contains the file
+        
+        const response = await axios.post('http://localhost:5000/validate-document', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        
+        if (response.status=200) {
+          setSelectedOption(null); // Reset selection after upload
+          alert(`${uploadedDocuments[docKey].label} document saved.`);
+        } else {
+          alert(`${uploadedDocuments[docKey].label} is not digitally signed.`);
+        }
+      } catch (error) {
+        console.error('Error validating document:', error);
         alert(`${uploadedDocuments[docKey].label} is not digitally signed.`);
-      }
-    } catch (error) {
-      console.error('Error validating document:', error);
-      alert(`${uploadedDocuments[docKey].label} is not digitally signed.`);
     }
   };
 

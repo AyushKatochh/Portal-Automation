@@ -7,11 +7,39 @@ import Step5 from './Step5';
 import Step6 from './Step6';
 import Step7 from './Step7';
 import  navbarImage from '../assets/banner.jpg';
+import { useParams } from 'react-router-dom';
 
 const ApprovalProcess = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [userName, setUserName] = useState('');
   const [instituteName, setInstituteName] = useState('');
+
+  const { applicationId } = useParams();
+  const [application, setApplication] = useState(null);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch application data by ID
+    const fetchApplication = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/application/${applicationId}`);
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to fetch application.');
+        }
+
+        setApplication(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchApplication();
+  }, [applicationId]);
 
   const steps = [
     'Institute',
@@ -46,6 +74,44 @@ const ApprovalProcess = () => {
   const goToNextStep = () => {
     if (currentStep < steps.length) setCurrentStep(currentStep + 1);
   };
+
+
+  const submitApplication = async () => {
+    try {
+      // Validate applicationId
+      if (!applicationId) {
+        alert("Application ID is required.");
+        return;
+      }
+  
+      // Create the request body
+      const requestBody = { applicationId };
+  
+      // Make the fetch call to the backend
+      const response = await fetch("http://localhost:5000/api/submit-application", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+  
+      // Parse the response
+      const data = await response.json();
+  
+      if (response.ok) {
+        console.log("Application submitted successfully:", data);
+        alert("Application submitted successfully.");
+      } else {
+        console.error("Error submitting application:", data);
+        alert(data.message || "Error submitting application.");
+      }
+    } catch (error) {
+      console.error("Unexpected error:", error);
+      alert("Unexpected error occurred. Please try again.");
+    }
+  };
+  
 
   return (
     <div className={styles.ApprovalProcessPage}>
@@ -95,6 +161,7 @@ const ApprovalProcess = () => {
                 : styles.connectingLine
             }
           ></div>
+          <div><button onClick={submitApplication}>Fimal Submit</button></div>
         </nav>
         <div className={styles.content}>
           {currentStep === 1 && <Step2 />}
@@ -102,7 +169,7 @@ const ApprovalProcess = () => {
           {currentStep === 3 && <Step4 />}
           {currentStep === 4 && <Step5 />}
           {currentStep === 5 && <Step6 />}
-          {currentStep === 6 && <Step7 />}
+          {currentStep === 6 && <Step7 applicationId={applicationId}/>}
 
         </div>
       </div>

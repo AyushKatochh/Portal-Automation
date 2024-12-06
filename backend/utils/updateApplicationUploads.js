@@ -8,7 +8,7 @@ const Application = require('../models/applications'); // Adjust the path as nec
  * @param {String} s3Url - The S3 URL of the uploaded file
  * @param {String} docResultId - The ID of the corresponding DocResult document
  */
-const addUploadToApplication = async (applicationId, filename, s3Url, docResultId) => {
+const addUploadToApplication = async (applicationId, filename, s3Url, docResultId,docName) => {
   try {
     // Find the application by its ID and update the uploads array
     const updatedApplication = await Application.findByIdAndUpdate(
@@ -19,6 +19,7 @@ const addUploadToApplication = async (applicationId, filename, s3Url, docResultI
             filename,
             url: s3Url,
             docResult_id: docResultId,
+            docName:docName
           },
         },
       },

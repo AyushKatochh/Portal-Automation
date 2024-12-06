@@ -33,7 +33,8 @@ const SignIn = () => {
         // Store ONLY necessary user data in local storage
         localStorage.setItem('userData', JSON.stringify({ 
           userName: data.institute.userName, 
-          instituteName: data.institute.name 
+          instituteName: data.institute.name,
+          instituteId:data.institute._id
         }));
   
         navigate('/HomeLink'); 

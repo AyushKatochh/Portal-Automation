@@ -10,8 +10,8 @@ const logsSchema = new Schema({
   
   status: { 
     type: String, 
-    enum: ['Pending', 'In Progress', 'Rejected', 'Approved'], 
-    required: true 
+    enum: ['In Progress', 'Rejected', 'Approved'], 
+    default:'In Progress' 
   }, // Current status of the application
   
   stage: {
