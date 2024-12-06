@@ -54,10 +54,6 @@ app.add_middleware(
 # Directory to temporarily store uploaded files
 UPLOAD_FOLDER = "./uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-MONGO_URI = 'mongodb+srv://AyushKatoch:ayush2002@cluster0.72gtk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
-client = MongoClient(MONGO_URI)
-db = client['aicte']
-admins_collection = db['admins']
 
 @app.on_event("startup")
 async def startup_event():
