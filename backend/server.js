@@ -112,6 +112,11 @@ const uploadMiddleware = (req, res, next) => {
 
 //INCLUDE AWS here......................................................
 
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWSID, 
+  secretAccessKey: process.env.AWSKEY,
+ });
+
 // Function to upload file to S3
 const uploadPdfToS3 = async (bucketName, filePath, s3Key) => {
   try {

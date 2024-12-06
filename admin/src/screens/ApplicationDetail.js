@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Modal from "../components/Modal";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEnvelope, faPhone, faMapMarkerAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import styles from './ApplicationDetail.module.css'; // Assuming you have a separate CSS file for styling
 
 const ApplicationDetail = () => {
   const { applicationId } = useParams();
@@ -25,17 +28,14 @@ const ApplicationDetail = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [actionType, setActionType] = useState("");
-  const [id, setid] = useState(null);
-  const [action, setaction] = useState(null);
+  const [id, setId] = useState(null);
+  const [action, setAction] = useState(null);
 
-  const handleAction = (action, objectId, actiontype) => {
-    console.log(objectId);
-    setid(objectId);
-    setModalMessage(
-      `Are you sure you want to ${action.toLowerCase()} this ${actiontype} request?`
-    );
-    setaction(action);
-    setActionType(actiontype);
+  const handleAction = (action, objectId, actionType) => {
+    setId(objectId);
+    setModalMessage(`Are you sure you want to ${action.toLowerCase()} this ${actionType} request?`);
+    setAction(action);
+    setActionType(actionType);
     setIsModalOpen(true);
   };
 
@@ -45,47 +45,15 @@ const ApplicationDetail = () => {
     if (actionType === "document") {
       if (confirm) {
         try {
-          console.log(remark, action, applicationId, id);
-          // Validate input parameters
-          if (!remark || !action || !applicationId || !id) {
-            throw new Error(
-              "All parameters (remark, action, applicationId, id) are required."
-            );
-          }
-
-          // Prepare the request payload
-          const payload = {
-            remark,
-            action,
-            applicationId,
-            id,
-          };
-
-          console.log(payload);
-
-          // Make the API call
+          const payload = { remark, action, applicationId, id };
           const response = await axios.post(
             "http://localhost:5000/api/verify-document",
-            payload,
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
+            payload
           );
-
-          // Handle success response
           alert(response.data.message || "Operation successful!");
-          console.log("Response:", response.data);
-
-          return response.data;
         } catch (error) {
-          // Handle errors
           console.error("Error verifying document:", error);
-          alert(
-            error.response?.data?.message ||
-              "An error occurred while processing the request."
-          );
+          alert("An error occurred while processing the request.");
         }
       } else {
         alert("Action cancelled.");
@@ -95,54 +63,21 @@ const ApplicationDetail = () => {
     if (actionType === "application") {
       if (confirm) {
         try {
-          console.log(remark, action, applicationId);
-          // Validate input parameters
-          if (!remark || !action || !applicationId) {
-            throw new Error(
-              "All parameters (remark, action, applicationId, id) are required."
-            );
-          }
-
-          // Prepare the request payload
-          const payload = {
-            remark,
-            action,
-            applicationId,
-          };
-
-          console.log(payload);
-
-          // Make the API call
+          const payload = { remark, action, applicationId };
           const response = await axios.post(
             "http://localhost:5000/api/verify-scrutiny",
-            payload,
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
+            payload
           );
-
-          // Handle success response
           alert(response.data.message || "Operation successful!");
-          console.log("Response:", response.data);
-
-          return response.data;
         } catch (error) {
-          // Handle errors
-          console.error("Error verifying document:", error);
-          alert(
-            error.response?.data?.message ||
-              "An error occurred while processing the request."
-          );
+          console.error("Error verifying application:", error);
+          alert("An error occurred while processing the request.");
         }
       } else {
         alert("Action cancelled.");
       }
     }
   };
-
-
 
   if (!application) {
     return <p>Loading...</p>;
@@ -151,74 +86,55 @@ const ApplicationDetail = () => {
   const { applicationDetails, uploads } = application;
 
   return (
-    <div>
-      <h1>Application Details</h1>
-      <h2>Type: {applicationDetails.type}</h2>
-      <h3>Institute Name: {applicationDetails.instituteName}</h3>
-      <button
-        className="approve-button"
-        onClick={() => handleAction("Approve", "", "application")}
-      >
-        Approve
-      </button>
-      <button
-        className="reject-button"
-        onClick={() => handleAction("Reject", "", "application")}
-      >
-        Reject
-      </button>
-      <h4>Contact Details:</h4>
-      <pre>{JSON.stringify(applicationDetails.contactDetails, null, 2)}</pre>
+    <div className={styles.container}>
+      <div className={styles.detailsBox}>
+        <h1 className={styles.title}>Application Details</h1>
+        <div className={styles.section}>
+          <h2>Type: <span>{applicationDetails.type}</span></h2>
+          <h3>Institute Name: <span>{applicationDetails.instituteName}</span></h3>
+        </div>
 
-      <h4>Uploads</h4>
-      <div>
-        {uploads.map((upload, index) => (
-          <div
-            key={index}
-            style={{
-              border: "1px solid #ccc",
-              padding: "10px",
-              marginBottom: "10px",
-            }}
-          >
-            <p>Filename: {upload.filename}</p>
-            <a href={upload.url} target="_blank" rel="noopener noreferrer">
-              View Document
-            </a>
-            <p>DocResult: {JSON.stringify(upload.docResult, null, 2)}</p>
-            <p>Verified: {upload.is_verified ? "Yes" : "No"}</p>
-            <p>Remark: {upload.remark}</p>
-            {!upload.is_verified ? (
-              <>
-                <button
-                  className="approve-button"
-                  onClick={() =>
-                    handleAction("Approve", upload._id, "document")
-                  }
-                >
-                  Verify
-                </button>
-                <button
-                  className="reject-button"
-                  onClick={() => handleAction("Reject", upload._id, "document")}
-                >
-                  Reject
-                </button>
-              </>
-            ) : (
-              <h6>Verified</h6>
-            )}
-
-            <Modal
-              isOpen={isModalOpen}
-              onClose={() => setIsModalOpen(false)}
-              onConfirm={handleModalResponse}
-              message={modalMessage}
-              action={action}
-            />
+        <div className={styles.section}>
+          <h4>Contact Details</h4>
+          <div className={styles.contactDetails}>
+            <p><FontAwesomeIcon icon={faUser} /> {applicationDetails.contactDetails.firstName} {applicationDetails.contactDetails.lastName}</p>
+            <p><FontAwesomeIcon icon={faPhone} /> {applicationDetails.contactDetails.mobileNumber}</p>
+            <p><FontAwesomeIcon icon={faMapMarkerAlt} /> {applicationDetails.contactDetails.address}, {applicationDetails.contactDetails.city}, {applicationDetails.contactDetails.state} - {applicationDetails.contactDetails.postalCode}</p>
+            <p><FontAwesomeIcon icon={faEnvelope} /> {applicationDetails.contactDetails.emailAddress}</p>
           </div>
-        ))}
+        </div>
+
+        <div className={styles.section}>
+          <h4>Uploads</h4>
+          <div className={styles.uploads}>
+            {uploads.map((upload, index) => (
+              <div key={index} className={styles.uploadCard}>
+                <p>Filename: {upload.filename}</p>
+                <a href={upload.url} target="_blank" rel="noopener noreferrer">View Document</a>
+                <p>DocResult: {JSON.stringify(upload.docResult, null, 2)}</p>
+                <p>Verified: {upload.is_verified ? "Yes" : "No"}</p>
+                <p>Remark: {upload.remark}</p>
+                {!upload.is_verified ? (
+                  <>
+                    <button className={styles.approveButton} onClick={() => handleAction("Approve", upload._id, "document")}>Verify</button>
+                    <button className={styles.rejectButton} onClick={() => handleAction("Reject", upload._id, "document")}>Reject</button>
+                  </>
+                ) : (
+                  <h6>Verified</h6>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={handleModalResponse}
+        message={modalMessage}
+        action={action}
+      />
     </div>
   );
 };
