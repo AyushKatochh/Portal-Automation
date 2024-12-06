@@ -46,7 +46,10 @@ router.get("/application/:applicationId", async (req, res) => {
         url: upload.url,
         docResult: upload.docResult_id?.result || null,
         is_verified: upload.is_verified,
+        docName:upload.docName,
+        is_verification_complete:upload.is_verification_complete,
         remark: upload.remark,
+        _id:upload._id
       }));
   
       res.json({

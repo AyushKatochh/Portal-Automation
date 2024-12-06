@@ -55,14 +55,14 @@ const applicationSchema = new mongoose.Schema({
             url: { type: String },
             docResult_id:{ type: mongoose.Schema.Types.ObjectId, ref: "DocResult", required:true},
             docName:{type: String},
+            is_verification_complete:{type:Boolean, default:false},
             is_verified:{ type: Boolean, default: false },
             remark:{ type: String },
-
         },
     ],
     institute_id:{ type: mongoose.Schema.Types.ObjectId, ref: "Institute", required:true},
     logs_id:{ type: mongoose.Schema.Types.ObjectId, ref: "Logs"},
-    is_complete:{type:Boolean, default:false}
+    is_complete:{type:Boolean, default:false},
 });
   
   

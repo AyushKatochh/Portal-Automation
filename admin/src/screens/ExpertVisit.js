@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import Modal from "../components/Modal";
 
-const ApplicationDetail = () => {
+const ExpertVisit = () => {
   const { applicationId } = useParams();
   const [application, setApplication] = useState(null);
 
@@ -39,15 +39,15 @@ const ApplicationDetail = () => {
     setIsModalOpen(true);
   };
 
-  const handleModalResponse = async (confirm, remark, action) => {
+
+  const handleExpertVisitResponse = async (confirm, remark, action) => {
     setIsModalOpen(false);
 
-    if (actionType === "document") {
       if (confirm) {
         try {
-          console.log(remark, action, applicationId, id);
+          console.log(remark, action, applicationId);
           // Validate input parameters
-          if (!remark || !action || !applicationId || !id) {
+          if (!remark || !action || !applicationId) {
             throw new Error(
               "All parameters (remark, action, applicationId, id) are required."
             );
@@ -65,7 +65,7 @@ const ApplicationDetail = () => {
 
           // Make the API call
           const response = await axios.post(
-            "http://localhost:5000/api/verify-document",
+            "http://localhost:5000/api/verify-expert-visit",
             payload,
             {
               headers: {
@@ -90,56 +90,6 @@ const ApplicationDetail = () => {
       } else {
         alert("Action cancelled.");
       }
-    }
-
-    if (actionType === "application") {
-      if (confirm) {
-        try {
-          console.log(remark, action, applicationId);
-          // Validate input parameters
-          if (!remark || !action || !applicationId) {
-            throw new Error(
-              "All parameters (remark, action, applicationId, id) are required."
-            );
-          }
-
-          // Prepare the request payload
-          const payload = {
-            remark,
-            action,
-            applicationId,
-          };
-
-          console.log(payload);
-
-          // Make the API call
-          const response = await axios.post(
-            "http://localhost:5000/api/verify-scrutiny",
-            payload,
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-
-          // Handle success response
-          alert(response.data.message || "Operation successful!");
-          console.log("Response:", response.data);
-
-          return response.data;
-        } catch (error) {
-          // Handle errors
-          console.error("Error verifying document:", error);
-          alert(
-            error.response?.data?.message ||
-              "An error occurred while processing the request."
-          );
-        }
-      } else {
-        alert("Action cancelled.");
-      }
-    }
   };
 
 
@@ -152,7 +102,8 @@ const ApplicationDetail = () => {
 
   return (
     <div>
-      <h1>Application Details</h1>
+        <h1>Expert Visit committee</h1>
+      <h2>Application Details</h2>
       <h2>Type: {applicationDetails.type}</h2>
       <h3>Institute Name: {applicationDetails.instituteName}</h3>
       <button
@@ -212,7 +163,7 @@ const ApplicationDetail = () => {
             <Modal
               isOpen={isModalOpen}
               onClose={() => setIsModalOpen(false)}
-              onConfirm={handleModalResponse}
+              onConfirm={handleExpertVisitResponse}
               message={modalMessage}
               action={action}
             />
@@ -223,4 +174,4 @@ const ApplicationDetail = () => {
   );
 };
 
-export default ApplicationDetail;
+export default ExpertVisit;
