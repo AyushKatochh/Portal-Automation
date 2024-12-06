@@ -18,8 +18,18 @@ from utils import (
     OCRResult,
     ExtractionRequest,
     validator,
-    get_members,
-    allocate_task
+    get_members_expert,
+    get_members_scrutiny,
+    allocate_task,
+    ChatResponse,
+    configure_google_ai,
+    load_document,
+    ChatRequest,
+    read_last_log_lines,
+    current_document_path,
+    process_chat_query,
+    LogsResponse
+    
 )
 
 # Load environment variables
@@ -49,6 +59,50 @@ client = MongoClient(MONGO_URI)
 db = client['aicte']
 admins_collection = db['admins']
 
+@app.on_event("startup")
+async def startup_event():
+    """Configure Google AI on startup"""
+    configure_google_ai()
+
+@app.post("/document_chat", response_model=ChatResponse)
+async def chat_endpoint(request: ChatRequest):
+    """Main chat endpoint"""
+    # Validate input
+    load_document()
+    if not request.question:
+        raise HTTPException(status_code=400, detail="Question is required")
+    
+    # Process chat query
+    response = process_chat_query(request.question, request.chat_history)
+    
+    return ChatResponse(**response)
+
+
+@app.get("/schedule_expert")
+async def get_next_deadline():
+    """
+    Retrieve the next available member and their new deadline
+    
+    Returns:
+        Dict containing member ID and new deadline
+    """
+    try:
+        # Get current members
+        members = get_members_expert()
+        
+        # Allocate task (which sorts and selects the least burdened member)
+        updated_members = allocate_task(members)
+        
+        # Select the first member (least burdened)
+        selected_member = updated_members[0]
+        
+        return {
+            "admin_id": selected_member[0],
+            "new_deadline": selected_member[2]
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.get("/schedule_scrutiny")
 async def get_next_deadline():
@@ -60,7 +114,7 @@ async def get_next_deadline():
     """
     try:
         # Get current members
-        members = get_members()
+        members = get_members_scrutiny()
         
         # Allocate task (which sorts and selects the least burdened member)
         updated_members = allocate_task(members)
