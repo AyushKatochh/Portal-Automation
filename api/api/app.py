@@ -21,15 +21,15 @@ from utils import (
     get_members_expert,
     get_members_scrutiny,
     allocate_task,
+    ChatRequestDocument,
     ChatResponse,
     configure_google_ai,
     load_document,
-    ChatRequest,
-    read_last_log_lines,
-    current_document_path,
     process_chat_query,
-    LogsResponse
-    
+)
+from ChatBot import(
+    load_status_chat,
+    ChatRequestStatus
 )
 
 # Load environment variables
@@ -54,15 +54,44 @@ app.add_middleware(
 # Directory to temporarily store uploaded files
 UPLOAD_FOLDER = "./uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
+MONGO_URI = 'mongodb+srv://AyushKatoch:ayush2002@cluster0.72gtk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+client = MongoClient(MONGO_URI)
+db = client['aicte']
+admins_collection = db['admins']
 
 @app.on_event("startup")
 async def startup_event():
     """Configure Google AI on startup"""
     configure_google_ai()
+    
+    
+@app.post("/status_chat")
+async def chat_with_application(request: ChatRequestStatus):
+    """
+    Endpoint to chat with an application based on its ID
+    
+    - **application_id**: The ID of the application to query
+    - **query**: The user's query about the application
+    """
+    chatbot=load_status_chat()
+    try:
+        # Fetch application data
+        document, logs = chatbot.get_application_data(request.application_id)
+        
+        # Generate response
+        response = chatbot.generate_response(document, logs, request.query)
+        
+        return {
+            "status": "success",
+            "response": response
+        }
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
 
 @app.post("/document_chat", response_model=ChatResponse)
-async def chat_endpoint(request: ChatRequest):
+async def chat_endpoint(request: ChatRequestDocument):
     """Main chat endpoint"""
     # Validate input
     load_document()
@@ -435,7 +464,6 @@ def main():
         port=8000,
         reload=True
     )
-
 
 
 
