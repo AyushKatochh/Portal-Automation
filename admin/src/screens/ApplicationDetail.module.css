@@ -3,10 +3,11 @@
 .container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start; /* Align items to the top */
   height: 100vh;
   background-color: #f4f6f9;
   padding: 20px;
+  overflow-y: auto; 
 }
 
 .detailsBox {
@@ -14,8 +15,23 @@
   padding: 30px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  width: 80%;
-  max-width: 1000px;
+  width: 95%; /* Increased width */
+  max-width: 90%; /* Increased max-width */
+}
+
+.nestedObject {
+  margin-bottom: 10px;
+  border: 1px solid #eee;
+  padding: 10px;
+  overflow-x: auto;  /* Added horizontal scrollbar */
+}
+
+.nestedFields {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  align-items: start;
+  min-width: 800px; /* Ensure minimum width for the grid */
 }
 
 .title {
@@ -27,6 +43,13 @@
 
 .section {
   margin-bottom: 20px;
+  text-align: center; /* Add this to center the content */
+}
+
+.contactDetails p {
+  margin: 10px 0;
+  font-size: 1.1rem;
+  text-align: center; /* Add this to center each line */
 }
 
 h2, h3, h4 {
@@ -38,10 +61,6 @@ h2 span, h3 span, h4 span {
   font-weight: bold;
 }
 
-.contactDetails p {
-  margin: 10px 0;
-  font-size: 1.1rem;
-}
 
 .contactDetails p span {
   color: #7f8c8d;
@@ -92,4 +111,25 @@ h6 {
   color: #2ecc71;
   font-size: 1.1rem;
   margin-top: 10px;
+}
+
+.nestedFieldContainer { 
+  border: 1px solid #eee; 
+  padding: 10px;
+  border-radius: 4px;
+  overflow: hidden; 
+}
+
+.nestedLabel {
+  font-weight: bold;
+  margin-bottom: 5px;
+  white-space: nowrap; 
+  display: inline-block;
+  margin-right: 10px; 
+}
+
+.nestedValue {
+  font-size: 14px;
+  color: #333;
+  white-space: pre-wrap;
 }

@@ -4,7 +4,7 @@ import axios from "axios";
 import Modal from "../components/Modal";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faPhone, faMapMarkerAlt, faUser } from '@fortawesome/free-solid-svg-icons';
-import styles from './ApplicationDetail.module.css'; // Assuming you have a separate CSS file for styling
+import styles from './ApplicationDetail.module.css'; 
 
 const ApplicationDetail = () => {
   const { applicationId } = useParams();
@@ -85,6 +85,41 @@ const ApplicationDetail = () => {
 
   const { applicationDetails, uploads } = application;
 
+  const renderContactInputs = (contactDetails) => {
+    return Object.keys(contactDetails).map((key) => (
+      <div className={styles.inputGroup} key={key}>
+        <label htmlFor={key} className={styles.label}>
+          {key.charAt(0).toUpperCase() + key.slice(1)}
+        </label>
+        <input
+          type="text"
+          id={key}
+          name={key}
+          defaultValue={contactDetails[key]}
+          className={styles.inputField}
+        />
+      </div>
+    ));
+  };
+
+  // Helper function to recursively render fields
+  const renderFields = (data) => {
+    if (typeof data === 'object' && data !== null) {
+      return Object.entries(data).map(([key, value]) => (
+        <div key={key} className={styles.nestedField}>
+          <label className={styles.nestedLabel}>{key}:</label>
+          {typeof value === 'object' && value !== null ? (
+            <div className={styles.nestedFields}>{renderFields(value)}</div> 
+          ) : (
+            <span className={styles.nestedValue}>{value}</span>
+          )}
+        </div>
+      ));
+    } else {
+      return <span className={styles.nestedValue}>{data}</span>;
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.detailsBox}>
@@ -111,7 +146,17 @@ const ApplicationDetail = () => {
               <div key={index} className={styles.uploadCard}>
                 <p>Filename: {upload.filename}</p>
                 <a href={upload.url} target="_blank" rel="noopener noreferrer">View Document</a>
-                <p>DocResult: {JSON.stringify(upload.docResult, null, 2)}</p>
+                <p>DocResult:</p>
+                <div className={styles.docResultContainer}>
+                  {Object.entries(upload.docResult).map(([key, value]) => (
+                    <div key={key} className={styles.nestedObject}>
+                      <p className={styles.docResultLabel}>{key}:</p>
+                      <div className={styles.nestedFields}>
+                        {renderFields(value)} 
+                      </div>
+                    </div>
+                  ))}
+                </div>
                 <p>Verified: {upload.is_verified ? "Yes" : "No"}</p>
                 <p>Remark: {upload.remark}</p>
                 {!upload.is_verified ? (
