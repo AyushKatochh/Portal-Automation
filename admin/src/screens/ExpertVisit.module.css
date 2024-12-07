@@ -124,3 +124,46 @@
     text-decoration: underline;
   }
   
+  .docResultContainer {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .docResultField {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  
+  .docResultLabel {
+    width: 100px; /* Adjust as needed */
+    font-weight: bold;
+  }
+  
+  .docResultInput {
+    flex-grow: 1;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .nestedObject {
+    margin-bottom: 10px; 
+    border: 1px solid #eee; /* Add a subtle border */
+    padding: 10px;
+  }
+  
+  .nestedList {
+    list-style: none; /* Remove bullet points */
+    padding: 0; 
+  }
+  
+  .nestedList li {
+    margin-bottom: 5px; 
+  }
+  
+  .nestedList li strong { 
+    font-weight: bold;
+    margin-right: 5px;
+  }

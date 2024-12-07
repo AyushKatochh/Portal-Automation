@@ -115,6 +115,16 @@ const ExpertVisit = () => {
     ));
   };
 
+  const renderValue = (value) => {
+    if (typeof value === 'object' && value !== null) {
+      // For objects, you might want to stringify or render them differently
+      return JSON.stringify(value); 
+    } else {
+      return value;
+    }
+  };
+
+
   return (
     <div className={styles.container}>
       <h1 className={styles.heading}>Expert Visit Committee</h1>
@@ -152,16 +162,55 @@ const ExpertVisit = () => {
             <a href={upload.url} target="_blank" rel="noopener noreferrer">
               View Document
             </a>
-            <p>DocResult: {JSON.stringify(upload.docResult, null, 2)}</p>
+            <p>DocResult:</p>
+            <div className={styles.docResultContainer}>
+              {Object.entries(upload.docResult).map(([key, value]) => {
+                if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+                  return (
+                    <div key={key} className={styles.nestedObject}>
+                      <p className={styles.docResultLabel}>{key}:</p>
+                      <ul className={styles.nestedList}> 
+                        {Object.entries(value).map(([nestedKey, nestedValue]) => (
+                          <li key={nestedKey}>
+                            <strong>{nestedKey}:</strong> {renderValue(nestedValue)} 
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  );
+                } else if (Array.isArray(value)) {
+                  return (
+                    <div key={key} className={styles.nestedObject}> 
+                      <p className={styles.docResultLabel}>{key}:</p>
+                      <ul className={styles.nestedList}>
+                        {value.map((item, index) => (
+                          <li key={index}>{renderValue(item)}</li> 
+                        ))}
+                      </ul>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div key={key} className={styles.docResultField}>
+                      <label className={styles.docResultLabel}>{key}:</label>
+                      <input
+                        type="text"
+                        defaultValue={value}
+                        className={styles.docResultInput}
+                        readOnly
+                      />
+                    </div>
+                  );
+                }
+              })}
+            </div>
             <p>Verified: {upload.is_verified ? "Yes" : "No"}</p>
             <p>Remark: {upload.remark}</p>
             {!upload.is_verified ? (
               <>
                 <button
                   className={styles.approveButton}
-                  onClick={() =>
-                    handleAction("Approve", upload._id, "document")
-                  }
+                  onClick={() => handleAction("Approve", upload._id, "document")}
                 >
                   Verify
                 </button>
