@@ -55,6 +55,7 @@ app.add_middleware(
 UPLOAD_FOLDER = "./uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+
 @app.on_event("startup")
 async def startup_event():
     """Configure Google AI on startup"""

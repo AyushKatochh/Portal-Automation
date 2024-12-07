@@ -25,3 +25,12 @@
 2024-12-06 07:05:56 - INFO - Loading faiss.
 2024-12-06 07:05:56 - INFO - Successfully loaded faiss.
 2024-12-06 07:06:41 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2024-12-07 14:42:22 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2024-12-07 15:07:25 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2024-12-07 15:07:28 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2024-12-07 15:08:38 - INFO - Loading faiss.
+2024-12-07 15:08:38 - INFO - Successfully loaded faiss.
+2024-12-07 15:11:26 - INFO - Loading faiss.
+2024-12-07 15:11:26 - INFO - Successfully loaded faiss.
+2024-12-07 15:13:06 - INFO - Loading faiss.
+2024-12-07 15:13:06 - INFO - Successfully loaded faiss.
