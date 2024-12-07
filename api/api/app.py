@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pymongo import MongoClient
 from dotenv import load_dotenv
+from datetime import datetime
 import uvicorn
 
 # Import existing utility functions (these would be in a separate utils.py)
@@ -15,17 +16,14 @@ from utils import (
     get_ai_client,
     DocumentValidationRequest,
     extract_document_info,
-    OCRResult,
-    ExtractionRequest,
     validator,
     get_members_expert,
     get_members_scrutiny,
     allocate_task,
     ChatRequestDocument,
     ChatResponse,
-    configure_google_ai,
-    load_document,
-    process_chat_query,
+    PDFProcessor,
+    ChatBot
 )
 from ChatBot import(
     load_status_chat,
@@ -59,12 +57,8 @@ client = MongoClient(MONGO_URI)
 db = client['aicte']
 admins_collection = db['admins']
 
-@app.on_event("startup")
-async def startup_event():
-    """Configure Google AI on startup"""
-    configure_google_ai()
-    
-    
+
+
 @app.post("/status_chat")
 async def chat_with_application(request: ChatRequestStatus):
     """
@@ -92,16 +86,26 @@ async def chat_with_application(request: ChatRequestStatus):
 
 @app.post("/document_chat", response_model=ChatResponse)
 async def chat_endpoint(request: ChatRequestDocument):
-    """Main chat endpoint"""
-    # Validate input
-    load_document()
-    if not request.question:
-        raise HTTPException(status_code=400, detail="Question is required")
+    try:
+        pdf_processor = PDFProcessor("Document/AICTE Doc.pdf")
+        text_pages = pdf_processor.load_pdf()
+        text_chunks = pdf_processor.chunk_text(text_pages)
+        chatbot = ChatBot(os.getenv("GROQ_API_KEY"))
+        # Get current timestamp
+        current_timestamp = datetime.now().isoformat()
     
-    # Process chat query
-    response = process_chat_query(request.question, request.chat_history)
-    
-    return ChatResponse(**response)
+        
+        # Get AI response with context
+        ai_response = chatbot.get_response(request.question, text_chunks)
+        
+        return JSONResponse(content={
+            "timestamp": current_timestamp,
+            "question": request.question,
+            "ai_response": ai_response,
+            
+        })
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.get("/schedule_expert")
