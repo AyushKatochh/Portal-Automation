@@ -5,6 +5,7 @@ import Applications from './screens/Applications';
 import ApplicationDetail from './screens/ApplicationDetail';
 import ExpertVisit from './screens/ExpertVisit';
 import Executive from './screens/Executive';
+import SuperAdminDashboard from './screens/SuperAdminDashboard';
 
 function App() {
     return (
@@ -15,7 +16,7 @@ function App() {
                 <Route path="/scrutiny/:applicationId" element={<ApplicationDetail />} />
                 <Route path="/evc/:applicationId" element={<ExpertVisit />} />
                 <Route path="/executive/:applicationId" element={<Executive />} />
-
+                <Route path="/superAdmin" element={<SuperAdminDashboard />} />
             </Routes>
         </Router>
     );

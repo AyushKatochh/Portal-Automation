@@ -215,6 +215,77 @@ app.post('/validate-document', uploadMiddleware, async (req, res) => {
 
 
 
+app.get('/super-admin-stats', async (req, res) => {
+  try {
+    const totalApplications = await Application.countDocuments();
+    const totalInstitutes = await Institute.countDocuments();
+    const applicationsByType = await Application.aggregate([
+      {
+        $group: {
+          _id: '$type',
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+    const applicationsByStatus = await Application.aggregate([
+      {
+        $group: {
+          _id: '$status', 
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+    const institutesByState = await Institute.aggregate([
+      {
+        $group: {
+          _id: '$state', 
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const applicationStatusCounts = await Application.aggregate([
+      {
+        $group: {
+          _id: '$status',
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    // Transform the aggregation result into the desired format
+    const applicationsByStatus1 = {
+      pending: 0,
+      verified: 0, 
+      approved: 0,
+    };
+
+    applicationStatusCounts.forEach((item) => {
+      if (item._id === 'Pending') {
+        applicationsByStatus.pending = item.count;
+      } else if (item._id === 'In Progress') {
+        applicationsByStatus.verified = item.count;
+      } else if (item._id === 'Approved') {
+        applicationsByStatus.approved = item.count;
+      }
+    });
+
+
+    res.json({
+      totalApplications,
+      totalInstitutes,
+      applicationsByType,
+      applicationsByStatus,
+      institutesByState,
+      applicationsByStatus1
+    });
+  } catch (error) {
+    console.error('Error fetching super admin stats:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
 app.post("/save-contact-details", async (req, res) => {
   const { userName, contactDetails } = req.body;
   const instituteName = req.headers["institute-name"]; // Retrieve from headers
