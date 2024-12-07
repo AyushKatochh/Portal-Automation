@@ -30,7 +30,6 @@ const ExpertVisit = () => {
   const [action, setaction] = useState(null);
 
   const handleAction = (action, objectId, actiontype) => {
-    console.log(objectId);
     setid(objectId);
     setModalMessage(
       `Are you sure you want to ${action.toLowerCase()} this ${actiontype} request?`
@@ -45,15 +44,12 @@ const ExpertVisit = () => {
 
     if (confirm) {
       try {
-        console.log(remark, action, applicationId);
-        // Validate input parameters
         if (!remark || !action || !applicationId) {
           throw new Error(
             "All parameters (remark, action, applicationId, id) are required."
           );
         }
 
-        // Prepare the request payload
         const payload = {
           remark,
           action,
@@ -61,9 +57,6 @@ const ExpertVisit = () => {
           id,
         };
 
-        console.log(payload);
-
-        // Make the API call
         const response = await axios.post(
           "http://localhost:5000/api/verify-expert-visit",
           payload,
@@ -74,14 +67,9 @@ const ExpertVisit = () => {
           }
         );
 
-        // Handle success response
         alert(response.data.message || "Operation successful!");
-        console.log("Response:", response.data);
-
         return response.data;
       } catch (error) {
-        // Handle errors
-        console.error("Error verifying document:", error);
         alert(
           error.response?.data?.message ||
             "An error occurred while processing the request."
@@ -115,12 +103,21 @@ const ExpertVisit = () => {
     ));
   };
 
-  const renderValue = (value) => {
-    if (typeof value === 'object' && value !== null) {
-      // For objects, you might want to stringify or render them differently
-      return JSON.stringify(value); 
+  // Helper function to recursively render fields
+  const renderFields = (data) => {
+    if (typeof data === 'object' && data !== null) {
+      return Object.entries(data).map(([key, value]) => (
+        <div key={key} className={styles.nestedField}>
+          <label className={styles.nestedLabel}>{key}:</label>
+          {typeof value === 'object' && value !== null ? (
+            <div className={styles.nestedFields}>{renderFields(value)}</div>
+          ) : (
+            <span className={styles.nestedValue}>{value}</span>
+          )}
+        </div>
+      ));
     } else {
-      return value;
+      return <span className={styles.nestedValue}>{data}</span>;
     }
   };
 
@@ -164,45 +161,14 @@ const ExpertVisit = () => {
             </a>
             <p>DocResult:</p>
             <div className={styles.docResultContainer}>
-              {Object.entries(upload.docResult).map(([key, value]) => {
-                if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-                  return (
-                    <div key={key} className={styles.nestedObject}>
-                      <p className={styles.docResultLabel}>{key}:</p>
-                      <ul className={styles.nestedList}> 
-                        {Object.entries(value).map(([nestedKey, nestedValue]) => (
-                          <li key={nestedKey}>
-                            <strong>{nestedKey}:</strong> {renderValue(nestedValue)} 
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  );
-                } else if (Array.isArray(value)) {
-                  return (
-                    <div key={key} className={styles.nestedObject}> 
-                      <p className={styles.docResultLabel}>{key}:</p>
-                      <ul className={styles.nestedList}>
-                        {value.map((item, index) => (
-                          <li key={index}>{renderValue(item)}</li> 
-                        ))}
-                      </ul>
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div key={key} className={styles.docResultField}>
-                      <label className={styles.docResultLabel}>{key}:</label>
-                      <input
-                        type="text"
-                        defaultValue={value}
-                        className={styles.docResultInput}
-                        readOnly
-                      />
-                    </div>
-                  );
-                }
-              })}
+              {Object.entries(upload.docResult).map(([key, value]) => (
+                <div key={key} className={styles.nestedObject}>
+                  <p className={styles.docResultLabel}>{key}:</p>
+                  <div className={styles.nestedFields}>
+                    {renderFields(value)} 
+                  </div>
+                </div>
+              ))}
             </div>
             <p>Verified: {upload.is_verified ? "Yes" : "No"}</p>
             <p>Remark: {upload.remark}</p>
@@ -210,7 +176,9 @@ const ExpertVisit = () => {
               <>
                 <button
                   className={styles.approveButton}
-                  onClick={() => handleAction("Approve", upload._id, "document")}
+                  onClick={() =>
+                    handleAction("Approve", upload._id, "document")
+                  }
                 >
                   Verify
                 </button>
