@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Modal from "../components/Modal";
+import styles from './ExpertVisit.module.css';
 
 const ExpertVisit = () => {
   const { applicationId } = useParams();
@@ -39,60 +40,57 @@ const ExpertVisit = () => {
     setIsModalOpen(true);
   };
 
-
   const handleExpertVisitResponse = async (confirm, remark, action) => {
     setIsModalOpen(false);
 
-      if (confirm) {
-        try {
-          console.log(remark, action, applicationId);
-          // Validate input parameters
-          if (!remark || !action || !applicationId) {
-            throw new Error(
-              "All parameters (remark, action, applicationId, id) are required."
-            );
-          }
-
-          // Prepare the request payload
-          const payload = {
-            remark,
-            action,
-            applicationId,
-            id,
-          };
-
-          console.log(payload);
-
-          // Make the API call
-          const response = await axios.post(
-            "http://localhost:5000/api/verify-expert-visit",
-            payload,
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-
-          // Handle success response
-          alert(response.data.message || "Operation successful!");
-          console.log("Response:", response.data);
-
-          return response.data;
-        } catch (error) {
-          // Handle errors
-          console.error("Error verifying document:", error);
-          alert(
-            error.response?.data?.message ||
-              "An error occurred while processing the request."
+    if (confirm) {
+      try {
+        console.log(remark, action, applicationId);
+        // Validate input parameters
+        if (!remark || !action || !applicationId) {
+          throw new Error(
+            "All parameters (remark, action, applicationId, id) are required."
           );
         }
-      } else {
-        alert("Action cancelled.");
+
+        // Prepare the request payload
+        const payload = {
+          remark,
+          action,
+          applicationId,
+          id,
+        };
+
+        console.log(payload);
+
+        // Make the API call
+        const response = await axios.post(
+          "http://localhost:5000/api/verify-expert-visit",
+          payload,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        // Handle success response
+        alert(response.data.message || "Operation successful!");
+        console.log("Response:", response.data);
+
+        return response.data;
+      } catch (error) {
+        // Handle errors
+        console.error("Error verifying document:", error);
+        alert(
+          error.response?.data?.message ||
+            "An error occurred while processing the request."
+        );
       }
+    } else {
+      alert("Action cancelled.");
+    }
   };
-
-
 
   if (!application) {
     return <p>Loading...</p>;
@@ -100,38 +98,56 @@ const ExpertVisit = () => {
 
   const { applicationDetails, uploads } = application;
 
-  return (
-    <div>
-        <h1>Expert Visit committee</h1>
-      <h2>Application Details</h2>
-      <h2>Type: {applicationDetails.type}</h2>
-      <h3>Institute Name: {applicationDetails.instituteName}</h3>
-      <button
-        className="approve-button"
-        onClick={() => handleAction("Approve", "", "application")}
-      >
-        Approve
-      </button>
-      <button
-        className="reject-button"
-        onClick={() => handleAction("Reject", "", "application")}
-      >
-        Reject
-      </button>
-      <h4>Contact Details:</h4>
-      <pre>{JSON.stringify(applicationDetails.contactDetails, null, 2)}</pre>
+  const renderContactInputs = (contactDetails) => {
+    return Object.keys(contactDetails).map((key) => (
+      <div className={styles.inputGroup} key={key}>
+        <label htmlFor={key} className={styles.label}>
+          {key.charAt(0).toUpperCase() + key.slice(1)}
+        </label>
+        <input
+          type="text"
+          id={key}
+          name={key}
+          defaultValue={contactDetails[key]}
+          className={styles.inputField}
+        />
+      </div>
+    ));
+  };
 
-      <h4>Uploads</h4>
+  return (
+    <div className={styles.container}>
+      <h1 className={styles.heading}>Expert Visit Committee</h1>
+      <h2 className={styles.subheading}>Application Details</h2>
+      <div className={styles.applicationInfo}>
+        <h3>Type: {applicationDetails.type}</h3>
+        <h4>Institute Name: {applicationDetails.instituteName}</h4>
+      </div>
+
+      <div className={styles.actionButtons}>
+        <button
+          className={styles.approveButton}
+          onClick={() => handleAction("Approve", "", "application")}
+        >
+          Approve
+        </button>
+        <button
+          className={styles.rejectButton}
+          onClick={() => handleAction("Reject", "", "application")}
+        >
+          Reject
+        </button>
+      </div>
+
+      <h4 className={styles.sectionTitle}>Contact Details:</h4>
+      <form className={styles.contactForm}>
+        {renderContactInputs(applicationDetails.contactDetails)}
+      </form>
+
+      <h4 className={styles.sectionTitle}>Uploads</h4>
       <div>
         {uploads.map((upload, index) => (
-          <div
-            key={index}
-            style={{
-              border: "1px solid #ccc",
-              padding: "10px",
-              marginBottom: "10px",
-            }}
-          >
+          <div key={index} className={styles.uploadContainer}>
             <p>Filename: {upload.filename}</p>
             <a href={upload.url} target="_blank" rel="noopener noreferrer">
               View Document
@@ -142,7 +158,7 @@ const ExpertVisit = () => {
             {!upload.is_verified ? (
               <>
                 <button
-                  className="approve-button"
+                  className={styles.approveButton}
                   onClick={() =>
                     handleAction("Approve", upload._id, "document")
                   }
@@ -150,7 +166,7 @@ const ExpertVisit = () => {
                   Verify
                 </button>
                 <button
-                  className="reject-button"
+                  className={styles.rejectButton}
                   onClick={() => handleAction("Reject", upload._id, "document")}
                 >
                   Reject
@@ -159,7 +175,6 @@ const ExpertVisit = () => {
             ) : (
               <h6>Verified</h6>
             )}
-
             <Modal
               isOpen={isModalOpen}
               onClose={() => setIsModalOpen(false)}
