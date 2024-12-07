@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-class ChatRequest(BaseModel):
+class ChatRequestStatus(BaseModel):
     application_id: str
     query: str
 
@@ -79,42 +79,10 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-# Global chatbot instance
-mongo_uri = 'mongodb+srv://AyushKatoch:ayush2002@cluster0.72gtk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
-groq_api_key = os.getenv("GROQ_API_KEY")
-chatbot = SimpleChatbot(mongo_uri, groq_api_key)
 
-@app.post("/chat")
-async def chat_with_application(request: ChatRequest):
-    """
-    Endpoint to chat with an application based on its ID
+def load_status_chat():
+    mongo_uri = 'mongodb+srv://AyushKatoch:ayush2002@cluster0.72gtk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+    groq_api_key = os.getenv("GROQ_API_KEY")
+    chatbot = SimpleChatbot(mongo_uri, groq_api_key)
+    return chatbot
     
-    - **application_id**: The ID of the application to query
-    - **query**: The user's query about the application
-    """
-    try:
-        # Fetch application data
-        document, logs = chatbot.get_application_data(request.application_id)
-        
-        # Generate response
-        response = chatbot.generate_response(document, logs, request.query)
-        
-        return {
-            "status": "success",
-            "response": response
-        }
-    except HTTPException as e:
-        raise e
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
-
-@app.get("/health")
-async def health_check():
-    """
-    Health check endpoint to verify the API is running
-    """
-    return {"status": "healthy"}
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
