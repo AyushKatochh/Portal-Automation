@@ -1,0 +1,162 @@
+/* General Container Styling */
+.container {
+  display: flex;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  background-color: #181818; /* Dark background for the whole container */
+  color: white; /* Light text color */
+}
+
+/* Sidebar Styling */
+.sidebar {
+  width: 300px;
+  padding: 20px;
+  background-color: #242424; /* Darker background for sidebar */
+  border-right: 2px solid #333; /* Slightly lighter border */
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar h2 {
+  font-size: 24px;
+  color: #00b0ff; /* Bright blue color for headings */
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.status {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.optionButton {
+  background-color: #00b0ff; /* Bright blue */
+  color: white;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+
+.optionButton:hover {
+  background-color: #0081c1;
+  transform: translateY(-2px);
+}
+
+.optionButton:focus {
+  outline: none;
+}
+
+.optionButton:active {
+  background-color: #005b87;
+  transform: translateY(0);
+}
+
+/* Main Content Area */
+.mainContent {
+  flex: 1;
+  padding: 40px 20px;
+  background-color: #121212; /* Dark background for main content */
+  overflow-y: auto;
+}
+
+/* Heading Styling */
+h2 {
+  color: #00b0ff; /* Bright blue for main headings */
+  font-size: 28px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+
+h3 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: white;
+  background-color: #333333; /* Darker background for section headers */
+  padding: 12px;
+  text-align: center;
+  border-radius: 5px;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+/* Stage Table */
+.stageTable {
+  width: 60%; /* Set table width to 60% */
+  margin: 30px auto; /* Center the table */
+  border-collapse: collapse;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border: 3px solid #00b0ff; /* Bright blue border */
+  background-color: #1d1d1d; /* Dark background for the table */
+}
+
+.stageTable th,
+.stageTable td {
+  padding: 12px;
+  text-align: left;
+  border: 3px solid #00b0ff; /* Bright blue border */
+}
+
+.stageTable th {
+  background-color: #333333; /* Dark header background */
+  color: white;
+  font-size: 18px;
+}
+
+.stageTable td {
+  background-color: #1d1d1d; /* Dark background for cells */
+  color: white;
+  font-size: 16px;
+}
+
+.stageTable tr:nth-child(even) {
+  background-color: #242424; /* Slightly lighter dark background for even rows */
+}
+
+.stageTable tr:hover {
+  background-color: #444444; /* Darker background on hover */
+}
+
+.keyCell {
+  font-weight: bold;
+  color: #00b0ff; /* Bright blue for keys */
+}
+
+.valueCell {
+  color: white; /* Light text for values */
+  font-size: 14px;
+}
+
+/* Status Color */
+.status {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.status.inProgress {
+  color: orange;
+}
+
+.status.verified {
+  color: green;
+}
+
+.status.pending {
+  color: red;
+}
+
+.status.unknown {
+  color: gray;
+}
+
