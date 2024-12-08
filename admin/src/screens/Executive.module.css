@@ -1,0 +1,89 @@
+/* Navbar Styles */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #007bff; /* Blue background color */
+  padding: 10px 20px;
+  color: white;
+  width: 100%;
+}
+
+.navLeft {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.navRight {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+/* Application Details Styles */
+.applicationDetails {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* Small Container for Application Details and Status */
+.detailsWrapper {
+  background-color: #f8f9fa; /* Light gray background */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 60%;
+  text-align: center;
+}
+
+/* Status Wrapper Styles */
+.statusWrapper {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ccc; /* Light border around status section */
+  border-radius: 5px;
+}
+
+/* Preformatted Text */
+pre {
+  background-color: #e9ecef;
+  padding: 15px;
+  border-radius: 8px;
+  white-space: pre-wrap; /* Allow wrapping of long lines */
+  word-wrap: break-word;
+}
+
+/* Status Color */
+.status {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* Stage Table Styles */
+.stageTable {
+  margin-top: 20px;
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.keyCell {
+  font-weight: bold;
+  padding: 8px;
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.valueCell {
+  padding: 8px;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
