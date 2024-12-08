@@ -1,0 +1,82 @@
+/* General container styling */
+.applications-container {
+  background-color: #f9f9f9;
+  min-height: 100vh;
+  padding: 20px;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Grid layout for cards */
+.application-grid {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin: 80px 40px;
+}
+
+/* Card design */
+.application-card {
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  border: 1px solid #90caf9;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.application-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Typography */
+.application-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1976d2;
+  margin-bottom: 10px;
+}
+
+.application-info {
+  font-size: 1rem;
+  color: #424242;
+  margin: 5px 0;
+}
+
+/* Button design */
+.track-button {
+  background-color: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.track-button:hover {
+  background-color: #0d47a1;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 600px) {
+  .applications-container {
+    padding: 10px;
+  }
+
+  .application-card {
+    padding: 15px;
+  }
+
+  .application-title {
+    font-size: 1.3rem;
+  }
+
+  .track-button {
+    font-size: 0.9rem;
+    padding: 8px 15px;
+  }
+}

@@ -9,6 +9,8 @@ const Admin = require('../models/admin'); // Adjust the path as needed
 // API 1: Get applications by institute_id and is_complete
 router.get('/institute-applications', async (req, res) => {
     const { institute_id, is_complete } = req.query;
+
+    console.log("get application request",is_complete)
   
     if (!institute_id === undefined) {
       return res.status(400).send('Parameters institute_id and is_complete are required.');

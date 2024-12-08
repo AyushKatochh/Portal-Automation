@@ -1,0 +1,178 @@
+/* General Dashboard Styling */
+.dashboardContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+  }
+  
+  /* Navbar Styling */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  
+  .navbarTitle {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .navbarUser {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+  }
+  
+  .navbarUser svg {
+    margin-right: 10px;
+  }
+  
+  /* Sidebar Styling */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 50%; 
+    width: 300px; 
+    height: 100%;
+    background-color: #2e2e2e;
+    color: white;
+    padding: 20px;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    z-index: 99;
+    transform: translateX(-870px); 
+  }
+  
+  .sidebar.open {
+    transform: translateX(0); 
+  }
+  
+  .hamburgerButton {
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  .sidebarHeader {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    text-align: center;
+    text-transform: uppercase;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+  }
+  
+  .sidebarOptions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .sidebarOption {
+    background-color: #444;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.2s ease;
+  }
+  
+  .sidebarOption:hover {
+    background-color: #555;
+  }
+  
+  .sidebarOption.active {
+    background-color: #007bff;
+  }
+  
+  /* Content Layout */
+  .content {
+    display: flex;
+    margin-left: 350px; 
+    transition: margin-left 0.3s ease;
+    flex-grow: 1;
+    overflow: auto;
+  }
+  
+  .sidebar.open ~ .content {
+    margin-left: 300px; 
+  }
+  
+  /* Main Content Area */
+  .mainContent {
+    flex-grow: 1;
+    padding: 20px;
+  }
+  
+  /* Chart Container Styling */
+  .chartContainer {
+    background-color: white;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    width: 80%; /* Make containers smaller */
+    margin-left: auto; /* Center the containers */
+    margin-right: auto; /* Center the containers */
+  }
+  
+  .chartContainer > div { 
+    width: 100%; 
+    height: 200px; 
+    margin-bottom: 20px; 
+  }
+  /* Chart Title Styling */
+  .chartTitle {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  
+  /* Responsive Design */
+  @media screen and (max-width: 768px) {
+    .sidebar {
+      width: 200px;
+      left: 10px; 
+    }
+  
+    .content {
+      margin-left: 0;
+    }
+  
+    .sidebar.open ~ .content {
+      margin-left: 200px;
+    }
+  
+    .hamburgerButton {
+      font-size: 1.2rem;
+    }
+  
+    .chartTitle {
+      font-size: 1.2rem;
+    }
+  
+    .chartContainer > div {
+      height: 150px; /* Further reduce height on smaller screens */
+    }
+  }

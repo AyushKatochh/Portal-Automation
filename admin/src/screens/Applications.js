@@ -39,34 +39,43 @@ const Applications = () => {
 
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
-        <h1 className={styles.heading}>Welcome, {adminName}</h1>
-        <p className={styles.userDetails}>
-          <FontAwesomeIcon icon={faEnvelope} /> Username: {adminUsername}
-        </p>
+      <aside className={styles.sidebar}>
+        <h2 className={styles.heading}>Welcome, {adminName}</h2> {/* Heading in sidebar */}
         <p className={styles.userDetails}>
           <FontAwesomeIcon icon={faIdBadge} /> Your Admin ID: {adminId}
         </p>
-      </div>
-      <div className={styles.grid}>
-        {applications.map((application) => (
-          <div key={application.applicationId} className={styles.card}>
-            <FontAwesomeIcon icon={faBuilding} className={styles.icon} />
-            <h3 className={styles.cardTitle}>{application.type}</h3>
-            <p className={styles.cardText}>Institute: {application.instituteName}</p>
-            <p className={styles.cardText}>Status: {application.status}</p>
-            <p className={styles.cardText}>
-              Deadline: {new Date(application.deadline).toLocaleDateString()}
+      </aside>
+
+      <main className={styles.mainContent}>
+        <nav className={styles.navbar}>
+          <h1 className={styles.heading}>Scrutiny Committee</h1> {/* Heading in navbar */}
+          <div className={styles.userDetails}> {/* User details in navbar */}
+            <p>
+              <FontAwesomeIcon icon={faEnvelope} /> {adminUsername}
             </p>
-            <button
-              className={styles.button}
-              onClick={() => handleViewDetails(application.applicationId)}
-            >
-              View Details
-            </button>
           </div>
-        ))}
-      </div>
+        </nav>
+
+        <div className={styles.grid}>
+          {applications.map((application) => (
+            <div key={application.applicationId} className={styles.card}>
+              <FontAwesomeIcon icon={faBuilding} className={styles.icon} />
+              <h3 className={styles.cardTitle}>{application.type}</h3>
+              <p className={styles.cardText}>Institute: {application.instituteName}</p>
+              <p className={styles.cardText}>Status: {application.status}</p>
+              <p className={styles.cardText}>
+                Deadline: {new Date(application.deadline).toLocaleDateString()}
+              </p>
+              <button
+                className={styles.button}
+                onClick={() => handleViewDetails(application.applicationId)}
+              >
+                View Details
+              </button>
+            </div>
+          ))}
+        </div>
+      </main>
     </div>
   );
 };

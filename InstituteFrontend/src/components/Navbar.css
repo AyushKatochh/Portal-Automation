@@ -1,0 +1,44 @@
+/* Navbar Container */
+.navbar {
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color:white;
+    /* color: #fff; */
+    padding: 1px 20px;
+    height: auto;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Icon Styling */
+  .navbar-icon {
+    width: auto;
+    height: 35px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .navbar-icon:hover {
+    transform: scale(1.1);
+  }
+  
+  .left-icon {
+    margin-left: 10px;
+  }
+  
+  .right-icon {
+    margin-right: 10px;
+  }
+  
+  /* Title Styling */
+  .navbar-title {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    color:#52A3FF;
+    letter-spacing: 1px;
+  }
+  
