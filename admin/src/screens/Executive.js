@@ -5,6 +5,7 @@ import styles from './Executive.module.css'; // Import the CSS Module
 
 const Executive = () => {
   const [application, setApplication] = useState(null);
+  const [selectedStage, setSelectedStage] = useState('document_verification'); // Default to 'document_verification'
   const { applicationId } = useParams();
 
   useEffect(() => {
@@ -21,6 +22,7 @@ const Executive = () => {
           application_id: data.logs_id?.application_id || 'Unknown Application ID',
           status: data.logs_id?.status || 'Unknown Status',
           stage: data.logs_id?.stage || {}, // Include stage if needed
+          status_logs: data.status_logs || [],
         };
 
         setApplication(filteredData);
@@ -54,33 +56,55 @@ const Executive = () => {
       break;
   }
 
+  // Render nested tables for each stage
+  const renderNestedTable = (nestedObj) => {
+    return (
+      <table className={styles.stageTable}>
+        <tbody>
+          {Object.keys(nestedObj).map((key) => (
+            <tr key={key}>
+              <td className={styles.keyCell}>{key}</td>
+              <td className={styles.valueCell}>{JSON.stringify(nestedObj[key])}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
+
+  // Conditional rendering for different stage tables
+  const renderStageContent = () => {
+    const stageData = application.stage[selectedStage];
+
+    if (!stageData) {
+      return <div>No data available for this stage.</div>;
+    }
+
+    return (
+      <>
+        <h3>{selectedStage.replace('_', ' ').toUpperCase()} Details</h3>
+        {renderNestedTable(stageData)}
+      </>
+    );
+  };
+
   return (
-    <div className={styles.applicationDetails}>
-      {/* Navbar */}
-      <nav className={styles.navbar}>
-        <h1 className={styles.navLeft}>Executive Member</h1>
-        <p className={styles.navRight}>Application ID: {application.application_id}</p>
-      </nav>
-
-      {/* Application Details Container */}
-      <div className={styles.detailsWrapper}>
-        <h2>Application Details</h2>
-        <div className={styles.statusWrapper}>
-          <p>Status: <span className={styles.status} style={{ color: statusColor }}>{application.status}</span></p>
+    <div className={styles.container}>
+      {/* Sidebar */}
+      <div className={styles.sidebar}>
+        <h2>Application Status</h2>
+        <p>Status: <span className={styles.status} style={{ color: statusColor }}>{application.status}</span></p>
+        <div className={styles.options}>
+          <button onClick={() => setSelectedStage('document_verification')} className={styles.optionButton}>Document Verification</button>
+          <button onClick={() => setSelectedStage('expert_visit_stage')} className={styles.optionButton}>Expert Visit</button>
+          <button onClick={() => setSelectedStage('final_stage')} className={styles.optionButton}>Final Stage</button>
         </div>
+      </div>
 
-        {/* Display stage data in a table */}
-        <h3>Stage Details</h3>
-        <table className={styles.stageTable}>
-          <tbody>
-            {Object.keys(application.stage).map((key) => (
-              <tr key={key}>
-                <td className={styles.keyCell}>{key}</td>
-                <td className={styles.valueCell}>{JSON.stringify(application.stage[key])}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {/* Main Content Area */}
+      <div className={styles.mainContent}>
+        <h2>Application Details</h2>
+        {renderStageContent()}
       </div>
     </div>
   );
