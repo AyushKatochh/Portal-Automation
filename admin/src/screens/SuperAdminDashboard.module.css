@@ -1,178 +1,253 @@
-/* General Dashboard Styling */
 .dashboardContainer {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-  }
-  
-  /* Navbar Styling */
-  .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  
-  .navbarTitle {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-  
-  .navbarUser {
-    display: flex;
-    align-items: center;
-    font-size: 1rem;
-  }
-  
-  .navbarUser svg {
-    margin-right: 10px;
-  }
-  
-  /* Sidebar Styling */
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: 50%; 
-    width: 300px; 
-    height: 100%;
-    background-color: #2e2e2e;
-    color: white;
-    padding: 20px;
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-    z-index: 99;
-    transform: translateX(-870px); 
-  }
-  
-  .sidebar.open {
-    transform: translateX(0); 
-  }
-  
-  .hamburgerButton {
-    background-color: transparent;
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    cursor: pointer;
-    margin-bottom: 20px;
-  }
-  
-  .sidebarHeader {
-    font-size: 1.2rem;
-    margin-bottom: 20px;
-    text-align: center;
-    text-transform: uppercase;
-    border-bottom: 1px solid #444;
-    padding-bottom: 10px;
-  }
-  
-  .sidebarOptions {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .sidebarOption {
-    background-color: #444;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: left;
-    transition: background-color 0.2s ease;
-  }
-  
-  .sidebarOption:hover {
-    background-color: #555;
-  }
-  
-  .sidebarOption.active {
-    background-color: #007bff;
-  }
-  
-  /* Content Layout */
-  .content {
-    display: flex;
-    margin-left: 350px; 
-    transition: margin-left 0.3s ease;
-    flex-grow: 1;
-    overflow: auto;
-  }
-  
-  .sidebar.open ~ .content {
-    margin-left: 300px; 
-  }
-  
-  /* Main Content Area */
-  .mainContent {
-    flex-grow: 1;
-    padding: 20px;
-  }
-  
-  /* Chart Container Styling */
-  .chartContainer {
-    background-color: white;
-    padding: 20px;
-    margin: 20px 0;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    width: 80%; /* Make containers smaller */
-    margin-left: auto; /* Center the containers */
-    margin-right: auto; /* Center the containers */
-  }
-  
-  .chartContainer > div { 
-    width: 100%; 
-    height: 200px; 
-    margin-bottom: 20px; 
-  }
-  /* Chart Title Styling */
-  .chartTitle {
-    text-align: center;
-    font-size: 1.4rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  
-  /* Responsive Design */
-  @media screen and (max-width: 768px) {
-    .sidebar {
-      width: 200px;
-      left: 10px; 
-    }
-  
-    .content {
-      margin-left: 0;
-    }
-  
-    .sidebar.open ~ .content {
-      margin-left: 200px;
-    }
-  
-    .hamburgerButton {
-      font-size: 1.2rem;
-    }
-  
-    .chartTitle {
-      font-size: 1.2rem;
-    }
-  
-    .chartContainer > div {
-      height: 150px; /* Further reduce height on smaller screens */
-    }
-  }
+  font-family: Arial, sans-serif;
+  background-color: #f4f6f9; /* Light background color for the entire page */
+  color: #333; /* Dark text color for readability */
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #2c3e50; /* Darker navbar background */
+  color: white;
+}
+
+.navbarTitle {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.navbarOptions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbarSearch {
+  padding: 5px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.navbarButton {
+  background-color: #3498db; /* More subtle blue color */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.navbarButton:hover {
+  background-color: #2980b9; /* Slightly darker blue on hover */
+}
+
+.navbarUser {
+  font-size: 1rem;
+}
+
+.contentWrapper {
+  display: flex;
+  padding: 20px;
+  gap: 20px;
+}
+
+.sidebar {
+  width: 220px; /* Decreased the width of the sidebar */
+  background-color: #34495e; /* A more muted, professional dark color */
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for the sidebar */
+}
+
+.sidebarMenu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebarItem {
+  margin: 15px 0;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.sidebarItem:hover {
+  background-color: #1abc9c; /* Subtle green color on hover */
+}
+
+.sidebarItem svg {
+  margin-right: 10px;
+}
+
+.mainContent {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row; /* Stats and charts side-by-side */
+  width: 100%; 
+}
+
+.statsContainer {
+  width: 30%; /* Adjust as needed */
+  margin-right: 20px; /* Add some space between stats and charts */
+}
+
+.statCard {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  flex: 1;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow effect */
+}
+
+.statCard h3 {
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  color: #2c3e50; /* Dark color for the stat titles */
+  background-color: transparent; 
+}
+
+.statCard p {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #3498db; /* Soft blue color for numbers */
+}
+
+.chartsContainer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 charts per row */
+  gap: 20px;
+  width: 70%; /* Adjust as needed */
+}
+
+.chartCard {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.chartTitle {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #2c3e50; /* Dark color for chart titles */
+  background-color: transparent;
+}
+
+.adminInfoSection {
+  background-color: #ecf0f1; /* Very light gray background */
+  padding: 20px;
+  margin-top: 30px; /* Add margin for separation */
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow effect */
+}
+
+.adminInfoSection h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #2c3e50; /* Dark color for the section title */
+}
+
+.adminInfoSection p {
+  font-size: 1rem;
+  color: #7f8c8d; /* Muted text color for section details */
+}
+
+.adminInfoIcon {
+  margin-right: 10px;
+  color: #2c3e50;
+}
+
+.sidebarItemActive {
+  background-color: #2980b9; /* Darker blue when the item is active */
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdownButton {
+  background-color: #3498db;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdownContent {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown:hover .dropdownContent {
+  display: block;
+}
+
+/* ... (other styles) ... */
+
+/* ... (other styles) ... */
+
+.modal {
+  /* Modal styles */
+  background-color: white;
+  max-width: 80%; /* Take up more of the screen width */
+  margin: 10vh auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  height: 80%;
+}
+
+
+.modal h2 {
+  margin-bottom: 20px;
+}
+
+
+.modal button {
+  /* Modal button styles */
+  padding: 10px 20px; /* Increased padding */
+  border: none;
+  border-radius: 8px; /* Less rounded corners */
+  cursor: pointer;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%); 
+  width: 120px; /* Set a fixed width */
+}
+
+.modal button:first-child {
+  background-color: #ff4d4d;
+  color: white;
+  margin-right: 20px; /* Increased margin */
+}
+
+.modal button:nth-child(2) {
+  background-color: #5cb85c;
+  color: white;
+  margin-left: 20px; /* Increased margin */
+}
+
+.closeButton {
+  margin-right: 20px;
+}

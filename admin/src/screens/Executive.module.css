@@ -3,7 +3,7 @@
   display: flex;
   height: 100vh;
   font-family: Arial, sans-serif;
-  background-color: #181818; /* Dark background for the whole container */
+  background-color: #f9fafa; /* Dark background for the whole container */
   color: white; /* Light text color */
 }
 
@@ -11,7 +11,7 @@
 .sidebar {
   width: 300px;
   padding: 20px;
-  background-color: #242424; /* Darker background for sidebar */
+  background-color: #8b8686; /* Darker background for sidebar */
   border-right: 2px solid #333; /* Slightly lighter border */
   display: flex;
   flex-direction: column;
@@ -66,7 +66,7 @@
 .mainContent {
   flex: 1;
   padding: 40px 20px;
-  background-color: #121212; /* Dark background for main content */
+  background-color: #fff; /* Dark background for main content */
   overflow-y: auto;
 }
 
@@ -97,8 +97,8 @@ h3 {
   margin: 30px auto; /* Center the table */
   border-collapse: collapse;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  border: 3px solid #00b0ff; /* Bright blue border */
-  background-color: #1d1d1d; /* Dark background for the table */
+  border: 3px solid #053d56; /* Bright blue border */
+  background-color: #dcdada; /* Dark background for the table */
 }
 
 .stageTable th,
