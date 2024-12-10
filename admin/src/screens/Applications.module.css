@@ -29,11 +29,7 @@
   margin-bottom: 15px; /* Increased margin */
 }
 
-/* Main Content Area */
-.mainContent {
-  flex-grow: 1;
-  padding: 20px;
-}
+
 
 /* Navbar Styling */
 .navbar {
@@ -58,11 +54,18 @@
 }
 
 /* Grid Styling */
+.mainContent {
+  flex-grow: 1;
+  padding: 20px;
+  display: flex;           /* Enable flexbox for .mainContent */
+  flex-wrap: wrap;        /* Allow items to wrap */
+  justify-content: center; /* Center items horizontally */
+}
+
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); 
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive columns */
   gap: 20px;
-  justify-content: space-around; /* Distribute cards evenly */
 }
 
 /* Card Styling */
@@ -72,6 +75,7 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
   text-align: center;
+  height: 50%;
 }
 
 .cardTitle {
