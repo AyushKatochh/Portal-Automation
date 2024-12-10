@@ -24,7 +24,6 @@ import {
   faBriefcase,
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./SuperAdminDashboard.module.css";
-import Modal from "react-modal";
 
 const SuperAdminDashboard = () => {
   const [stats, setStats] = useState(null);
@@ -32,8 +31,6 @@ const SuperAdminDashboard = () => {
   const [showAdminInfo, setShowAdminInfo] = useState(false);
   const [selectedSection, setSelectedSection] = useState("");
   const [selectedMember, setSelectedMember] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalData, setModalData] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -436,17 +433,7 @@ const SuperAdminDashboard = () => {
     navigate("/applications", { state: { member } });
   };
 
-  const handleViewApplications = (member) => {
-    setModalData(member);
-    setIsModalOpen(true);
-  };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setModalData(null);
-  };
-
-  
   const COLORS = ["#0088FE", "#00C49F"];
 
   return (
@@ -516,12 +503,7 @@ const SuperAdminDashboard = () => {
                   <button onClick={() => handleMemberClick(member)} className={styles.dropdownButton}>
                     View Details
                   </button>
-                  <div className={styles.dropdownContent}>
-                    <p>Number of allocated applications: {member.applicationsAllocated}</p>
-                    <button onClick={() => handleViewApplications(member)}>
-                      View Applications
-                    </button>
-                  </div>
+                  
                 </div>
               </div>
             ))}
@@ -650,24 +632,7 @@ const SuperAdminDashboard = () => {
         </div>
       </div>
 
-      <Modal
-      isOpen={isModalOpen}
-      onRequestClose={closeModal}
-      contentLabel="Member Applications"
-      className={styles.modal}
-      overlayClassName={styles.overlay}
-    >
-      <h2>{modalData?.name} - Applications</h2>
-
-      {/* Report button */}
-      <button className={styles.reportButton} onClick={() => { 
-        // Add your report logic here, e.g., open a new form, send an email, etc.
-        console.log("Report button clicked for", modalData?.name); 
-      }}>
-        Report
-      </button>
-
-    </Modal>
+      
     </div>
   );
 };
