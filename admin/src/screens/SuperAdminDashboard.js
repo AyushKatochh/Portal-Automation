@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   BarChart,
   Bar,
@@ -33,6 +34,7 @@ const SuperAdminDashboard = () => {
   const [selectedMember, setSelectedMember] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const dummyData = {
@@ -431,7 +433,7 @@ const SuperAdminDashboard = () => {
   };
 
   const handleMemberClick = (member) => {
-    setSelectedMember(member);
+    navigate("/applications", { state: { member } });
   };
 
   const handleViewApplications = (member) => {
@@ -444,6 +446,7 @@ const SuperAdminDashboard = () => {
     setModalData(null);
   };
 
+  
   const COLORS = ["#0088FE", "#00C49F"];
 
   return (
@@ -510,7 +513,7 @@ const SuperAdminDashboard = () => {
               >
                 <h3>{member.name}</h3>
                 <div className={styles.dropdown}>
-                  <button className={styles.dropdownButton}>
+                  <button onClick={() => handleMemberClick(member)} className={styles.dropdownButton}>
                     View Details
                   </button>
                   <div className={styles.dropdownContent}>
