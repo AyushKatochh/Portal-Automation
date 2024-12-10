@@ -13,6 +13,7 @@ services:
     environment:
       - GROQ_API_KEY=${GROQ_API_KEY} # Pass the OpenAI API key as an environment variable
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS}
     networks:
       - app_network
 
