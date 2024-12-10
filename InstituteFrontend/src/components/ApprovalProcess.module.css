@@ -1,8 +1,8 @@
 .pageContainer {
   width: 80%; /* Set width to 80% of the page */
   margin: 0 auto; /* Center the container horizontally */
-  border: 1px solid #ddd; /* Light border around the container */
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow for better design */
+  /* border: 1px solid #ddd; Light border around the container */
+  /* box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); Optional: subtle shadow for better design */
   background-color: #fff; /* Ensure a white background */
   padding: 1rem; /* Add padding inside the container */
   box-sizing: border-box; /* Include padding in the width */
@@ -23,6 +23,7 @@
 }
 
 .stepsListContainer {
+
   display: flex;
   align-items: center; /* Center align the arrows and step list */
   width: 100%; /* Full width for alignment */
@@ -75,6 +76,16 @@
   text-decoration: none;
   color: #333;
   font-weight: bold;
+  cursor: pointer;
+}
+
+.uploadButton {
+  padding: 0.5rem 1rem;
+  background-color: #48afef; /* Example button color */
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
 }
 
 .stepCircle {
@@ -101,15 +112,7 @@
   font-weight: bold;
 }
 
-.connectingLine {
-  width: calc(100% - 4rem); /* Subtract arrow width to ensure it doesn’t overlap */
-  height: 2px;
-  background-color: #ccc;
-  z-index: 1;
-  transform: translateY(-50%);
-  margin: 0 auto; /* Center align the line */
-  display: block; /* Default behavior */
-}
+/*  */
 
 .arrow {
   display: flex;

@@ -8,6 +8,7 @@ import Step6 from './Step6';
 import Step7 from './Step7';
 import  navbarImage from '../assets/banner.jpg';
 import { useParams } from 'react-router-dom';
+import Navbar from './Navbar';
 
 const ApprovalProcess = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -42,12 +43,11 @@ const ApprovalProcess = () => {
   }, [applicationId]);
 
   const steps = [
-    'Institute',
     'Contact',
     'Programme',
     'Land Details',
     'Bank Details',
-    'Uplaod File'
+    'Upl0ad File'
   ];
 
   useEffect(() => {
@@ -115,13 +115,11 @@ const ApprovalProcess = () => {
 
   return (
     <div className={styles.ApprovalProcessPage}>
-      <img
-        src={navbarImage}
-        alt="Navbar"
-        className={styles.navbarImage}
-      />
+      
+      <Navbar name={instituteName} activeKey={"Application Form"}/>
       <div className={styles.pageContainer}>
         <nav className={styles.navbar}>
+              <div><button className={styles.uploadButton} onClick={submitApplication}>Final Submit</button></div>
           <div className={styles.userId}>
             User: {userName} ({instituteName})
           </div>
@@ -161,17 +159,15 @@ const ApprovalProcess = () => {
                 : styles.connectingLine
             }
           ></div>
-          <div><button onClick={submitApplication}>Fimal Submit</button></div>
         </nav>
-        <div className={styles.content}>
-          {currentStep === 1 && <Step2 />}
-          {currentStep === 2 && <Step3 />}
-          {currentStep === 3 && <Step4 />}
-          {currentStep === 4 && <Step5 />}
-          {currentStep === 5 && <Step6 />}
-          {currentStep === 6 && <Step7 applicationId={applicationId}/>}
+        {application && <div className={styles.content}>
+          {currentStep === 1 && <Step3 application={application.applicationDetails} applicationId={applicationId} updateApplication={(updatedApplication) => setApplication(updatedApplication)}/>}
+          {currentStep === 2 && <Step4 />}
+          {currentStep === 3 && <Step5 application={application.applicationDetails} applicationId={applicationId} updateApplication={(updatedApplication) => setApplication(updatedApplication)}/>}
+          {currentStep === 4 && <Step6 application={application.applicationDetails} applicationId={applicationId} updateApplication={(updatedApplication) => setApplication(updatedApplication)}/>}
+          {currentStep === 5 && <Step7 application={application.uploads} applicationId={applicationId} updateApplication={(updatedApplication) => setApplication(updatedApplication)}/>}
 
-        </div>
+        </div>}
       </div>
     </div>
   );

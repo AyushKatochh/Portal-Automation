@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import styles from './Step5.module.css';
 
-const Step5 = () => {
+const Step5 = ({application, applicationId, updateApplication}) => {
   const [landDetails, setLandDetails] = useState({
     location: '',
     hillyArea: 'Yes',
@@ -15,6 +15,18 @@ const Step5 = () => {
     dateOfRegistration: '',
   });
 
+  console.log(applicationId)
+
+    // Synchronize state with application.contactDetails on mount or application change
+    useEffect(() => {
+      if (application?.contactDetails) {
+        setLandDetails((prevDetails) => ({
+          ...prevDetails,
+          ...application.contactDetails,
+        }));
+      }
+    }, [application]);
+
   const handleChange = (e) => {
     const { id, value } = e.target;
     setLandDetails({ ...landDetails, [id]: value });
@@ -23,17 +35,18 @@ const Step5 = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const userName = 'aman'; // Replace with dynamic user name
-    const response = await fetch('/save-land-details', {
+    const response = await fetch('http://localhost:5000/api/save-land-details', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        applicationId: applicationId,
       },
-      body: JSON.stringify({ userName, landDetails }),
+      body: JSON.stringify({landDetails }),
     });
 
     const data = await response.json();
     if (response.ok) {
+      updateApplication(data?.application);
       alert('Land details saved successfully');
     } else {
       alert(`Error: ${data.message}`);
@@ -56,7 +69,7 @@ const Step5 = () => {
               type="text"
               id="location"
               className={styles.input}
-              value={landDetails.location}
+              value={landDetails.location ||""}
               onChange={handleChange}
             />
           </div>
@@ -68,7 +81,7 @@ const Step5 = () => {
             <select
               id="hillyArea"
               className={styles.input}
-              value={landDetails.hillyArea}
+              value={landDetails.hillyArea ||""}
               onChange={handleChange}
             >
               <option value="Yes">Yes</option>
@@ -84,7 +97,7 @@ const Step5 = () => {
               type="number"
               id="totalArea"
               className={styles.input}
-              value={landDetails.totalArea}
+              value={landDetails.totalArea ||""}
               onChange={handleChange}
             />
           </div>
@@ -97,7 +110,7 @@ const Step5 = () => {
               type="number"
               id="fsi"
               className={styles.input}
-              value={landDetails.fsi}
+              value={landDetails.fsi ||""}
               onChange={handleChange}
             />
           </div>
@@ -110,7 +123,7 @@ const Step5 = () => {
               type="number"
               id="numberOfPlaces"
               className={styles.input}
-              value={landDetails.numberOfPlaces}
+              value={landDetails.numberOfPlaces ||""}
               onChange={handleChange}
             />
           </div>
@@ -123,7 +136,7 @@ const Step5 = () => {
               type="number"
               id="landPieceArea1"
               className={styles.input}
-              value={landDetails.landPieceArea1}
+              value={landDetails.landPieceArea1 ||""}
               onChange={handleChange}
             />
           </div>
@@ -136,7 +149,7 @@ const Step5 = () => {
               type="number"
               id="landPieceArea2"
               className={styles.input}
-              value={landDetails.landPieceArea2}
+              value={landDetails.landPieceArea2 ||""}
               onChange={handleChange}
             />
           </div>
@@ -149,7 +162,7 @@ const Step5 = () => {
               type="number"
               id="landPieceArea3"
               className={styles.input}
-              value={landDetails.landPieceArea3}
+              value={landDetails.landPieceArea3 ||""}
               onChange={handleChange}
             />
           </div>
@@ -162,7 +175,7 @@ const Step5 = () => {
               type="text"
               id="landRegistrationNo"
               className={styles.input}
-              value={landDetails.landRegistrationNo}
+              value={landDetails.landRegistrationNo ||""}
               onChange={handleChange}
             />
           </div>
@@ -175,12 +188,12 @@ const Step5 = () => {
               type="date"
               id="dateOfRegistration"
               className={styles.input}
-              value={landDetails.dateOfRegistration}
+              value={landDetails.dateOfRegistration ||""}
               onChange={handleChange}
             />
           </div>
         </div>
-        <button type="submit" className={styles.submitButton}>Save</button>
+        <button type="submit" className={styles.uploadButton}>Save</button>
       </form>
     </div>
   );

@@ -18,6 +18,7 @@ export default function ApplicationStatus() {
   const [application, setApplication] = useState(null);
   const [statusLogs, setStatusLogs] = useState([]);
   const [instituteName, setInstituteName] = useState('');
+  const [istyping, setisTyping] = useState(false)
 
 
   useEffect(() => {
@@ -65,6 +66,8 @@ export default function ApplicationStatus() {
 
   // Handle sending messages
   const sendMessage = async () => {
+
+    setisTyping(true)
     if (!currentMessage.trim()) return;
 
     // Append user message to chat
@@ -119,7 +122,7 @@ export default function ApplicationStatus() {
           text: response.data.response,
           date: new Date(),
         };
-
+        setisTyping(false)
         setMessages((prevMessages) => [...prevMessages, botResponse]);
       } catch (error) {
         console.error("Error communicating with backend:", error);
@@ -270,7 +273,7 @@ export default function ApplicationStatus() {
         )}
       </div>
       <div className="chat-container">
-      <h3 style={{lineHeight:0.8}} className="title">SARTHI</h3>
+      <h3 style={{lineHeight:0.8}} className="title">SARTHI {istyping && <span style={{color:'green'}}>is Analyzing</span>}</h3>
 
         <MessageList
           className="message-list"

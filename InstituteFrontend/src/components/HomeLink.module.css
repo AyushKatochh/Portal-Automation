@@ -1,98 +1,94 @@
-/* src/components/HomeLink.module.css */
+/* HomeLink.module.css */
 
 .homeLinkContainer {
-    padding: 2rem;
-    max-width: 80%;
-    margin: 0 auto;
-    text-align: center;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #fefefe;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-  
-  .header {
-    font-size: 2rem;
-    color: #3498db;
-    margin-bottom: 0.5rem;
-  }
-  
-  .horizontalLine {
-    width: 50%;
-    height: 2px;
-    background-color: #ccc;
-    margin-bottom: 2rem;
-  }
-  
-  .cardContainer {
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-  }
-  
-  .card {
-    flex: 1 1 calc(25% - 1rem); /* Adjusted for 4 cards */
-    min-width: 200px;
-    max-width: 300px;
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 1.5rem;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
-  }
-  
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-  }
-  
-  .icon {
-    font-size: 2.5rem;
-    color: #3498db;
-    margin-bottom: 1rem;
-  }
-  
-  .cardTitle {
-    font-size: 1.5rem;
-    color: #3498db;
-    margin-bottom: 1rem;
-  }
-  
-  .cardDescription {
-    font-size: 1rem;
-    color: #7f8c8d;
-  }
-  
-  @media (max-width: 768px) {
-    .cardContainer {
-      flex-direction: column;
-      align-items: center;
-    }
-  
-    .card {
-      margin-bottom: 1rem;
-    }
-  }
+  background: linear-gradient(120deg, #3498db, #8e44ad);
+  padding: 2rem;
+  color: #fff;
+  text-align: center;
+  min-height: 95vh;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+}
 
-  .loaderContainer {
-    position: fixed; /* Use fixed positioning to cover the whole viewport */
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
+.header {
+  margin-top: 70px;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+
+.horizontalLine {
+  width: 60%;
+  height: 4px;
+  background-color: #ffffff;
+  border-radius: 4px;
+  margin-bottom: 2rem;
+}
+
+
+
+.cardContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.card {
+  background: #ffffff;
+  color: #2c3e50;
+  border-radius: 12px;
+  padding: 1.5rem;
+  max-width: 280px;
+  min-width: 200px;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.icon {
+  font-size: 3rem;
+  color: #3498db;
+  margin-bottom: 1rem;
+}
+
+.cardTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.cardDescription {
+  font-size: 1rem;
+  color: #7f8c8d;
+}
+
+.loaderContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.loaderText {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .cardContainer {
+    flex-direction: column;
     align-items: center;
-    background-color: white; /* Set background color to white */
-    z-index: 100; /* Ensure the loader is on top */
   }
-  
+}

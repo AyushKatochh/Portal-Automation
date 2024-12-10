@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./Step3.module.css";
 
-const Step3 = () => {
+const Step3 = ({ application, applicationId, updateApplication }) => {
+  // State for contact details
   const [contactDetails, setContactDetails] = useState({
     title: "",
     firstName: "",
@@ -17,35 +18,41 @@ const Step3 = () => {
     emailAddress: "",
   });
 
+  // Synchronize state with application.contactDetails on mount or application change
+  useEffect(() => {
+    console.log(application)
+    if (application?.contactDetails) {
+      setContactDetails((prevDetails) => ({
+        ...prevDetails,
+        ...application.contactDetails,
+      }));
+    }
+  }, [application]);
+
+  // Handle input change
   const handleChange = (e) => {
-    setContactDetails({ ...contactDetails, [e.target.id]: e.target.value });
+    const { id, value } = e.target;
+    setContactDetails((prevDetails) => ({
+      ...prevDetails,
+      [id]: value,
+    }));
   };
 
+  // Handle save button click
   const handleSave = async () => {
-    const userData = JSON.parse(localStorage.getItem("userData"));
-    console.log("LocalStorage Data:", userData);
-  
-    if (!userData || !userData.userName || !userData.instituteName) {
-      alert("User data not found in localStorage.");
-      return;
-    }
-  
     try {
-      const response = await fetch("http://localhost:5000/save-contact-details", {
+      const response = await fetch("http://localhost:5000/api/save-contact-details", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Institute-Name": userData.instituteName, // Send instituteName in the headers
+          applicationId: applicationId,
         },
-        body: JSON.stringify({
-          userName: userData.userName, // Pass the userName from localStorage
-          contactDetails, // Pass the contactDetails to save
-        }),
+        body: JSON.stringify({ contactDetails }),
       });
-  
+
       const result = await response.json();
-      console.log("Response:", result);
-  
+      updateApplication(result?.application);
+
       if (response.ok) {
         alert("Details saved successfully!");
       } else {
@@ -56,7 +63,6 @@ const Step3 = () => {
       alert("An error occurred while saving details.");
     }
   };
-  
 
   return (
     <div className={styles.step3Container}>
@@ -74,13 +80,13 @@ const Step3 = () => {
               type={key === "emailAddress" ? "email" : "text"}
               id={key}
               className={styles.input}
-              value={contactDetails[key]}
+              value={contactDetails[key] || ""}
               onChange={handleChange}
             />
           </div>
         ))}
       </div>
-      <button onClick={handleSave} className={styles.saveButton}>
+      <button onClick={handleSave} className={styles.uploadButton}>
         Save Details
       </button>
     </div>

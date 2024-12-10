@@ -14,7 +14,6 @@ const saveValidationResponse = require('./utils/saveDocResult'); // Import the f
 const addUploadToApplication = require('./utils/updateApplicationUploads'); // Import the function
 require('dotenv').config();
 
-
 const app = express();
 const PORT = 5000;
 
@@ -29,6 +28,7 @@ app.use("/api", require("./routes/adminapplications"));
 app.use("/api", require("./routes/createApplication"));
 app.use("/api", require("./routes/verifications"));
 app.use("/api", require("./routes/getData"));
+app.use("/api", require("./routes/newApplication"));
 
 
 app.post('/upload', (req, res) => {
@@ -114,9 +114,9 @@ const uploadMiddleware = (req, res, next) => {
 //INCLUDE AWS here......................................................
 
 const s3 = new AWS.S3({
-  accessKeyId: process.env.AWSID, 
-  secretAccessKey: process.env.AWSKEY,
- });
+  accessKeyId: 'AKIARHQBNPCADJETSQ7P', 
+  secretAccessKey: '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',
+});
 
 // Function to upload file to S3
 const uploadPdfToS3 = async (bucketName, filePath, s3Key) => {
@@ -215,96 +215,81 @@ app.post('/validate-document', uploadMiddleware, async (req, res) => {
 
 
 
-app.post("/save-contact-details", async (req, res) => {
-  const { userName, contactDetails } = req.body;
-  const instituteName = req.headers["institute-name"]; // Retrieve from headers
 
-  console.log("Received Data:", { userName, instituteName, contactDetails });
+/////////////////.............super admin endpoint...............//////////////////////
 
-  if (!userName || !instituteName || !contactDetails) {
-    return res.status(400).json({ message: "Required data is missing." });
-  }
 
+app.get('/super-admin-stats', async (req, res) => {
   try {
-    // Use a case-insensitive query for both userName and name (which is the instituteName in the database)
-    const institute = await Institute.findOne({
-      userName: userName,
-      name: { $regex: new RegExp("^" + instituteName + "$", "i") } // Case-insensitive matching for 'name' field
+    const totalApplications = await Application.countDocuments();
+    const totalInstitutes = await Institute.countDocuments();
+    const applicationsByType = await Application.aggregate([
+      {
+        $group: {
+          _id: '$type',
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+    const applicationsByStatus = await Application.aggregate([
+      {
+        $group: {
+          _id: '$status', 
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+    const institutesByState = await Institute.aggregate([
+      {
+        $group: {
+          _id: '$state', 
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const applicationStatusCounts = await Application.aggregate([
+      {
+        $group: {
+          _id: '$status',
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    // Transform the aggregation result into the desired format
+    const applicationsByStatus1 = {
+      pending: 0,
+      verified: 0, 
+      approved: 0,
+    };
+
+    applicationStatusCounts.forEach((item) => {
+      if (item._id === 'Pending') {
+        applicationsByStatus.pending = item.count;
+      } else if (item._id === 'In Progress') {
+        applicationsByStatus.verified = item.count;
+      } else if (item._id === 'Approved') {
+        applicationsByStatus.approved = item.count;
+      }
     });
 
-    console.log("Found Institute:", institute); // Log the found institute
 
-    if (!institute) {
-      return res.status(404).json({ message: "Institute not found." });
-    }
-
-    // Update only the contactDetails field (do not modify other fields like name)
-    institute.contactDetails = contactDetails;
-
-    // Save the document with updated contactDetails only
-    await institute.save();
-
-    res.status(200).json({ message: "Contact details updated successfully.", institute });
+    res.json({
+      totalApplications,
+      totalInstitutes,
+      applicationsByType,
+      applicationsByStatus,
+      institutesByState,
+      applicationsByStatus1
+    });
   } catch (error) {
-    console.error("Error updating contact details:", error);
-    res.status(500).json({ message: "Server error." });
+    console.error('Error fetching super admin stats:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
-app.post("/save-land-details", async (req, res) => {
-  const { userName, landDetails } = req.body;
 
-  if (!userName || !landDetails) {
-    return res.status(400).json({ message: "Required data is missing." });
-  }
 
-  try {
-    // Find the institute based on the userName
-    const institute = await Institute.findOne({ userName });
-
-    if (!institute) {
-      return res.status(404).json({ message: "Institute not found." });
-    }
-
-    // Update the institute with the new landDetails
-    institute.landDetails = landDetails;
-
-    // Save the updated document
-    await institute.save();
-
-    res.status(200).json({ message: "Land details saved successfully.", institute });
-  } catch (error) {
-    console.error("Error saving land details:", error);
-    res.status(500).json({ message: "Server error." });
-  }
-});
-
-app.post("/save-bank-details", async (req, res) => {
-  const { userName, bankDetails } = req.body;
-
-  if (!userName || !bankDetails) {
-    return res.status(400).json({ message: "Required data is missing." });
-  }
-
-  try {
-    // Find the institute based on the userName
-    const institute = await Institute.findOne({ userName });
-
-    if (!institute) {
-      return res.status(404).json({ message: "Institute not found." });
-    }
-
-    // Update the institute with the new bankDetails
-    institute.bankDetails = bankDetails;
-
-    // Save the updated document
-    await institute.save();
-
-    res.status(200).json({ message: "Bank details saved successfully.", institute });
-  } catch (error) {
-    console.error("Error saving bank details:", error);
-    res.status(500).json({ message: "Server error." });
-  }
-});
 // Start server
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

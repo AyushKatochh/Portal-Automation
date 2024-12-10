@@ -57,3 +57,14 @@
     gap: 1rem;
     flex-wrap: wrap; /* Allow wrapping to the next line */
   }
+
+
+
+  .uploadButton {
+    padding: 0.5rem 1rem;
+    background-color: #48afef; /* Example button color */
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+  }

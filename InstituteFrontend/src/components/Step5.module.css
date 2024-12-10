@@ -49,3 +49,13 @@
   margin: 0; /* Align with the heading */
   border: 2px solid #0400ff; /* Bluish color for the horizontal line */
 }
+
+
+.uploadButton {
+  padding: 0.5rem 1rem;
+  background-color: #48afef; /* Example button color */
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+}

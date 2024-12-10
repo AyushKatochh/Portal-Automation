@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./Step6.module.css";
 
-const Step6 = () => {
+const Step6 = ({application, applicationId, updateApplication}) => {
   const [bankDetails, setBankDetails] = useState({
     bankName: "",
     bankIfscCode: "",
@@ -14,6 +14,17 @@ const Step6 = () => {
     bankPin: "",
   });
 
+
+    // Synchronize state with application.contactDetails on mount or application change
+    useEffect(() => {
+      if (application?.contactDetails) {
+        setBankDetails((prevDetails) => ({
+          ...prevDetails,
+          ...application.contactDetails,
+        }));
+      }
+    }, [application]);
+
   const handleChange = (e) => {
     const { id, value } = e.target;
     setBankDetails({ ...bankDetails, [id]: value });
@@ -22,17 +33,18 @@ const Step6 = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const userName = "aman"; // Replace with dynamic user name
-    const response = await fetch("http://localhost:5000/save-bank-details", {
+    const response = await fetch("http://localhost:5000/api/save-bank-details", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "applicationId": applicationId,
       },
-      body: JSON.stringify({ userName, bankDetails }),
+      body: JSON.stringify({bankDetails }),
     });
 
     const data = await response.json();
     if (response.ok) {
+      updateApplication(data.application);
       alert("Bank details saved successfully");
     } else {
       alert(`Error: ${data.message}`);
@@ -156,7 +168,7 @@ const Step6 = () => {
             />
           </div>
         </div>
-        <button type="submit" className={styles.submitButton}>Save</button>
+        <button type="submit" className={styles.uploadButton}>Save</button>
       </form>
     </div>
   );
