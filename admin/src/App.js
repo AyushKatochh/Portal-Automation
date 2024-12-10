@@ -1,14 +1,17 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AppProvider } from './Context/AppContext';
 import Login from './screens/Login';
 import Applications from './screens/Applications';
 import ApplicationDetail from './screens/ApplicationDetail';
 import ExpertVisit from './screens/ExpertVisit';
 import Executive from './screens/Executive';
 import SuperAdminDashboard from './screens/SuperAdminDashboard';
+import Footer from "./screens/Footer";
 
 function App() {
     return (
+        <AppProvider>
         <Router>
             <Routes>
                 <Route path="/" element={<Login />} />
@@ -19,6 +22,8 @@ function App() {
                 <Route path="/superAdmin" element={<SuperAdminDashboard />} />
             </Routes>
         </Router>
+        <Footer/>
+        </AppProvider>
     );
 }
 

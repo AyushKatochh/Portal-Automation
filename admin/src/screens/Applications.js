@@ -4,6 +4,7 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBuilding, faIdBadge, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import styles from './Applications.module.css';
+import Navbar from "./Navbar";
 
 const Applications = () => {
   const [applications, setApplications] = useState([]);
@@ -38,23 +39,15 @@ const Applications = () => {
   };
 
   return (
+    <div>
+    <Navbar 
+        name={adminCommittee} 
+        activeKey={adminName} 
+        adminId={adminId}  // Pass adminId as a prop
+      /> 
     <div className={styles.page}>
-      <aside className={styles.sidebar}>
-        <h2 className={styles.heading}>Welcome, {adminName}</h2> {/* Heading in sidebar */}
-        <p className={styles.userDetails}>
-          <FontAwesomeIcon icon={faIdBadge} /> Your Admin ID: {adminId}
-        </p>
-      </aside>
 
       <main className={styles.mainContent}>
-        <nav className={styles.navbar}>
-          <h1 className={styles.heading}>Scrutiny Committee</h1> {/* Heading in navbar */}
-          <div className={styles.userDetails}> {/* User details in navbar */}
-            <p>
-              <FontAwesomeIcon icon={faEnvelope} /> {adminUsername}
-            </p>
-          </div>
-        </nav>
 
         <div className={styles.grid}>
           {applications.map((application) => (
@@ -76,6 +69,7 @@ const Applications = () => {
           ))}
         </div>
       </main>
+    </div>
     </div>
   );
 };

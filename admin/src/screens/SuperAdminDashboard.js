@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   BarChart,
   Bar,
@@ -7,141 +7,531 @@ import {
   YAxis,
   Tooltip,
   Legend,
-  PieChart,
-  Pie,
-  Cell,
-  LineChart,
-  Line,
   AreaChart,
   Area,
   ResponsiveContainer,
-} from 'recharts';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faTimes, faUser } from '@fortawesome/free-solid-svg-icons';
-import styles from './SuperAdminDashboard.module.css';
+  LineChart,
+  Line,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faUser,
+  faClipboardList,
+  faStethoscope,
+  faBriefcase,
+} from "@fortawesome/free-solid-svg-icons";
+import styles from "./SuperAdminDashboard.module.css";
 
 const SuperAdminDashboard = () => {
   const [stats, setStats] = useState(null);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [userName, setUserName] = useState('');
-  const [activeChart, setActiveChart] = useState('applicationsByStatus');
+  const [userName, setUserName] = useState("");
+  const [showAdminInfo, setShowAdminInfo] = useState(false);
+  const [selectedSection, setSelectedSection] = useState("");
+  const [selectedMember, setSelectedMember] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/super-admin-stats');
-        setStats(response.data);
-        const fetchedUserName = response.data.userName || 'Super Admin';
-        setUserName(fetchedUserName);
-      } catch (error) {
-        console.error('Error fetching stats:', error);
-      }
+    const dummyData = {
+      userName: "Super Admin",
+      scrutinyStats: {
+        committeeMembers: 3,
+        members: [
+          {
+            name: "John Doe",
+            applicationsAllocated: 6,
+            pending: 2,
+            inProgress: 3,
+            verified: 1,
+            applicationsOverTime: [
+              { month: "Jan", applications: 1 },
+              { month: "Feb", applications: 3 },
+              { month: "Mar", applications: 2 },
+            ],
+            applicationsCompleted: [
+              { name: "Completed", value: 4 },
+              { name: "Not Completed", value: 2 },
+            ],
+          },
+          {
+            name: "Jane Smith",
+            applicationsAllocated: 5,
+            pending: 1,
+            inProgress: 3,
+            verified: 1,
+            applicationsOverTime: [
+              { month: "Jan", applications: 2 },
+              { month: "Feb", applications: 2 },
+              { month: "Mar", applications: 1 },
+            ],
+            applicationsCompleted: [
+              { name: "Completed", value: 3 },
+              { name: "Not Completed", value: 2 },
+            ],
+          },
+          {
+            name: "Peter Jones",
+            applicationsAllocated: 4,
+            pending: 2,
+            inProgress: 1,
+            verified: 1,
+            applicationsOverTime: [
+              { month: "Jan", applications: 0 },
+              { month: "Feb", applications: 1 },
+              { month: "Mar", applications: 3 },
+            ],
+            applicationsCompleted: [
+              { name: "Completed", value: 2 },
+              { name: "Not Completed", value: 2 },
+            ],
+          },
+        ],
+        applicationsAllocated: 15,
+        pending: 5,
+        inProgress: 8,
+        verified: 2,
+        applicationsOverTime: [
+          { month: "Jan", applications: 2 },
+          { month: "Feb", applications: 5 },
+          { month: "Mar", applications: 3 },
+        ],
+        applicationsCompleted: [
+          { name: "Completed", value: 4 },
+          { name: "Not Completed", value: 2 },
+        ],
+      },
+      expertVisitStats: {
+        committeeMembers: 2,
+        members: [
+          {
+            name: "Alice Brown",
+            applicationsAllocated: 6,
+            pending: 2,
+            inProgress: 3,
+            verified: 1,
+            applicationsOverTime: [
+              { month: "Jan", applications: 1 },
+              { month: "Feb", applications: 2 },
+              { month: "Mar", applications: 3 },
+            ],
+            applicationsCompleted: [
+              { name: "Completed", value: 4 },
+              { name: "Not Completed", value: 2 },
+            ],
+          },
+          {
+            name: "Bob Johnson",
+            applicationsAllocated: 4,
+            pending: 1,
+            inProgress: 2,
+            verified: 1,
+            applicationsOverTime: [
+              { month: "Jan", applications: 0 },
+              { month: "Feb", applications: 2 },
+              { month: "Mar", applications: 2 },
+            ],
+            applicationsCompleted: [
+              { name: "Completed", value: 3 },
+              { name: "Not Completed", value: 1 },
+            ],
+          },
+        ],
+        applicationsAllocated: 10,
+        pending: 3,
+        inProgress: 5,
+        verified: 2,
+        applicationsOverTime: [
+          { month: "Jan", applications: 1 },
+          { month: "Feb", applications: 4 },
+          { month: "Mar", applications: 5 },
+        ],
+        applicationsCompleted: [
+          { name: "Completed", value: 5 },
+          { name: "Not Completed", value: 1 },
+        ],
+      },
+      executiveStats: {
+        committeeMembers: 2,
+        members: [
+          {
+            name: "Eva Green",
+            applicationsAllocated: 7,
+            pending: 3,
+            inProgress: 3,
+            verified: 1,
+            applicationsOverTime: [
+              { month: "Jan", applications: 2 },
+              { month: "Feb", applications: 1 },
+              { month: "Mar", applications: 4 },
+            ],
+            applicationsCompleted: [
+              { name: "Completed", value: 5 },
+              { name: "Not Completed", value: 2 },
+            ],
+          },
+          {
+            name: "Charlie Brown",
+            applicationsAllocated: 5,
+            pending: 1,
+            inProgress: 3,
+            verified: 1,
+            applicationsOverTime: [
+              { month: "Jan", applications: 1 },
+              { month: "Feb", applications: 2 },
+              { month: "Mar", applications: 2 },
+            ],
+            applicationsCompleted: [
+              { name: "Completed", value: 2 },
+              { name: "Not Completed", value: 3 },
+            ],
+          },
+        ],
+        applicationsAllocated: 12,
+        pending: 4,
+        inProgress: 6,
+        verified: 2,
+        applicationsOverTime: [
+          { month: "Jan", applications: 3 },
+          { month: "Feb", applications: 3 },
+          { month: "Mar", applications: 6 },
+        ],
+        applicationsCompleted: [
+          { name: "Completed", value: 3 },
+          { name: "Not Completed", value: 3 },
+        ],
+      },
+      applicationsByStatus: [
+        { _id: "Pending", count: 12 },
+        { _id: "In Progress", count: 19 },
+        { _id: "Verified", count: 6 },
+      ],
+      applicationsOverTime: [
+        { month: "Jan", applications: 6 },
+        { month: "Feb", applications: 12 },
+        { month: "Mar", applications: 14 },
+      ],
     };
 
-    fetchStats();
+    setStats(dummyData);
+    setUserName(dummyData.userName);
   }, []);
 
   if (!stats) {
     return <div>Loading...</div>;
   }
 
-  const applicationsByTypeData = stats.applicationsByType.map((item) => ({
-    name: item._id,
-    applications: item.count,
-  }));
+  const getStatsData = () => {
+    if (selectedMember) {
+      switch (selectedSection) {
+        case "Scrutiny":
+          return {
+            committeeMembers: stats.scrutinyStats.committeeMembers,
+            members: stats.scrutinyStats.members,
+            applicationsAllocated: stats.scrutinyStats.applicationsAllocated,
+            pending: stats.scrutinyStats.pending,
+            inProgress: stats.scrutinyStats.inProgress,
+            verified: stats.scrutinyStats.verified,
+            applicationsByStatus: [
+              { name: "Pending", value: stats.scrutinyStats.pending },
+              {
+                name: "In Progress",
+                value: stats.scrutinyStats.inProgress,
+              },
+              { name: "Verified", value: stats.scrutinyStats.verified },
+            ],
+            applicationsOverTime: stats.scrutinyStats.applicationsOverTime,
+            applicationsCompleted: stats.scrutinyStats.applicationsCompleted,
+          };
+        case "Expert Visit":
+          return {
+            committeeMembers: stats.expertVisitStats.committeeMembers,
+            members: stats.expertVisitStats.members,
+            applicationsAllocated:
+              stats.expertVisitStats.applicationsAllocated,
+            pending: stats.expertVisitStats.pending,
+            inProgress: stats.expertVisitStats.inProgress,
+            verified: stats.expertVisitStats.verified,
+            applicationsByStatus: [
+              { name: "Pending", value: stats.expertVisitStats.pending },
+              {
+                name: "In Progress",
+                value: stats.expertVisitStats.inProgress,
+              },
+              { name: "Verified", value: stats.expertVisitStats.verified },
+            ],
+            applicationsOverTime: stats.expertVisitStats.applicationsOverTime,
+            applicationsCompleted: stats.expertVisitStats.applicationsCompleted,
+          };
+        case "Executive":
+          return {
+            committeeMembers: stats.executiveStats.committeeMembers,
+            members: stats.executiveStats.members,
+            applicationsAllocated: stats.executiveStats.applicationsAllocated,
+            pending: stats.executiveStats.pending,
+            inProgress: stats.executiveStats.inProgress,
+            verified: stats.executiveStats.verified,
+            applicationsByStatus: [
+              { name: "Pending", value: stats.executiveStats.pending },
+              {
+                name: "In Progress",
+                value: stats.executiveStats.inProgress,
+              },
+              { name: "Verified", value: stats.executiveStats.verified },
+            ],
+            applicationsOverTime: stats.executiveStats.applicationsOverTime,
+            applicationsCompleted: stats.executiveStats.applicationsCompleted,
+          };
+        default:
+          return {
+            committeeMembers: 0,
+            members: [],
+            applicationsAllocated: 0,
+            pending: 0,
+            inProgress: 0,
+            verified: 0,
+            applicationsByStatus: [
+              {
+                name: "Pending",
+                value:
+                  stats.applicationsByStatus.find(
+                    (item) => item._id === "Pending"
+                  ).count,
+              },
+              {
+                name: "In Progress",
+                value:
+                  stats.applicationsByStatus.find(
+                    (item) => item._id === "In Progress"
+                  ).count,
+              },
+              {
+                name: "Verified",
+                value:
+                  stats.applicationsByStatus.find(
+                    (item) => item._id === "Verified"
+                  ).count,
+              },
+            ],
+            applicationsOverTime: stats.applicationsOverTime,
+            applicationsCompleted: [],
+          };
+      }
+    } else {
+      switch (selectedSection) {
+        case "Scrutiny":
+          return {
+            committeeMembers: stats.scrutinyStats.committeeMembers,
+            members: stats.scrutinyStats.members,
+            applicationsAllocated: stats.scrutinyStats.applicationsAllocated,
+            pending: stats.scrutinyStats.pending,
+            inProgress: stats.scrutinyStats.inProgress,
+            verified: stats.scrutinyStats.verified,
+            applicationsByStatus: [
+              { name: "Pending", value: stats.scrutinyStats.pending },
+              {
+                name: "In Progress",
+                value: stats.scrutinyStats.inProgress,
+              },
+              { name: "Verified", value: stats.scrutinyStats.verified },
+            ],
+            applicationsOverTime: stats.scrutinyStats.applicationsOverTime,
+            applicationsCompleted: stats.scrutinyStats.applicationsCompleted,
+          };
+        case "Expert Visit":
+          return {
+            committeeMembers: stats.expertVisitStats.committeeMembers,
+            members: stats.expertVisitStats.members,
+            applicationsAllocated:
+              stats.expertVisitStats.applicationsAllocated,
+            pending: stats.expertVisitStats.pending,
+            inProgress: stats.expertVisitStats.inProgress,
+            verified: stats.expertVisitStats.verified,
+            applicationsByStatus: [
+              { name: "Pending", value: stats.expertVisitStats.pending },
+              {
+                name: "In Progress",
+                value: stats.expertVisitStats.inProgress,
+              },
+              { name: "Verified", value: stats.expertVisitStats.verified },
+            ],
+            applicationsOverTime: stats.expertVisitStats.applicationsOverTime,
+            applicationsCompleted: stats.expertVisitStats.applicationsCompleted,
+          };
+        case "Executive":
+          return {
+            committeeMembers: stats.executiveStats.committeeMembers,
+            members: stats.executiveStats.members,
+            applicationsAllocated: stats.executiveStats.applicationsAllocated,
+            pending: stats.executiveStats.pending,
+            inProgress: stats.executiveStats.inProgress,
+            verified: stats.executiveStats.verified,
+            applicationsByStatus: [
+              { name: "Pending", value: stats.executiveStats.pending },
+              {
+                name: "In Progress",
+                value: stats.executiveStats.inProgress,
+              },
+              { name: "Verified", value: stats.executiveStats.verified },
+            ],
+            applicationsOverTime: stats.executiveStats.applicationsOverTime,
+            applicationsCompleted: stats.executiveStats.applicationsCompleted,
+          };
+        default:
+          return {
+            committeeMembers: 0,
+            members: [],
+            applicationsAllocated: 0,
+            pending: 0,
+            inProgress: 0,
+            verified: 0,
+            applicationsByStatus: [
+              {
+                name: "Pending",
+                value:
+                  stats.applicationsByStatus.find(
+                    (item) => item._id === "Pending"
+                  ).count,
+              },
+              {
+                name: "In Progress",
+                value:
+                  stats.applicationsByStatus.find(
+                    (item) => item._id === "In Progress"
+                  ).count,
+              },
+              {
+                name: "Verified",
+                value:
+                  stats.applicationsByStatus.find(
+                    (item) => item._id === "Verified"
+                  ).count,
+              },
+            ],
+            applicationsOverTime: stats.applicationsOverTime,
+            applicationsCompleted: [],
+          };
+      }
+    }
+  };
 
-  const applicationsByStatusData = [
-    { name: 'Pending', value: stats.applicationsByStatus.find(item => item._id === "Pending")?.count || 10 },
-    { name: 'In Progress', value: stats.applicationsByStatus.find(item => item._id === "In Progress")?.count || 30 },
-    { name: 'Approved', value: stats.applicationsByStatus.find(item => item._id === "Approved")?.count || 15 },
-  ];
+  const statsData = getStatsData();
 
-  const applicationsOverTimeData = stats.applicationsOverTime || [
-    { month: 'Jan', applications: 12 },
-    { month: 'Feb', applications: 15 },
-    { month: 'Mar', applications: 8 },
-    { month: 'Apr', applications: 10 },
-    { month: 'May', applications: 18 },
-  ];
+  const handleAdminInfoClick = () => {
+    setShowAdminInfo(!showAdminInfo);
+    setSelectedSection("");
+    setSelectedMember(null);
+  };
 
-  const COLORS = ['#FF5733', '#33FF57', '#3357FF'];
+  const handleSectionSelect = (section) => {
+    setSelectedSection(section);
+    setSelectedMember(null);
+  };
+
+  const handleMemberClick = (member) => {
+    navigate("/applications", { state: { member } });
+  };
+
+
+  const COLORS = ["#0088FE", "#00C49F"];
 
   return (
     <div className={styles.dashboardContainer}>
-      {/* Top Navbar */}
       <nav className={styles.navbar}>
         <h1 className={styles.navbarTitle}>Super Admin Panel</h1>
+        <div className={styles.navbarOptions}>
+          <button
+            className={styles.navbarButton}
+            onClick={handleAdminInfoClick}
+          >
+            Admin Information
+          </button>
+          <input
+            type="text"
+            className={styles.navbarSearch}
+            placeholder="Enter Admin ID"
+          />
+        </div>
         <div className={styles.navbarUser}>
           <FontAwesomeIcon icon={faUser} /> Welcome, {userName}
         </div>
       </nav>
 
-      {/* Main Dashboard Layout */}
-      <div className={styles.content}>
-        <aside className={`${styles.sidebar} ${sidebarOpen ? styles.open : ''}`}>
-          <button
-            className={styles.hamburgerButton}
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-          >
-            <FontAwesomeIcon icon={sidebarOpen ? faTimes : faBars} />
-          </button>
-          <div className={styles.sidebarContent}>
-            <h2 className={styles.sidebarHeader}>Charts</h2>
-            <div className={styles.sidebarOptions}>
-              <button
-                className={`${styles.sidebarOption} ${activeChart === 'applicationsByStatus' ? styles.active : ''}`}
-                onClick={() => setActiveChart('applicationsByStatus')}
+      <div className={styles.contentWrapper}>
+        <div className={styles.sidebar}>
+          {showAdminInfo && (
+            <ul className={styles.sidebarMenu}>
+              <li
+                className={styles.sidebarItem}
+                onClick={() => handleSectionSelect("Scrutiny")}
               >
-                Applications by Status
-              </button>
-              <button
-                className={`${styles.sidebarOption} ${activeChart === 'applicationsByType' ? styles.active : ''}`}
-                onClick={() => setActiveChart('applicationsByType')}
+                <FontAwesomeIcon icon={faClipboardList} /> Scrutiny
+              </li>
+              <li
+                className={styles.sidebarItem}
+                onClick={() => handleSectionSelect("Expert Visit")}
               >
-                Applications by Type
-              </button>
-              <button
-                className={`${styles.sidebarOption} ${activeChart === 'applicationsOverTime' ? styles.active : ''}`}
-                onClick={() => setActiveChart('applicationsOverTime')}
+                <FontAwesomeIcon icon={faStethoscope} /> Expert Visit
+              </li>
+              <li
+                className={styles.sidebarItem}
+                onClick={() => handleSectionSelect("Executive")}
               >
-                Applications Over Time
-              </button>
-              <button
-                className={`${styles.sidebarOption} ${activeChart === 'applicationsTrend' ? styles.active : ''}`}
-                onClick={() => setActiveChart('applicationsTrend')}
+                <FontAwesomeIcon icon={faBriefcase} /> Executive
+              </li>
+            </ul>
+          )}
+        </div>
+
+        <div className={styles.mainContent}>
+          <div className={styles.statsContainer}>
+            <div className={styles.statCard}>
+              <h3>Committee Members</h3>
+              <p>{statsData.committeeMembers}</p>
+            </div>
+
+            {statsData.members.map((member, index) => (
+              <div
+                className={styles.statCard}
+                key={index}
+                onClick={() => handleMemberClick(member)}
+                style={{ cursor: "pointer" }}
               >
-                Applications Trend
-              </button>
+                <h3>{member.name}</h3>
+                <div className={styles.dropdown}>
+                  <button onClick={() => handleMemberClick(member)} className={styles.dropdownButton}>
+                    View Details
+                  </button>
+                  
+                </div>
+              </div>
+            ))}
+
+            <div className={styles.statCard}>
+              <h3>Applications Allocated</h3>
+              <p>{statsData.applicationsAllocated}</p>
+            </div>
+
+            <div className={styles.statCard}>
+              <h3>Pending Applications</h3>
+              <p>{statsData.pending}</p>
+            </div>
+            <div className={styles.statCard}>
+              <h3>In Progress Applications</h3>
+              <p>{statsData.inProgress}</p>
+            </div>
+            <div className={styles.statCard}>
+              <h3>Verified Applications</h3>
+              <p>{statsData.verified}</p>
             </div>
           </div>
-        </aside>
 
-        <main className={styles.mainContent}>
-          {activeChart === 'applicationsByStatus' && (
-            <div className={styles.chartContainer}>
-              <h2 className={styles.chartTitle}>Applications by Status</h2>
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={applicationsByStatusData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                    label
-                  >
-                    {applicationsByStatusData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={applicationsByStatusData}> 
+          <div className={styles.chartsContainer}>
+            <div className={styles.chartCard}>
+              <h3 className={styles.chartTitle}>Applications by Status</h3>
+              <ResponsiveContainer width="100%" height={150}>
+                <BarChart data={statsData.applicationsByStatus}>
                   <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip />
@@ -150,79 +540,99 @@ const SuperAdminDashboard = () => {
                 </BarChart>
               </ResponsiveContainer>
             </div>
-          )}
-
-          {activeChart === 'applicationsByType' && (
-            <div className={styles.chartContainer}>
-              <h2 className={styles.chartTitle}>Applications by Type</h2>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={applicationsByTypeData}>
-                  <XAxis dataKey="name" />
+            <div className={styles.chartCard}>
+              <h3 className={styles.chartTitle}>Applications Over Time</h3>
+              <ResponsiveContainer width="100%" height={150}>
+                <AreaChart data={statsData.applicationsOverTime}>
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip />
+                  <Area
+                    type="monotone"
+                    dataKey="applications"
+                    stroke="#3357FF"
+                    fill="#3357FF"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+            <div className={styles.chartCard}>
+              <h3 className={styles.chartTitle}>Applications Trend</h3>
+              <ResponsiveContainer width="100%" height={150}>
+                <BarChart data={statsData.applicationsOverTime}>
+                  <XAxis dataKey="month" />
                   <YAxis />
                   <Tooltip />
                   <Legend />
                   <Bar dataKey="applications" fill="#33FF57" />
                 </BarChart>
               </ResponsiveContainer>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={applicationsByTypeData}>
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="applications" stroke="#33FF57" />
-                </LineChart>
-              </ResponsiveContainer>
             </div>
-          )}
-
-          {activeChart === 'applicationsOverTime' && (
-            <div className={styles.chartContainer}>
-              <h2 className={styles.chartTitle}>Applications Over Time</h2>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={applicationsOverTimeData}>
+            <div className={styles.chartCard}>
+              <h3 className={styles.chartTitle}>
+                Applications Trend (Area)
+              </h3>
+              <ResponsiveContainer width="100%" height={150}>
+                <AreaChart data={statsData.applicationsOverTime}>
                   <XAxis dataKey="month" />
                   <YAxis />
                   <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="applications" stroke="#FF5733" />
-                </LineChart>
-              </ResponsiveContainer>
-              <ResponsiveContainer width="100%" height={300}>
-                <AreaChart data={applicationsOverTimeData}>
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
-                  <Area type="monotone" dataKey="applications" stroke="#FF5733" fill="#FF5733" /> 
+                  <Area
+                    type="monotone"
+                    dataKey="applications"
+                    stroke="#FF5733"
+                    fill="#FF5733"
+                  />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
-          )}
-
-          {activeChart === 'applicationsTrend' && (
-            <div className={styles.chartContainer}>
-              <h2 className={styles.chartTitle}>Applications Trend</h2>
-              <ResponsiveContainer width="100%" height={300}>
-                <AreaChart data={applicationsOverTimeData}>
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
-                  <Area type="monotone" dataKey="applications" stroke="#3357FF" fill="#3357FF" />
-                </AreaChart>
-              </ResponsiveContainer>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={applicationsOverTimeData}>
+            <div className={styles.chartCard}>
+              <h3 className={styles.chartTitle}>Applications Line Chart</h3>
+              <ResponsiveContainer width="100%" height={150}>
+                <LineChart data={statsData.applicationsOverTime}>
                   <XAxis dataKey="month" />
                   <YAxis />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="applications" fill="#3357FF" />
-                </BarChart>
+                  <Line
+                    type="monotone"
+                    dataKey="applications"
+                    stroke="#8884d8"
+                  />
+                </LineChart>
               </ResponsiveContainer>
             </div>
-          )}
-        </main>
+
+            <div className={styles.chartCard}>
+              <h3 className={styles.chartTitle}>Applications Completed</h3>
+              <ResponsiveContainer width="100%" height={150}>
+                <PieChart>
+                  <Pie
+                    data={statsData.applicationsCompleted}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={50}
+                    fill="#8884d8"
+                    label
+                  >
+                    {statsData.applicationsCompleted.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
       </div>
+
+      
     </div>
   );
 };

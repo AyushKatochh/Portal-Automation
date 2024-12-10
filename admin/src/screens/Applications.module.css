@@ -29,11 +29,7 @@
   margin-bottom: 15px; /* Increased margin */
 }
 
-/* Main Content Area */
-.mainContent {
-  flex-grow: 1;
-  padding: 20px;
-}
+
 
 /* Navbar Styling */
 .navbar {
@@ -58,21 +54,36 @@
 }
 
 /* Grid Styling */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); 
-  gap: 20px;
-  justify-content: space-around; /* Distribute cards evenly */
+.mainContent {
+  flex-grow: 1;
+  padding: 20px;
+  display: flex;          
+  flex-wrap: wrap;        /* Allow items to wrap */
+  justify-content: center; /* Center items horizontally */
 }
 
-/* Card Styling */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 2fr)); /* Responsive columns */
+  gap: 20px;
+}
+
 .card {
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
   text-align: center;
+  height: auto; 
+  display: flex; 
+  flex-direction: column; 
+  justify-content: space-between; 
 }
+
+.cardContent { /* Style for the card content container */
+  margin-bottom: 20px; /* Add margin at the bottom */
+}
+
 
 .cardTitle {
   font-size: 18px;
@@ -105,3 +116,4 @@
 .button:hover {
   background-color: #218838;
 }
+
