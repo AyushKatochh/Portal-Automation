@@ -57,26 +57,33 @@
 .mainContent {
   flex-grow: 1;
   padding: 20px;
-  display: flex;           /* Enable flexbox for .mainContent */
+  display: flex;          
   flex-wrap: wrap;        /* Allow items to wrap */
   justify-content: center; /* Center items horizontally */
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive columns */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 2fr)); /* Responsive columns */
   gap: 20px;
 }
 
-/* Card Styling */
 .card {
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
   text-align: center;
-  height: 50%;
+  height: auto; 
+  display: flex; 
+  flex-direction: column; 
+  justify-content: space-between; 
 }
+
+.cardContent { /* Style for the card content container */
+  margin-bottom: 20px; /* Add margin at the bottom */
+}
+
 
 .cardTitle {
   font-size: 18px;
@@ -109,3 +116,4 @@
 .button:hover {
   background-color: #218838;
 }
+

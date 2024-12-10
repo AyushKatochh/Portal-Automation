@@ -11,10 +11,10 @@
 .sidebar {
   width: 300px;
   padding: 20px;
-  background-color: #8b8686; /* Darker background for sidebar */
-  border-right: 2px solid #333; /* Slightly lighter border */
   display: flex;
   flex-direction: column;
+  background-color: #fff;
+  top: 50%;
 }
 
 .sidebar h2 {
@@ -29,28 +29,35 @@
   font-size: 18px;
   margin-bottom: 30px;
   text-align: center;
+  margin-bottom: 10px;
 }
 
 .options {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
 }
 
 .optionButton {
-  background-color: #00b0ff; /* Bright blue */
-  color: white;
-  padding: 12px;
+  color: #00b0ff;
+  background-color: #fff;
+  width: 70%;
+  padding: 12px 3px;
   font-size: 16px;
   border: none;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 20px;
   transition: background-color 0.3s ease, transform 0.2s;
+  margin-top: 20px;
+  border: 2px solid #00b0ff;
 }
 
 .optionButton:hover {
   background-color: #0081c1;
   transform: translateY(-2px);
+  color: #fff;
 }
 
 .optionButton:focus {
@@ -115,13 +122,13 @@ h3 {
 }
 
 .stageTable td {
-  background-color: #1d1d1d; /* Dark background for cells */
+  background-color: #fff; /* Dark background for cells */
   color: white;
   font-size: 16px;
 }
 
 .stageTable tr:nth-child(even) {
-  background-color: #242424; /* Slightly lighter dark background for even rows */
+  background-color: #fff; /* Slightly lighter dark background for even rows */
 }
 
 .stageTable tr:hover {
@@ -160,3 +167,8 @@ h3 {
   color: gray;
 }
 
+
+
+.detailsHeader {
+  background-color: #00b0ff;
+}

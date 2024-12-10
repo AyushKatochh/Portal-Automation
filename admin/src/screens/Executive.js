@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import styles from './Executive.module.css'; // Import the CSS Module
+import styles from './Executive.module.css'; 
+import Navbar from './Navbar'; 
 
 const Executive = () => {
   const [application, setApplication] = useState(null);
-  const [selectedStage, setSelectedStage] = useState('document_verification'); // Default to 'document_verification'
+  const [selectedStage, setSelectedStage] = useState('document_verification'); 
   const { applicationId } = useParams();
 
   useEffect(() => {
@@ -14,14 +15,12 @@ const Executive = () => {
         const response = await axios.get(`http://localhost:5000/api/track-application/${applicationId}`);
         const data = response.data;
 
-        // Log the response for verification
         console.log('API Response:', data);
 
-        // Extract application_id, status, and stage
         const filteredData = {
           application_id: data.logs_id?.application_id || 'Unknown Application ID',
           status: data.logs_id?.status || 'Unknown Status',
-          stage: data.logs_id?.stage || {}, // Include stage if needed
+          stage: data.logs_id?.stage || {}, 
           status_logs: data.status_logs || [],
         };
 
@@ -39,40 +38,84 @@ const Executive = () => {
     return <div>Loading...</div>;
   }
 
-  // Determine the status color
   let statusColor;
   switch (application.status) {
     case 'In Progress':
-      statusColor = 'orange'; // For "In Progress"
+      statusColor = 'orange'; 
       break;
     case 'Verified':
-      statusColor = 'green'; // For "Verified"
+      statusColor = 'green'; 
       break;
     case 'Pending':
-      statusColor = 'red'; // For "Pending"
+      statusColor = 'red'; 
       break;
     default:
-      statusColor = 'gray'; // Default color for unknown status
+      statusColor = 'gray';
       break;
   }
 
-  // Render nested tables for each stage
   const renderNestedTable = (nestedObj) => {
+    // Define the custom labels here
+    const labels = {
+      is_completed: 'Completed by Scrutiny',
+      success: 'Success', 
+      verification_timestamp: 'Time of Verification',
+      remark: 'Remark',
+      is_allocated: 'Allocated by Member', 
+    };
+
+    const formatValue = (key, value) => {
+      switch (key) {
+        case 'is_completed':
+        case 'success':
+        case 'is_allocated':
+          return value ? 'Yes' : 'No'; 
+        case 'verification_timestamp':
+          return new Date(value).toLocaleString(); // Format the date and time
+        default:
+          return value;
+      }
+    };
+
     return (
       <table className={styles.stageTable}>
-        <tbody>
-          {Object.keys(nestedObj).map((key) => (
-            <tr key={key}>
-              <td className={styles.keyCell}>{key}</td>
-              <td className={styles.valueCell}>{JSON.stringify(nestedObj[key])}</td>
-            </tr>
-          ))}
+         <tbody>
+          {Object.keys(nestedObj).map((key) => {
+            const value = formatValue(key, nestedObj[key]);
+
+            // Determine the container style based on the value
+            let containerStyle = {};
+            if (typeof value === 'string' && (value.toLowerCase() === 'yes' || value.toLowerCase() === 'no')) {
+              containerStyle.backgroundColor = value.toLowerCase() === 'yes' ? 'green' : 'red';
+              containerStyle.color = 'white';
+              containerStyle.padding = '3px 7px';   // Reduced padding
+              containerStyle.borderRadius = '4px';  // Smaller border radius
+              containerStyle.display = 'inline-block'; 
+              containerStyle.textAlign = 'center'
+              containerStyle.borderRadius = '15px'
+            }
+
+            // Style for the key cell (remains the same)
+            const keyCellStyle = {
+              color: 'gray',
+            };
+
+            return (
+              <tr key={key}>
+                <td className={styles.keyCell} style={keyCellStyle}>{labels[key] || key}</td>
+                <td className={styles.valueCell} style={{ backgroundColor: 'white', textAlign: 'center', color: 'black' }}>
+                  <div style={containerStyle}>
+                    {value}
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     );
   };
 
-  // Conditional rendering for different stage tables
   const renderStageContent = () => {
     const stageData = application.stage[selectedStage];
 
@@ -82,29 +125,31 @@ const Executive = () => {
 
     return (
       <>
-        <h3>{selectedStage.replace('_', ' ').toUpperCase()} Details</h3>
+        <h3 className={styles.detailsHeader}>{selectedStage.replace('_', ' ').toUpperCase()} Details</h3>
         {renderNestedTable(stageData)}
       </>
     );
   };
 
   return (
-    <div className={styles.container}>
-      {/* Sidebar */}
-      <div className={styles.sidebar}>
-        <h2>Application Status</h2>
-        <p>Status: <span className={styles.status} style={{ color: statusColor }}>{application.status}</span></p>
-        <div className={styles.options}>
-          <button onClick={() => setSelectedStage('document_verification')} className={styles.optionButton}>Document Verification</button>
-          <button onClick={() => setSelectedStage('expert_visit_stage')} className={styles.optionButton}>Expert Visit</button>
-          <button onClick={() => setSelectedStage('final_stage')} className={styles.optionButton}>Final Stage</button>
-        </div>
-      </div>
+    <div>
+      <Navbar name="Executive" activeKey={applicationId} />
 
-      {/* Main Content Area */}
-      <div className={styles.mainContent}>
-        <h2>Application Details</h2>
-        {renderStageContent()}
+      <div className={styles.container}>
+        <div className={styles.sidebar}>
+          <h2>Application Status</h2>
+          <p>Status: <span className={styles.status} style={{ color: statusColor }}>{application.status}</span></p>
+          <div className={styles.options}>
+            <button onClick={() => setSelectedStage('document_verification')} className={styles.optionButton}>Scrutiny Details</button>
+            <button onClick={() => setSelectedStage('expert_visit_stage')} className={styles.optionButton}>Expert Visit Details</button>
+            <button onClick={() => setSelectedStage('final_stage')} className={styles.optionButton}>Executive Details</button>
+          </div>
+        </div>
+
+        <div className={styles.mainContent}>
+          <h2>Application Details</h2>
+          {renderStageContent()}
+        </div>
       </div>
     </div>
   );
