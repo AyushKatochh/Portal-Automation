@@ -1,6 +1,9 @@
 import json
 import logging
 import datetime
+import io
+import fitz  
+import base64
 from datetime import datetime
 from datetime import timedelta
 from typing import List, Optional, Dict, Any
@@ -18,11 +21,16 @@ from groq import Groq
 from openai import OpenAI
 from pymongo import MongoClient
 from PyPDF2 import PdfReader
+from google.cloud import vision
+from dotenv import load_dotenv
+
+load_dotenv()
 
 MONGO_URI = 'mongodb+srv://AyushKatoch:ayush2002@cluster0.72gtk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
 client = MongoClient(MONGO_URI)
 db = client['aicte']
 admins_collection = db['admins']
+
 
 logging.basicConfig(
     filename='document_chat.log',
@@ -30,7 +38,6 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S'
 )
-
 
 DOCUMENT_KEYWORDS = {
     "fire_safety_certificate": [
@@ -155,7 +162,11 @@ class ChatBot:
                 - Use the uploaded handbook as your sole reference.
                 - Provide a detailed and well-organized answer to the following user query:\n**{question}**
                 
+<<<<<<< Updated upstream
                 Also, Greet with Hi if prompted. Do not explicitly mention document name.
+=======
+                Also, Greet with Hi if prompted. Do not explicitly mention that the document is AITCE Student Handbook. It is your answer you need to own it.
+>>>>>>> Stashed changes
                 '''
             },
             {
@@ -433,8 +444,8 @@ class GroqDocumentValidator:
 
         Response Format (MUST be valid JSON):
         {{
-            "overall_validity": true/false,
-            "confidence_score": 0-100,
+            "overall_validity": true/false (If confidence score is above 85 give true else false),
+            "confidence_score": (no. of true / total true )*100,
             "field_validations": {{
                 "document_type": {{
                     "is_valid": true/false,
@@ -480,6 +491,114 @@ class ExtractionRequest(BaseModel):
     keywords: List[str] = Field(..., description="Keywords to extract")
 
 
+def extract_first_image_from_pdf(pdf_bytes):
+
+    # Open the PDF from bytes
+    doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+   
+        
+    # Try to extract first image
+    for page_num in range(len(doc)):
+        page = doc[page_num]
+        
+        # Extract images from the page
+        image_list = page.get_images(full=True)
+        
+        if image_list:
+            # Extract the first image
+            xref = image_list[0][0]
+            base_image = doc.extract_image(xref)
+            
+            # Get image data
+            image_bytes = base_image["image"]
+            
+            # Convert to base64
+            base64_image = base64.b64encode(image_bytes).decode('utf-8')
+            
+            # Close the document
+            doc.close()
+            
+            return base64_image
+    
+    # Close the document
+    doc.close()
+    
+    # Return None if no images found
+    return None
+
+def detect_text(image_bytes):
+    """Detects text in the image bytes."""
+    client = vision.ImageAnnotatorClient()
+
+    image = vision.Image(content=image_bytes)
+
+    # for dense text
+    response = client.document_text_detection(image=image)
+    texts = response.text_annotations
+    ocr_text = []
+
+    for text in texts:
+        ocr_text.append(text.description)
+
+    if response.error.message:
+        raise Exception(
+            "{}\nFor more info on error messages, check: "
+            "https://cloud.google.com/apis/design/errors".format(response.error.message)
+        )
+    return " ".join(ocr_text)
+
+def analyze_architectural_plan(ocr_text):
+    """
+    Analyze the OCR text using Groq and Llama 3 to generate 
+    a detailed architectural documentation plan
+    """
+    # Initialize Groq client
+    client = Groq(
+        api_key=os.getenv('GROQ_API_KEY')
+    )
+
+    # Construct a detailed prompt for architectural analysis
+    prompt = f"""You are an expert architectural analyst. 
+    Given the following OCR-extracted text from an architectural plan:
+
+    {ocr_text}
+
+    Please provide a comprehensive architectural documentation plan that includes:
+    1. Detailed description of the architectural elements
+    2. Structural insights and key design features
+    3. Potential construction considerations
+    4. Material specifications (if discernible)
+    5. Scale and dimensional analysis
+    6. Any unique or noteworthy design characteristics
+    7. Provide a dimensional report of each floor and each type of room.
+    8. give me the area of different regions eg. classroom, playground, and the total institute
+    
+    Make sure to give 8th point with maximum accuracy.
+
+    Analyze the text thoroughly and extract as much architectural information as possible."""
+
+    # Create chat completion
+    chat_completion = client.chat.completions.create(
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+        model="llama3-8b-8192"  # Groq's Llama 3 model
+    )
+
+    # Return the generated analysis
+    return chat_completion.choices[0].message.content
+
+def verify_signature(signatures_info):
+    signer_names=['DigiSigner', 'Arch']
+    if signatures_info[0].get('signer_name') in signer_names:
+        return True
+    else:
+        return False
+    
+    
 def get_ai_client():
     """Initialize and return the AI client"""
     return OpenAI(
@@ -489,15 +608,6 @@ def get_ai_client():
 
 # Function for extracting document information
 def extract_document_info(text: str, keywords: List[str], client: OpenAI) -> Dict[str, Any]:
-    """
-    Extract structured information from a document using AI
-    Args:
-        text (str): Raw text content of the document
-        keywords (List[str]): Keywords to extract values for
-        client (OpenAI): AI client for processing
-    Returns:
-        Dict containing extracted information
-    """
     try:
         # Construct prompt for structured extraction with more explicit instructions
         keywords_list = ", ".join(keywords)
@@ -601,15 +711,7 @@ def get_members_expert():
     return member
 
 def allocate_task(members):
-    """
-    Allocate a task to the member with the least burden
-    
-    Args:
-        members (List): List of members and their task details
-    
-    Returns:
-        Updated list of members with task allocation
-    """
+
     # Sort by number of tasks (ascending), then by earliest deadline
     members.sort(key=lambda x: (x[1], x[2]))
     

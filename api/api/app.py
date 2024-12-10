@@ -1,4 +1,7 @@
 import os
+import io
+import fitz  # PyMuPDF
+import base64
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -10,6 +13,10 @@ import uvicorn
 # Import existing utility functions (these would be in a separate utils.py)
 from utils import (
     get_pdf_signatures,
+    verify_signature,
+    extract_first_image_from_pdf,
+    detect_text,
+    analyze_architectural_plan,
     process_document_for_ocr,
     cleanup_file,
     DOCUMENT_KEYWORDS,
@@ -23,7 +30,8 @@ from utils import (
     ChatRequestDocument,
     ChatResponse,
     PDFProcessor,
-    ChatBot
+    ChatBot,
+    
 )
 from ChatBot import(
     load_status_chat,
@@ -52,21 +60,106 @@ app.add_middleware(
 # Directory to temporarily store uploaded files
 UPLOAD_FOLDER = "./uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-MONGO_URI = 'mongodb+srv://AyushKatoch:ayush2002@cluster0.72gtk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+MONGO_URI = 'mongodb+srv://AyushKatoch:ayush2002@cluster0.72gtk.mongodb.net/aicte?retryWrites=true&w=majority&appName=Cluster0'
 client = MongoClient(MONGO_URI)
 db = client['aicte']
 admins_collection = db['admins']
+
+@app.post("/analyze-plan/")
+async def process_architectural_plans(file: UploadFile = File(...)):
+
+    # Read file contents
+    file_contents = await file.read()
+    file_path = os.path.join(UPLOAD_FOLDER, file.filename)
+    document_name = os.path.basename(file_path)
+    
+    
+    # Determine file type
+    file_extension = file.filename.split('.')[-1].lower()
+    
+    # Store results
+    results = {}
+    try:
+        with open(file_path, 'wb') as f:
+            f.write(file_contents)
+            signatures_info=[]
+            if file.content_type == "application/pdf":
+                try:
+                    for signature in get_pdf_signatures(file_path):
+                        certificate = signature.certificate
+                        subject = certificate.subject
+                        signature_details = {
+                                        "type": str(signature.type),
+                                        "signature": str(signature),
+                                        "signer_name": str(signature.signer_name),
+                                        "signing_time": str(signature.signing_time),
+                                        "certificate": {
+                                            "validity": {
+                                                "not_before": str(certificate.validity.not_before),
+                                                "not_after": str(certificate.validity.not_after),
+                                            },
+                                            "issuer": str(certificate.issuer),
+                                            "subject": {
+                                                "common_name": str(subject.common_name),
+                                                "serial_number": str(subject.serial_number),
+                                            }
+                                        }
+                                    }
+                    signatures_info.append(signature_details)
+                except Exception as sig_error:
+                                # signatures_info = [{"error": str(sig_error)}]
+                                        # except Exception as sig_error:
+                                return JSONResponse(
+                                    content={
+                                        "status": "error", 
+                                        "message": f"Signature Validation Failed: {str(sig_error)}"
+                                    }, 
+                                    status_code=400
+                                )
+        if verify_signature(signatures_info):
+            # Process based on file type
+            if file_extension == 'pdf':
+                # Extract first image from PDF
+                base64_image = extract_first_image_from_pdf(file_contents)
+                
+                if not base64_image:
+                    raise HTTPException(status_code=404, detail="No images found in the PDF")
+            else:
+                # Treat as single image
+                base64_image = base64.b64encode(file_contents).decode('utf-8')
+                
+            # Decode base64 image
+            image_bytes = base64.b64decode(base64_image)
+            
+            # Perform OCR
+            ocr_text = detect_text(image_bytes)
+            
+            # Analyze architectural plan
+            analysis = analyze_architectural_plan(ocr_text)
+            
+            # Store results
+            return JSONResponse(
+                content={
+                    "analysis":analysis
+                }
+            )
+        else:
+            return JSONResponse(
+                content={
+               "result" : "The signature is not verified"
+                }
+            )
+
+    except Exception as e:
+        # Raise HTTP exception for overall processing error
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 
 
 @app.post("/status_chat")
 async def chat_with_application(request: ChatRequestStatus):
-    """
-    Endpoint to chat with an application based on its ID
     
-    - **application_id**: The ID of the application to query
-    - **query**: The user's query about the application
-    """
     chatbot=load_status_chat()
     try:
         # Fetch application data
@@ -110,12 +203,6 @@ async def chat_endpoint(request: ChatRequestDocument):
 
 @app.get("/schedule_expert")
 async def get_next_deadline():
-    """
-    Retrieve the next available member and their new deadline
-    
-    Returns:
-        Dict containing member ID and new deadline
-    """
     try:
         # Get current members
         members = get_members_expert()
@@ -136,12 +223,7 @@ async def get_next_deadline():
 
 @app.get("/schedule_scrutiny")
 async def get_next_deadline():
-    """
-    Retrieve the next available member and their new deadline
-    
-    Returns:
-        Dict containing member ID and new deadline
-    """
+
     try:
         # Get current members
         members = get_members_scrutiny()
@@ -210,35 +292,35 @@ async def process_document_comprehensively(file: UploadFile = File(...), documen
                 for signature in get_pdf_signatures(file_path):
                     certificate = signature.certificate
                     subject = certificate.subject
-
                     signature_details = {
-                        "type": str(signature.type),
-                        "signature": str(signature),
-                        "signer_name": str(signature.signer_name),
-                        "signing_time": str(signature.signing_time),
-                        "certificate": {
-                            "validity": {
-                                "not_before": str(certificate.validity.not_before),
-                                "not_after": str(certificate.validity.not_after),
-                            },
-                            "issuer": str(certificate.issuer),
-                            "subject": {
-                                "common_name": str(subject.common_name),
-                                "serial_number": str(subject.serial_number),
-                            }
-                        }
-                    }
-                    signatures_info.append(signature_details)
+                                    "type": str(signature.type),
+                                    "signature": str(signature),
+                                    "signer_name": str(signature.signer_name),
+                                    "signing_time": str(signature.signing_time),
+                                    "certificate": {
+                                        "validity": {
+                                            "not_before": str(certificate.validity.not_before),
+                                            "not_after": str(certificate.validity.not_after),
+                                        },
+                                        "issuer": str(certificate.issuer),
+                                        "subject": {
+                                            "common_name": str(subject.common_name),
+                                            "serial_number": str(subject.serial_number),
+                                        }
+                                    }
+                                }
+                signatures_info.append(signature_details)
             except Exception as sig_error:
-                # signatures_info = [{"error": str(sig_error)}]
-                        # except Exception as sig_error:
-                return JSONResponse(
-                    content={
-                        "status": "error", 
-                        "message": f"Signature Validation Failed: {str(sig_error)}"
-                    }, 
-                    status_code=400
-                )
+                            # signatures_info = [{"error": str(sig_error)}]
+                                    # except Exception as sig_error:
+                            return JSONResponse(
+                                content={
+                                    "status": "error", 
+                                    "message": f"Signature Validation Failed: {str(sig_error)}"
+                                }, 
+                                status_code=400
+                            )    
+                        
 
         # Combine results
         combined_result = {
@@ -468,7 +550,6 @@ def main():
         port=8000,
         reload=True
     )
-
 
 
 
