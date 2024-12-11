@@ -759,7 +759,6 @@ def allocate_task(members):
     return members
 
 def parse_pkcs7_signatures(signature_data: bytes):
-    """Parse a PKCS7 / CMS / CADES signature"""
     content_info = cms.ContentInfo.load(signature_data).native
     if content_info['content_type'] != 'signed_data':
         return None

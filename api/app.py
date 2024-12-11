@@ -112,7 +112,7 @@ async def process_architectural_plans(file: UploadFile = File(...)):
                                 return JSONResponse(
                                     content={
                                         "status": "error", 
-                                        "message": f"Signature Validation Failed: {str(sig_error)}"
+                                        "message": f"Signature Validation Failed"
                                     }, 
                                     status_code=400
                                 )
@@ -153,8 +153,6 @@ async def process_architectural_plans(file: UploadFile = File(...)):
     except Exception as e:
         # Raise HTTP exception for overall processing error
         raise HTTPException(status_code=500, detail=str(e))
-
-
 
 
 @app.post("/status_chat")
@@ -316,7 +314,7 @@ async def process_document_comprehensively(file: UploadFile = File(...), documen
                             return JSONResponse(
                                 content={
                                     "status": "error", 
-                                    "message": f"Signature Validation Failed: {str(sig_error)}"
+                                    "message": "Signature Validation Failed"
                                 }, 
                                 status_code=400
                             )    
