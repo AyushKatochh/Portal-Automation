@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Authentication</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-2xl mx-auto">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h1 class="text-2xl font-bold mb-6 text-center">Face Authentication System</h1>
+                
+                <!-- Status Messages -->
+                <div id="statusMessage" class="mb-4 p-4 rounded text-center hidden"></div>
+                
+                <!-- Video Feed Container -->
+                <div id="videoContainer" class="relative mb-6 hidden">
+                    <img id="videoFeed" src="" alt="Video Feed" class="w-full rounded-lg shadow-md">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div id="loadingOverlay" class="bg-black bg-opacity-50 p-4 rounded hidden">
+                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Controls -->
+                <div class="flex justify-center space-x-4">
+                    <button id="startAuth" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-200">
+                        Start Authentication
+                    </button>
+                    <button id="cancelAuth" class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-200 hidden">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSessionId = null;
+        let statusCheckInterval = null;
+        let videoFeedInterval = null;
+
+        const videoFeed = document.getElementById('videoFeed');
+        const videoContainer = document.getElementById('videoContainer');
+        const statusMessage = document.getElementById('statusMessage');
+        const startAuthButton = document.getElementById('startAuth');
+        const cancelAuthButton = document.getElementById('cancelAuth');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+
+        function showMessage(message, type = 'info') {
+            statusMessage.textContent = message;
+            statusMessage.className = 'mb-4 p-4 rounded text-center';
+            
+            switch(type) {
+                case 'success':
+                    statusMessage.classList.add('bg-green-100', 'text-green-700');
+                    break;
+                case 'error':
+                    statusMessage.classList.add('bg-red-100', 'text-red-700');
+                    break;
+                default:
+                    statusMessage.classList.add('bg-blue-100', 'text-blue-700');
+            }
+            
+            statusMessage.classList.remove('hidden');
+        }
+
+        function updateVideoFeed() {
+            if (currentSessionId) {
+                // Add timestamp to prevent caching
+                videoFeed.src = `/video_feed/${currentSessionId}?t=${Date.now()}`;
+            }
+        }
+
+        function startAuthentication() {
+            showMessage('Starting authentication session...');
+            loadingOverlay.classList.remove('hidden');
+            startAuthButton.disabled = true;
+            videoContainer.classList.remove('hidden');
+            cancelAuthButton.classList.remove('hidden');
+
+            fetch('/start-auth', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    currentSessionId = data.session_id;
+                    startStatusCheck();
+                    startVideoFeed();
+                    showMessage('Please look at the camera and follow the instructions');
+                } else {
+                    throw new Error(data.message);
+                }
+            })
+            .catch(error => {
+                showMessage(error.message, 'error');
+                resetUI();
+            });
+        }
+
+        function startStatusCheck() {
+            if (statusCheckInterval) clearInterval(statusCheckInterval);
+            
+            statusCheckInterval = setInterval(() => {
+                if (!currentSessionId) return;
+
+                fetch(`/check-status/${currentSessionId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.active) {
+                            clearInterval(statusCheckInterval);
+                            clearInterval(videoFeedInterval);
+                            showMessage(data.message, data.success ? 'success' : 'error');
+                            resetUI();
+                        }
+                    })
+                    .catch(error => {
+                        showMessage('Error checking status', 'error');
+                        resetUI();
+                    });
+            }, 1000);
+        }
+
+        function startVideoFeed() {
+            if (videoFeedInterval) clearInterval(videoFeedInterval);
+            videoFeedInterval = setInterval(updateVideoFeed, 100);
+        }
+
+        function resetUI() {
+            currentSessionId = null;
+            clearInterval(statusCheckInterval);
+            clearInterval(videoFeedInterval);
+            startAuthButton.disabled = false;
+            loadingOverlay.classList.add('hidden');
+            videoContainer.classList.add('hidden');
+            cancelAuthButton.classList.add('hidden');
+        }
+
+        function cancelAuthentication() {
+            resetUI();
+            showMessage('Authentication cancelled', 'info');
+        }
+
+        startAuthButton.addEventListener('click', startAuthentication);
+        cancelAuthButton.addEventListener('click', cancelAuthentication);
+    </script>
+</body>
+</html>
