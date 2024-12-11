@@ -21,10 +21,9 @@ function App() {
     <AppProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<Homepage />} />
           <Route path="/sign-up" element={<SignUp />} />
 
-          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/" element={<SignIn />} />
           <Route path="/approval-process/:applicationId" element={<ApprovalProcess />} />
           <Route path="/HomeLink" element={<HomeLink />} />
           <Route path="/scrutiny" element={<ScrutinyPage />} />

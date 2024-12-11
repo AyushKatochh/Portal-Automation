@@ -35,7 +35,7 @@ export default function HomePage() {
         }
 
         // Replace localhost with your laptop's IP address
-        const backendUrl = 'http://192.168.27.32:5000/api/institute-applications';
+        const backendUrl = 'http://192.168.68.32:5000/api/institute-applications';
 
         const response = await axios.get(backendUrl, {
           params: {

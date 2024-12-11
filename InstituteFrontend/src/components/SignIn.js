@@ -54,7 +54,7 @@ const SignIn = () => {
 
   return (
     <div className={styles.signInPage}>
-      <img src={leftImage} alt="Left" className={styles.leftImage} />
+      {/* <img src={leftImage} alt="Left" className={styles.leftImage} /> */}
       <div className={styles.signInContainer}>
         {isLoading && (
           <div className={styles.loaderContainer}>
@@ -87,7 +87,7 @@ const SignIn = () => {
           </button>
         </form>
         <div className={styles.links}>
-          <Link to="/new-institute" className={styles.link}>New Institute</Link>
+          <Link to="/sign-up" className={styles.link}>New Institute</Link>
           <Link to="/forgot-password" className={styles.link}>Forgot Password</Link>
         </div>
       </div>

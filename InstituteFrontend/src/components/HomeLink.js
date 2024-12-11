@@ -82,13 +82,13 @@ const HomeLink = () => {
               Check the status of submitted applications.
             </p>
           </div>
-          <div className={styles.card}>
+          {/* <div className={styles.card}>
             <FaCalendarAlt className={styles.icon} />
             <h2 className={styles.cardTitle}>Extension of Application</h2>
             <p className={styles.cardDescription}>
               Apply for an extension of your existing application.
             </p>
-          </div>
+          </div> */}
         </div>
       )}
     </div>

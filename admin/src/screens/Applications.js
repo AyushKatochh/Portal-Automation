@@ -12,7 +12,11 @@ const Applications = () => {
 
   const adminId = localStorage.getItem('adminId');
   const adminCommittee = localStorage.getItem('adminCommittee');
+<<<<<<< Updated upstream
   const adminUsername = localStorage.getItem('adminUsername');
+=======
+  const adminName = localStorage.getItem('adminName');
+>>>>>>> Stashed changes
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -28,17 +32,17 @@ const Applications = () => {
   }, [adminId]);
 
   const handleViewDetails = (applicationId) => {
-    if (adminCommittee === 'Scrutiny') {
-      navigate(`/scrutiny/${applicationId}`);
-    } else if (adminCommittee === 'Expert Visit') {
-      navigate(`/evc/${applicationId}`);
-    } else if (adminCommittee === 'Executive') {
-      navigate(`/executive/${applicationId}`);
-    }
+    const routes = {
+      Scrutiny: `/scrutiny/${applicationId}`,
+      'Expert Visit': `/evc/${applicationId}`,
+      Executive: `/executive/${applicationId}`
+    };
+    navigate(routes[adminCommittee]);
   };
 
   return (
     <div>
+<<<<<<< Updated upstream
     <Navbar 
         name='Scrutiny' 
         activeKey='Scrutiny' 
@@ -69,6 +73,35 @@ const Applications = () => {
         </div>
       </main>
     </div>
+=======
+      <Navbar name={adminCommittee} activeKey={adminName}/> 
+      <div className={styles.page}>
+        <main className={styles.mainContent}>
+          <h1 className={styles.heading}>Applications</h1>
+          <div className={styles.grid}>
+            {applications.map((application) => (
+              <div key={application.applicationId} className={styles.card}>
+                <div className={styles.cardHeader}>
+                  <FontAwesomeIcon icon={faBuilding} className={styles.icon} />
+                  <h3 className={styles.cardTitle}>{application.type}</h3>
+                </div>
+                <div className={styles.cardBody}>
+                  <p className={styles.cardText}><strong>Institute:</strong> {application.instituteName}</p>
+                  <p className={styles.cardText}><strong>Status:</strong> {application.status}</p>
+                  <p className={styles.cardText}><strong>Deadline:</strong> {new Date(application.deadline).toLocaleDateString()}</p>
+                </div>
+                <button
+                  className={styles.button}
+                  onClick={() => handleViewDetails(application.applicationId)}
+                >
+                  View Details
+                </button>
+              </div>
+            ))}
+          </div>
+        </main>
+      </div>
+>>>>>>> Stashed changes
     </div>
   );
 };
