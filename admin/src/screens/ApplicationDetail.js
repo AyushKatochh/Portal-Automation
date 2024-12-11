@@ -135,6 +135,7 @@ const ApplicationDetail = () => {
                 transition={{ duration: 0.5 }}
             >
                 <motion.div 
+                    className={styles.buttonContainer}
                     initial={{ y: 50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.5, delay: 0.2 }}
@@ -274,7 +275,23 @@ const ApplicationDetail = () => {
 
 
 
-                                <p>Verified: {upload.is_verified ? "Yes" : "No"}</p>
+<p>
+  Verified: 
+  <span 
+    className={styles.verifiedBox} 
+    style={{
+      backgroundColor: upload.is_verified ? "green" : "red",
+      color: "white",
+      padding: "5px 10px",
+      borderRadius: "15px",
+      display: "inline-block",
+      marginLeft: "5px"
+    }}
+  >
+    {upload.is_verified ? "Yes" : "No"}
+  </span>
+</p>
+
                                 <p>Remark: {upload.remark}</p>
                                 {!upload.is_verified ? (
                                     <>
