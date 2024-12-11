@@ -41,8 +41,8 @@ const Applications = () => {
   return (
     <div>
     <Navbar 
-        name={adminCommittee} 
-        activeKey={adminName} 
+        name='Scrutiny' 
+        activeKey='Scrutiny' 
         adminId={adminId}  // Pass adminId as a prop
       /> 
     <div className={styles.page}>

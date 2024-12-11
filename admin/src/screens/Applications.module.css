@@ -117,3 +117,27 @@
   background-color: #218838;
 }
 
+.potentialIssues {
+  margin-top: 15px;
+  background-color: #f8d7da; /* Light red for warning */
+  color: #721c24; /* Dark red for text */
+  border: 1px solid #f5c6cb; /* Border for warning */
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 14px;
+  text-align: left;
+}
+
+.potentialIssues h4 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.issueItem {
+  list-style-type: disc;
+  margin-left: 20px;
+  font-size: 14px;
+}
+
+

@@ -2,134 +2,202 @@
 
 .container {
   display: flex;
-  justify-content: center;
-  align-items: flex-start; /* Align items to the top */
-  height: 100vh;
-  background-color: #f4f6f9;
+  flex-direction: column;
+  align-items: center; /* Center content horizontally */
+  justify-content: center; /* Center content vertically */
   padding: 20px;
-  overflow-y: auto; 
+  font-family: sans-serif;
+  min-height: 100vh; /* Ensure it covers the full height of the page */
+  box-sizing: border-box; /* Include padding in width/height calculations */
+  width: 80%; /* Cover 80% of the viewport */
+  margin: auto; /* Automatically center the container */
 }
 
 .detailsBox {
-  background-color: white;
-  padding: 30px;
+  background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  width: 95%; /* Increased width */
-  max-width: 90%; /* Increased max-width */
-}
-
-.nestedObject {
-  margin-bottom: 10px;
-  border: 1px solid #eee;
-  padding: 10px;
-  overflow-x: auto;  /* Added horizontal scrollbar */
-}
-
-.nestedFields {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  align-items: start;
-  min-width: 800px; /* Ensure minimum width for the grid */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  width: 100%; /* Set width to the full size of the container */
+  max-width: 800px; /* Optional: limit maximum width */
+  text-align: left;
 }
 
 .title {
   text-align: center;
-  color: #2c3e50;
-  font-size: 2rem;
   margin-bottom: 20px;
 }
 
 .section {
   margin-bottom: 20px;
-  text-align: center; /* Add this to center the content */
+}
+
+.section h2,
+.section h3 {
+  margin-bottom: 10px;
+}
+
+.section h4 {
+  margin-bottom: 10px;
+  color: #333;
+}
+.contactDetails {
+  display: flex;
+  flex-direction: column; 
+  gap: 8px; 
 }
 
 .contactDetails p {
-  margin: 10px 0;
-  font-size: 1.1rem;
-  text-align: center; /* Add this to center each line */
+  margin: 0; 
+  align-items: center; 
 }
 
-h2, h3, h4 {
-  color: #2980b9;
-}
-
-h2 span, h3 span, h4 span {
-  color: #34495e;
-  font-weight: bold;
-}
-
-
-.contactDetails p span {
-  color: #7f8c8d;
+.contactDetails svg {
+  margin-right: 8px; 
 }
 
 .uploads {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive columns */
+  gap: 20px;
 }
 
 .uploadCard {
-  background-color: #ecf0f1;
-  padding: 15px;
-  border-radius: 8px;
   border: 1px solid #ddd;
-}
-
-.uploadCard a {
-  color: #3498db;
-  text-decoration: none;
+  padding: 20px;
+  border-radius: 8px;
 }
 
 .uploadCard p {
-  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+/* General styling for document result container */
+.docResultContainer {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+/* Specific styling for document_type */
+.documentType {
+  background-color: #f0f8ff; /* Light blue background */
+  padding: 10px;
+  border-radius: 5px;
   margin: 5px 0;
 }
 
-.approveButton, .rejectButton {
-  background-color: #27ae60;
-  color: white;
+.documentTypeLabel {
+  font-weight: bold;
+  color: #007acc; /* Dark blue for key text */
+  font-size: 16px;
+}
+
+.documentTypeValue {
+  color: #00509e; /* Slightly darker blue for value text */
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+
+.nestedObject {
+  margin-bottom: 10px;
+  display: flex;           /* Use flexbox for alignment */
+  align-items: flex-start; /* Align items to the top */
+}
+
+.docResultLabel {
+  flex: 0 0 200px;       /* Give the label a fixed width */
+  margin-right: 10px; 
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.nestedFields {
+  flex: 1;
+  margin-left: 20px; 
+}
+
+.approveButton,
+.rejectButton {
+  background-color: #4CAF50; /* Green */
   border: none;
+  color: white;
   padding: 10px 20px;
-  border-radius: 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 10px 5px; 
   cursor: pointer;
-  margin: 5px;
+  border-radius: 4px;
 }
 
 .rejectButton {
-  background-color: #e74c3c;
+  background-color: #f44336; /* Red */
 }
 
-.approveButton:hover, .rejectButton:hover {
-  opacity: 0.8;
-}
-
-h6 {
-  color: #2ecc71;
-  font-size: 1.1rem;
+.potentialIssues {
   margin-top: 10px;
-}
-
-.nestedFieldContainer { 
-  border: 1px solid #eee; 
   padding: 10px;
-  border-radius: 4px;
-  overflow: hidden; 
+  background-color: #ffe5e5; /* Light red background for highlighting */
+  border: 1px solid #ffcccc; /* Border matching the background */
+  border-radius: 5px;
 }
 
-.nestedLabel {
-  font-weight: bold;
-  margin-bottom: 5px;
-  white-space: nowrap; 
-  display: inline-block;
-  margin-right: 10px; 
+.potentialIssues h5 {
+  margin: 0 0 5px 0;
+  color: #cc0000; /* Dark red text color for heading */
+  font-size: 16px;
 }
 
-.nestedValue {
+.potentialIssues ul {
+  list-style-type: disc;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.potentialIssues li {
+  color: #333; /* Neutral text color for issues */
   font-size: 14px;
-  color: #333;
-  white-space: pre-wrap;
+}
+
+/* OCR Extraction Container */
+.ocrExtraction {
+  background-color: #f9f9f9; /* Light gray background for OCR fields */
+  padding: 15px; /* Padding around the field */
+  border: 1px solid #ccc; /* Subtle border for distinction */
+  border-radius: 8px; /* Rounded corners */
+  margin-top: 15px; /* Add spacing above */
+}
+
+/* Label for OCR Extraction */
+.ocrExtractionLabel {
+  font-weight: bold;
+  color: #007acc; /* Dark blue color for key */
+}
+
+/* OCR Fields */
+.ocrExtractionFields {
+  display: flex;
+  flex-direction: column; /* Arrange fields vertically */
+  gap: 8px; /* Spacing between fields */
+}
+
+.ocrField {
+  display: flex; /* Align key and value side by side */
+  justify-content: space-between; /* Align key to left and value to right */
+  margin-bottom: 8px; /* Spacing between rows */
+}
+
+.ocrFieldKey {
+  font-weight: bold;
+  color: #333; /* Dark text for keys */
+  font-size: 14px;
+}
+
+.ocrFieldValue {
+  color: #555; /* Neutral text for values */
+  font-size: 14px;
 }
