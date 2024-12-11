@@ -9,7 +9,7 @@
   font-family: sans-serif;
   min-height: 100vh; /* Ensure it covers the full height of the page */
   box-sizing: border-box; /* Include padding in width/height calculations */
-  width: 80%; /* Cover 80% of the viewport */
+  width: 100%; /* Cover 80% of the viewport */
   margin: auto; /* Automatically center the container */
 }
 
@@ -19,8 +19,8 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 30px;
   width: 100%; /* Set width to the full size of the container */
-  max-width: 800px; /* Optional: limit maximum width */
   text-align: left;
+  width: 80%;
 }
 
 .title {
@@ -63,7 +63,7 @@
 }
 
 .uploadCard {
-  border: 1px solid #ddd;
+
   padding: 20px;
   border-radius: 8px;
 }
@@ -73,9 +73,11 @@
 }
 
 /* General styling for document result container */
-.docResultContainer {
+docResultContainer {
   margin-top: 10px;
   padding: 10px;
+  /* Remove the border line from here */
+  border: none;  /* Remove border */
 }
 
 /* Specific styling for document_type */
@@ -115,6 +117,13 @@
 .nestedFields {
   flex: 1;
   margin-left: 20px; 
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center; /* Centers buttons horizontally */
+  gap: 15px; /* Space between buttons */
+  margin-top: 20px; /* Optional: space from the top section */
 }
 
 .approveButton,
@@ -285,6 +294,7 @@
   color: red; /* Red color for invalid fields */
   font-weight: bold;
 }
+
 
 
 

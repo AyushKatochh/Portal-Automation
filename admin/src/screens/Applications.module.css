@@ -1,108 +1,57 @@
-/* General Page Styling */
-.page {
-  display: flex;
-  height: 100vh;
-  background-color: #f8f9fa;
-  font-family: Arial, sans-serif;
-}
-
-/* Sidebar Styling */
-.sidebar {
-  width: 200px; /* Reduced sidebar width */
-  background-color: #e9ecef;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.sidebar .heading {
-  color: #343a40;
-  font-size: 20px;
-  margin-bottom: 20px; /* Increased margin */
-}
-
-.sidebar .userDetails {
-  font-size: 14px;
-  color: #6c757d;
-  margin-bottom: 15px; /* Increased margin */
-}
-
-
-
-/* Navbar Styling */
-.navbar {
-  display: flex; /* Use flexbox in navbar */
-  justify-content: space-between; /* Align items to left and right */
-  align-items: center; /* Vertically center content */
-  width: 97%;
-  background-color: #007bff;
-  color: white;
-  padding: 10px 20px;
-  margin-bottom: 20px;
-}
-
-.navbar .heading { /* Style for heading in navbar */
-  text-align: left; /* Align heading to the left */
-  margin: 0; /* Remove default margin */
-}
-
-.navbar .userDetails {
-  text-align: right; /* Align user details to the right */
-  width: 150px; /* Adjust width as needed */
-}
-
-/* Grid Styling */
+/* MainContent Flexbox for General Layout */
 .mainContent {
   flex-grow: 1;
   padding: 20px;
-  display: flex;          
-  flex-wrap: wrap;        /* Allow items to wrap */
-  justify-content: center; /* Center items horizontally */
+  display: flex;
+  justify-content: center; /* Center the grid horizontally */
+  align-items: center;     /* Center the grid vertically when fewer items exist */
 }
 
+/* Grid Container Styling */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 2fr)); /* Responsive columns */
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Flexible 2x2 grid */
   gap: 20px;
+  justify-content: center; /* Center grid items horizontally */
+  align-content: center;   /* Center grid items vertically */
 }
 
+/* Individual Card Styling */
 .card {
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
   text-align: center;
-  height: auto; 
-  display: flex; 
-  flex-direction: column; 
-  justify-content: space-between; 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: auto;
+  width: 100%; /* Ensure flexibility */
 }
 
-.cardContent { /* Style for the card content container */
-  margin-bottom: 20px; /* Add margin at the bottom */
-}
-
-
+/* Title Styling */
 .cardTitle {
   font-size: 18px;
   color: #007bff;
   margin-bottom: 10px;
 }
 
+/* Card Text Styling */
 .cardText {
   font-size: 14px;
   color: #495057;
   margin-bottom: 8px;
 }
 
+/* Icon Styling */
 .icon {
   font-size: 40px;
   color: #6c757d;
   margin-bottom: 10px;
 }
 
+/* Button Styling */
 .button {
   background-color: #28a745;
   color: #fff;
@@ -116,28 +65,3 @@
 .button:hover {
   background-color: #218838;
 }
-
-.potentialIssues {
-  margin-top: 15px;
-  background-color: #f8d7da; /* Light red for warning */
-  color: #721c24; /* Dark red for text */
-  border: 1px solid #f5c6cb; /* Border for warning */
-  border-radius: 8px;
-  padding: 10px;
-  font-size: 14px;
-  text-align: left;
-}
-
-.potentialIssues h4 {
-  margin: 0 0 5px 0;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.issueItem {
-  list-style-type: disc;
-  margin-left: 20px;
-  font-size: 14px;
-}
-
-

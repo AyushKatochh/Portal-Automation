@@ -12,7 +12,6 @@ const Applications = () => {
 
   const adminId = localStorage.getItem('adminId');
   const adminCommittee = localStorage.getItem('adminCommittee');
-  const adminName = localStorage.getItem('adminName');
   const adminUsername = localStorage.getItem('adminUsername');
 
   useEffect(() => {
