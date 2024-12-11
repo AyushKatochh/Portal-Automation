@@ -76,8 +76,6 @@
 .docResultContainer {
   margin-top: 10px;
   padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
 }
 
 /* Specific styling for document_type */
@@ -178,26 +176,116 @@
   color: #007acc; /* Dark blue color for key */
 }
 
-/* OCR Fields */
-.ocrExtractionFields {
-  display: flex;
-  flex-direction: column; /* Arrange fields vertically */
-  gap: 8px; /* Spacing between fields */
+/* OCR Extraction Container */
+.ocrExtraction {
+  background-color: #f9f9f9; /* Light gray background for OCR fields */
+  padding: 15px; /* Padding around the field */
+  border: 1px solid #ddd; /* Subtle border for distinction */
+  border-radius: 8px; /* Rounded corners */
+  margin-top: 15px; /* Add spacing above */
 }
 
+
+
+/* Validity Field */
+.validityField {
+  margin-top: 10px; /* Add spacing for clarity */
+  padding: 10px; /* Padding around the field */
+  border: 1px solid #ddd; /* Subtle border */
+  border-radius: 8px; /* Rounded corners */
+  background-color: #f0f8ff; /* Light blue background */
+}
+
+.validityDetails {
+  display: flex;
+  flex-direction: column; /* Arrange validity details vertically */
+  gap: 8px; /* Add spacing between items */
+}
+
+/* General OCR Field Styles */
 .ocrField {
   display: flex; /* Align key and value side by side */
-  justify-content: space-between; /* Align key to left and value to right */
-  margin-bottom: 8px; /* Spacing between rows */
+  justify-content: space-between; /* Space between key and value */
+  margin-bottom: 8px; /* Add spacing between rows */
 }
 
 .ocrFieldKey {
   font-weight: bold;
-  color: #333; /* Dark text for keys */
+  color: #333; /* Dark color for keys */
   font-size: 14px;
 }
 
 .ocrFieldValue {
-  color: #555; /* Neutral text for values */
+  color: #555; /* Neutral text color for values */
   font-size: 14px;
 }
+
+/* ApplicationDetail.module.css */
+
+
+/* ApplicationDetail.module.css */
+
+/* ... your existing styles ... */
+
+.validityField {
+  margin-bottom: 10px;  /* Add spacing between fields */
+}
+
+.validityDetails {
+  margin-left: 20px;   /* Indent the validity details */
+}
+
+.ocrField {
+  display: flex;
+  align-items: center; /* Align key-value pairs */
+}
+
+.ocrFieldKey {
+  font-weight: bold;
+  margin-right: 10px; /* Space between key and value */
+  flex: 0 0 150px;    /* Give keys a fixed width */
+}
+
+/* Field Validations */
+.fieldValidations {
+  margin-top: 20px; /* Add space above field validations */
+  padding: 15px; /* Padding around the content */
+  background-color: #f9f9f9; /* Light grey background */
+  border: 1px solid #ccc; /* Subtle border */
+  border-radius: 8px; /* Rounded corners */
+}
+
+.fieldValidationsLabel {
+  font-weight: bold;
+  color: #007acc; /* Dark blue for the label */
+  font-size: 16px;
+}
+
+.fieldValidationsContent {
+  margin-top: 10px; /* Add space between label and content */
+  font-size: 14px;
+  color: #333; /* Text color */
+}
+
+.validationField {
+  margin-bottom: 10px;
+}
+
+.validationFieldKey {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.validFieldValid {
+  color: green; /* Green color for valid fields */
+  font-weight: bold;
+}
+
+.invalidField {
+  color: red; /* Red color for invalid fields */
+  font-weight: bold;
+}
+
+
+
+

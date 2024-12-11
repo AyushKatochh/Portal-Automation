@@ -121,7 +121,7 @@ const ApplicationDetail = () => {
 
     return (
       <div>
-      <Navbar name="Executive" activeKey={applicationId} />
+      <Navbar name="Scrutiny" activeKey={'Document Verification'} />
         <motion.div 
             className={styles.container}
             initial={{ opacity: 0 }} 
@@ -190,49 +190,76 @@ const ApplicationDetail = () => {
                                 <a href={upload.url} target="_blank" rel="noopener noreferrer">View Document</a>
                                 <p>DocResult:</p>
                                 <div className={styles.docResultContainer}>
-    {Object.entries(upload.docResult).map(([key, value]) => (
-        <div
-            key={key}
-            className={
-                key === "document_type"
-                    ? `${styles.nestedObject} ${styles.documentType}`
-                    : key === "ocr_extraction"
-                    ? `${styles.nestedObject} ${styles.ocrExtraction}`
-                    : styles.nestedObject
-            }
-        >
-            <p
-                className={
-                    key === "document_type"
-                        ? `${styles.docResultLabel} ${styles.documentTypeLabel}`
-                        : key === "ocr_extraction"
-                        ? `${styles.docResultLabel} ${styles.ocrExtractionLabel}`
-                        : styles.docResultLabel
-                }
-            >
-                {key}:
-            </p>
-            <div
-                className={
-                    key === "document_type"
-                        ? `${styles.nestedFields} ${styles.documentTypeValue}`
-                        : key === "ocr_extraction"
-                        ? `${styles.nestedFields} ${styles.ocrExtractionFields}`
-                        : styles.nestedFields
-                }
-            >
-                {key === "ocr_extraction" && typeof value === "object"
-                    ? Object.entries(value).map(([subKey, subValue]) => (
-                          <div key={subKey} className={styles.ocrField}>
-                              <span className={styles.ocrFieldKey}>{subKey}:</span>
-                              <span className={styles.ocrFieldValue}>{subValue}</span>
-                          </div>
-                      ))
-                    : renderFields(value)}
+
+
+    {/* Extract and style combined_result -> ocr_extraction */}
+    {upload.docResult.combined_result?.ocr_extraction && (
+        <div className={styles.ocrExtraction}>
+            <p className={styles.ocrExtractionLabel}>OCR Extraction:</p>
+            <div className={styles.ocrExtractionFields}>
+                {Object.entries(upload.docResult.combined_result.ocr_extraction).map(([subKey, subValue]) => (
+                    subKey === "validity" && typeof subValue === "object" ? (
+                        // Handle validity field separately
+                        <div key={subKey} className={styles.validityField}>
+                            <span className={styles.ocrFieldKey}>{subKey}:</span>
+                            <div className={styles.validityDetails}>
+                                {Object.entries(subValue).map(([validityKey, validityValue]) => (
+                                    <div key={validityKey} className={styles.ocrField}>
+                                        <span className={styles.ocrFieldKey}>{validityKey}:</span>
+                                        <span className={styles.ocrFieldValue}>{validityValue}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ) : (
+                        // Render other fields normally
+                        <div key={subKey} className={styles.ocrField}>
+                            <span className={styles.ocrFieldKey}>{subKey}:</span>
+                            <span className={styles.ocrFieldValue}>{subValue}</span>
+                        </div>
+                    )
+                ))}
             </div>
         </div>
-    ))}
-    {upload.docResult.validation_result?.potential_issues && (
+    )}
+
+    {/* Extract and style validation_notes */}
+    {upload.docResult.validation_result?.validation_notes && (
+        <div className={styles.validationNotes}>
+            <p className={styles.validationNotesLabel}>Validation Notes:</p>
+            <div className={styles.validationNotesContent}>
+                <p>{upload.docResult.validation_result.validation_notes}</p>
+            </div>
+        </div>
+    )}
+
+    {/* Extract and style field_validations with is_valid */}
+    {upload.docResult.validation_result?.field_validations && (
+        <div className={styles.fieldValidations}>
+            <h5>Field Validations:</h5>
+            {Object.entries(upload.docResult.validation_result.field_validations).map(
+                ([fieldKey, fieldValue]) => (
+                    <div key={fieldKey} className={styles.validationField}>
+                        <p className={styles.validationFieldLabel}>{fieldKey}:</p>
+                        <div
+                            className={styles.validationFieldValue}
+                            style={{
+                                color: fieldValue.is_valid ? "green" : "red",
+                            }}
+                        >
+                            {fieldValue.is_valid ? "Valid" : "Invalid"}
+                        </div>
+                        {fieldValue.notes && (
+                            <p className={styles.validationFieldNotes}>{fieldValue.notes}</p>
+                        )}
+                    </div>
+                )
+            )}
+        </div>
+    )}
+
+    {/* Rendering Potential Issues */}
+    {upload.docResult?.validation_result?.potential_issues && (
         <div className={styles.potentialIssues}>
             <h5>Potential Issues:</h5>
             <ul>
@@ -243,6 +270,7 @@ const ApplicationDetail = () => {
         </div>
     )}
 </div>
+
 
 
 
