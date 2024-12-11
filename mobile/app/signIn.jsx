@@ -18,7 +18,7 @@ const SignIn = ({ onAuth }) => {
     setError('');
 
     try {
-      const response = await fetch('http://192.168.27.32:5000/authenticate', {
+      const response = await fetch('http://192.168.68.32:5000/authenticate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
