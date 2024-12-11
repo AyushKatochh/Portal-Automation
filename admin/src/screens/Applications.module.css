@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 /* MainContent Flexbox for General Layout */
 .mainContent {
   flex-grow: 1;
@@ -42,26 +43,106 @@
   font-size: 14px;
   color: #495057;
   margin-bottom: 8px;
+=======
+/* General Page Styling */
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  /* background: linear-gradient(135deg, #e3f2fd, #bbdefb); */
+  font-family: 'Roboto', sans-serif;
+  padding: 20px;
+}
+
+/* Heading Styling */
+.heading {
+  font-size: 2.5rem;
+  color: #0d47a1;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Grid Container Styling */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 10px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Card Styling */
+.card {
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Card Header */
+.cardHeader {
+  background: linear-gradient(135deg, #2196f3, #1e88e5);
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+>>>>>>> Stashed changes
 }
 
 /* Icon Styling */
 .icon {
-  font-size: 40px;
-  color: #6c757d;
-  margin-bottom: 10px;
+  font-size: 30px;
 }
 
+<<<<<<< Updated upstream
+=======
+.cardTitle {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+/* Card Body */
+.cardBody {
+  padding: 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cardText {
+  font-size: 1rem;
+  color: #424242;
+}
+
+>>>>>>> Stashed changes
 /* Button Styling */
 .button {
-  background-color: #28a745;
-  color: #fff;
+  background-color: #4caf50;
+  color: white;
   padding: 10px 15px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
+  border-top: 0px;
+  font-size: 1rem;
   cursor: pointer;
-  margin-top: 10px;
+  transition: background-color 0.3s ease;
 }
 
 .button:hover {
+<<<<<<< Updated upstream
   background-color: #218838;
+=======
+  background-color: #388e3c;
+>>>>>>> Stashed changes
 }

@@ -37,7 +37,7 @@ const SignUp = () => {
 
       if (response.ok) {
         alert('Institute registered successfully!');
-        navigate('/sign-in');
+        navigate('/');
       } else {
         setError(result.message || 'Error registering institute. Please try again.');
       }
@@ -103,7 +103,7 @@ const SignUp = () => {
         </button>
       </form>
       <p>
-        Already have an account? <span onClick={() => navigate('/sign-in')}>Sign In</span>
+        Already have an account? <span onClick={() => navigate('/')}>Sign In</span>
       </p>
     </div>
   );

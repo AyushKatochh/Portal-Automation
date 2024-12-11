@@ -21,7 +21,7 @@
     text-align: center;
     font-family: Verdana, sans-serif; /* Added font-family */
     width: 300px; /* Increased width */
-    margin-left: 800px;
+    /* margin-left: 800px; */
     height: 400px;
   }
   
@@ -75,14 +75,6 @@
     font-family: Verdana, sans-serif; /* Added font-family */
   }
 
-  .leftImage { /* New style for the left image */
-    position: absolute;
-    left: 200px; /* Adjust position from the left */
-    top: 50%;
-    transform: translateY(-50%); /* Center vertically */
-    width: 800px; /* Adjust width as needed */
-    height: 500px;
-  }
 
   .loaderContainer {
     position: fixed; /* Use fixed positioning to cover the whole viewport */

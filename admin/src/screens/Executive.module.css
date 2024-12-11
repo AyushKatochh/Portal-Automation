@@ -90,7 +90,7 @@ h3 {
   font-size: 22px;
   margin-bottom: 20px;
   color: white;
-  background-color: #333333; /* Darker background for section headers */
+  /* background-color: #333333; Darker background for section headers */
   padding: 12px;
   text-align: center;
   border-radius: 5px;
