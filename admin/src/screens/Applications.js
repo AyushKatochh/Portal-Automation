@@ -12,11 +12,7 @@ const Applications = () => {
 
   const adminId = localStorage.getItem('adminId');
   const adminCommittee = localStorage.getItem('adminCommittee');
-<<<<<<< Updated upstream
-  const adminUsername = localStorage.getItem('adminUsername');
-=======
   const adminName = localStorage.getItem('adminName');
->>>>>>> Stashed changes
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -42,38 +38,6 @@ const Applications = () => {
 
   return (
     <div>
-<<<<<<< Updated upstream
-    <Navbar 
-        name='Scrutiny' 
-        activeKey='Scrutiny' 
-        adminId={adminId}  // Pass adminId as a prop
-      /> 
-    <div className={styles.page}>
-
-      <main className={styles.mainContent}>
-
-        <div className={styles.grid}>
-          {applications.map((application) => (
-            <div key={application.applicationId} className={styles.card}>
-              <FontAwesomeIcon icon={faBuilding} className={styles.icon} />
-              <h3 className={styles.cardTitle}>{application.type}</h3>
-              <p className={styles.cardText}>Institute: {application.instituteName}</p>
-              <p className={styles.cardText}>Status: {application.status}</p>
-              <p className={styles.cardText}>
-                Deadline: {new Date(application.deadline).toLocaleDateString()}
-              </p>
-              <button
-                className={styles.button}
-                onClick={() => handleViewDetails(application.applicationId)}
-              >
-                View Details
-              </button>
-            </div>
-          ))}
-        </div>
-      </main>
-    </div>
-=======
       <Navbar name={adminCommittee} activeKey={adminName}/> 
       <div className={styles.page}>
         <main className={styles.mainContent}>
@@ -101,7 +65,6 @@ const Applications = () => {
           </div>
         </main>
       </div>
->>>>>>> Stashed changes
     </div>
   );
 };
