@@ -30,7 +30,6 @@ const addUploadToApplication = async (applicationId, filename, s3Url, docResultI
       throw new Error(`Application with ID ${applicationId} not found.`);
     }
 
-    console.log('Updated application with new upload:', updatedApplication);
     return updatedApplication;
   } catch (error) {
     console.error('Error updating application uploads:', error);

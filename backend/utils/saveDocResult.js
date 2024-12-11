@@ -19,7 +19,6 @@ const saveValidationResponse = async (applicationId, validationResponse) => {
       // Save the document to MongoDB
       const savedDocResult = await newDocResult.save();
   
-      console.log('Validation response saved:', savedDocResult._id);
       return savedDocResult._id; // Return the new document's ID
     } catch (error) {
       console.error('Error saving validation response to MongoDB:', error);

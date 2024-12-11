@@ -1,125 +1,181 @@
-.container {
-    max-width: 90%; /* Increased to 90% */ 
-    margin: 20px auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-  }
-  
-  .heading {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .subheading {
-    text-align: center;
-    margin-bottom: 10px;
-  }
-  
-  .applicationInfo {
-    margin-bottom: 20px;
-    text-align: center; /* Add this line */
-  }
-  
-  .actionButtons {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-  
-  .approveButton,
-  .rejectButton {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin: 0 10px;
-  }
-  
-  .approveButton {
-    background-color: #28a745; /* Green */
-    color: white;
-  }
-  
-  .rejectButton {
-    background-color: #dc3545; /* Red */
-    color: white;
-  }
-  
-  .sectionTitle {
-    margin-bottom: 10px;
-  }
-  
-  .contactForm {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  
-  .inputGroup {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .label {
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  
-  .inputField {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .uploadContainer {
-    margin-bottom: 20px;
-    padding: 15px;
-    border: 1px solid #eee;
-    border-radius: 4px;
-    overflow: hidden; /* Add this to prevent content overflow */
-  }
-  
-  .docResultContainer {
-    margin-top: 10px;
-    overflow-x: auto;  /* Add this for horizontal scroll if needed */
-  }
-  
-  .nestedFields {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 equal-width columns */
-    gap: 15px; /* Increased gap between grid items */
-    align-items: start;
-  }
-  
-  .nestedFieldContainer { 
-    border: 1px solid #eee; 
-    padding: 10px;
-    border-radius: 4px;
-    overflow: hidden; 
-  }
-  
-  .nestedLabel {
-    font-weight: bold;
-    margin-bottom: 8px; /* Increased margin below the label */
-    white-space: nowrap; 
-  }
-  
-  .nestedValue {
-    font-size: 14px;
-    color: #333;
-    white-space: pre-wrap;
-  }
+/* ExpertVisit.module.css */
+:root {
+  --primary-color: #3498db;
+  --secondary-color: #2ecc71;
+  --danger-color: #e74c3c;
+  --background-color: #f4f6f7;
+  --text-color: #2c3e50;
+  --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
-  .docResultLabel {
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  
-  .docResultInput {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+.container {
+  /* max-width: 1200px; */
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: var(--background-color);
+  font-family: 'Inter', sans-serif;
+  color: var(--text-color);
+}
+
+.heading {
+  text-align: center;
+  color: var(--primary-color);
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.subheading {
+  color: var(--primary-color);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 0.5rem;
+}
+
+.applicationInfo {
+  background-color: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--card-shadow);
+  margin: 30px 80px;
+
+}
+
+.detailsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.actionButtons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.approveButton, .rejectButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.approveButton {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.rejectButton {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+.approveButton:hover, .rejectButton:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.sectionTitle {
+  color: var(--primary-color);
+  margin-bottom: 2rem;
+  font-size: 1.25rem;
+  margin: 0px 80px;
+}
+
+.contactForm {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  margin: 30px 80px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.inputField {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  transition: border-color 0.3s ease;
+}
+
+.inputField:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.uploadContainer {
+  background-color: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--card-shadow);
+}
+
+.uploadHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.uploadActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.viewDocumentLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.docResultContainer {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.verificationStatus {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.verifiedStatus {
+  color: var(--secondary-color);
+  margin-left: 0.5rem;
+}
+
+.unverifiedStatus {
+  color: var(--danger-color);
+  margin-left: 0.5rem}
+
+
+  .obox{
+    margin: 0px 80px;
   }

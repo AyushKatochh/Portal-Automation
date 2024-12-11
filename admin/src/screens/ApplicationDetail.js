@@ -123,6 +123,10 @@ const ApplicationDetail = () => {
   return (
     <div className={styles.container}>
       <div className={styles.detailsBox}>
+                  <>
+                    <button className={styles.approveButton} onClick={() => handleAction("Approve", applicationId, "application")}>Approve</button>
+                    <button className={styles.rejectButton} onClick={() => handleAction("Reject", applicationId, "application")}>Reject</button>
+                  </>
         <h1 className={styles.title}>Application Details</h1>
         <div className={styles.section}>
           <h2>Type: <span>{applicationDetails.type}</span></h2>

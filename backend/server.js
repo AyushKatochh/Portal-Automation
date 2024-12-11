@@ -137,6 +137,7 @@ const uploadPdfToS3 = async (bucketName, filePath, s3Key) => {
   }
 };
 
+
 // Express route for document validation and upload
 app.post('/validate-document', uploadMiddleware, async (req, res) => {
   try {
@@ -154,55 +155,110 @@ app.post('/validate-document', uploadMiddleware, async (req, res) => {
       formData.append('file', fs.createReadStream(uploadPath));
       formData.append('document_type', docName); // Example document type
 
-      try {
-        // Validate the document
-        const response = await axios.post(
-          'http://localhost:8000/process-and-validate/',
-          formData,
-          { headers: formData.getHeaders() }
-        );
-
-        // If validation is successful, upload to S3
-        const bucketName = 'aicte-portal';
-        const s3Key = `${docName}/${uploadedFile.name}`;
-
-        await uploadPdfToS3(bucketName, uploadPath, s3Key);
-
-        const docId = await saveValidationResponse(applicationId, response.data);
-
-        // Update application uploads
-        await addUploadToApplication(
-          applicationId,
-          uploadedFile.name,
-          `https://${bucketName}.s3.amazonaws.com/${s3Key}`,
-          docId,
-          docName
-        );
-        // Send success response
-        res.status(200).json({
-          status: 'success',
-          message: 'Document validated and uploaded successfully',
-          s3Url: `https://${bucketName}.s3.amazonaws.com/${s3Key}`,
-          validationResponse: response.data, // Include validation data in the response
-        });
-      } catch (err) {
-        // Handle validation or upload error
-        if (err.response) {
-          const statusCode = err.response.status;
-          const errorMessage = err.response.data.message || 'Validation error occurred';
-          console.error(`Validation Error: ${errorMessage}`);
-          res.status(statusCode).json({
-            status: 'error',
-            message: errorMessage,
+      if(!docName=="site_plan"){
+        try {
+          // Validate the document
+          const response = await axios.post(
+            'http://localhost:8000/process-and-validate/',
+            formData,
+            { headers: formData.getHeaders() }
+          );
+  
+          // If validation is successful, upload to S3
+          const bucketName = 'aicte-portal';
+          const s3Key = `${docName}/${uploadedFile.name}`;
+  
+          await uploadPdfToS3(bucketName, uploadPath, s3Key);
+  
+          const docId = await saveValidationResponse(applicationId, response.data);
+  
+          // Update application uploads
+          await addUploadToApplication(
+            applicationId,
+            uploadedFile.name,
+            `https://${bucketName}.s3.amazonaws.com/${s3Key}`,
+            docId,
+            docName
+          );
+          // Send success response
+          res.status(200).json({
+            status: 'success',
+            message: 'Document validated and uploaded successfully',
+            s3Url: `https://${bucketName}.s3.amazonaws.com/${s3Key}`,
+            validationResponse: response.data, // Include validation data in the response
           });
-        } else {
-          console.error('Unexpected error during validation:', err.message);
-          res.status(500).json({
-            status: 'error',
-            message: 'Validation or upload failed due to a server error.',
-          });
+        } catch (err) {
+          // Handle validation or upload error
+          if (err.response) {
+            const statusCode = err.response.status;
+            const errorMessage = err.response.data.message || 'Validation error occurred';
+            console.error(`Validation Error: ${errorMessage}`);
+            res.status(statusCode).json({
+              status: 'error',
+              message: errorMessage,
+            });
+          } else {
+            console.error('Unexpected error during validation:', err.message);
+            res.status(500).json({
+              status: 'error',
+              message: 'Validation or upload failed due to a server error.',
+            });
+          }
         }
       }
+      else{
+        try {
+          // Validate the document
+          const response = await axios.post(
+            'http://localhost:8000/analyze-plan/',
+            formData,
+            { headers: formData.getHeaders() }
+          );
+  
+          // If validation is successful, upload to S3
+          const bucketName = 'aicte-portal';
+          const s3Key = `${docName}/${uploadedFile.name}`;
+  
+          await uploadPdfToS3(bucketName, uploadPath, s3Key);
+  
+          const docId = await saveValidationResponse(applicationId, response.data.analysis);
+  
+          // Update application uploads
+          await addUploadToApplication(
+            applicationId,
+            uploadedFile.name,
+            `https://${bucketName}.s3.amazonaws.com/${s3Key}`,
+            docId,
+            docName
+          );
+          // Send success response
+          res.status(200).json({
+            status: 'success',
+            message: 'Document validated and uploaded successfully',
+            s3Url: `https://${bucketName}.s3.amazonaws.com/${s3Key}`,
+            validationResponse: response.data, // Include validation data in the response
+          });
+        } catch (err) {
+          // Handle validation or upload error
+          if (err.response) {
+            const statusCode = err.response.status;
+            const errorMessage = err.response.data.message || 'Validation error occurred';
+            console.error(`Validation Error: ${errorMessage}`);
+            res.status(statusCode).json({
+              status: 'error',
+              message: errorMessage,
+            });
+          } else {
+            console.error('Unexpected error during validation:', err.message);
+            res.status(500).json({
+              status: 'error',
+              message: 'Validation or upload failed due to a server error.',
+            });
+          }
+        }
+      }
+
+
     });
   } catch (error) {
     console.error('Error in validate-document:', error);
