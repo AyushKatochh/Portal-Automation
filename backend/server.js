@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const bcrypt = require("bcryptjs");
+
 const fileUpload = require('express-fileupload');
 const Institute = require('./models/institute'); // Schema file
 const Application = require('./models/applications'); // Schema file
@@ -16,6 +18,7 @@ require('dotenv').config();
 
 const app = express();
 const PORT = 5000;
+
 
 // Middleware
 app.use(cors());
@@ -61,8 +64,16 @@ app.post('/save-institute', async (req, res) => {
     return res.status(400).json({ message: 'All fields are required' });
   }
 
+  const userExists = await Institute.findOne({ email });
+  if (userExists) {
+    return res.json({ success: false, message: "User already exists" });
+  }
+  
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
+
   try {
-    const institute = new Institute({ name, email, password, userName });
+    const institute = new Institute({ name, email, password:hashedPassword, userName });
     await institute.save();
     res.status(201).json({ message: 'Institute saved successfully' });
   } catch (error) {
@@ -90,7 +101,9 @@ app.post('/authenticate', async (req, res) => {
       return res.status(404).json({ message: 'Institute not found' });
     }
 
-    if (institute.password !== password) {
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
