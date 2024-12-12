@@ -41,11 +41,11 @@ logging.basicConfig(
 
 DOCUMENT_KEYWORDS = {
     "fire_safety_certificate": [
-        "document_name","certificate_number", "issuing_authority", "issuance_date", 
+        "document_name", "issuing_authority", "issuance_date", 
         "expiry_date", "fire_equipment_details"
     ],
     "land_conversion_certificate": [
-        "document_name","certificate_number", "issuing_authority", "issue_date", "applicant_name", "contact_information", 
+        "issuing_authority", "issue_date", "applicant_name", "contact_information", 
         "location", "area_of_land"
     ],
     "affidavit": [
@@ -759,6 +759,7 @@ def allocate_task(members):
     return members
 
 def parse_pkcs7_signatures(signature_data: bytes):
+
     content_info = cms.ContentInfo.load(signature_data).native
     if content_info['content_type'] != 'signed_data':
         return None
