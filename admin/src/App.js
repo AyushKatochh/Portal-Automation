@@ -8,6 +8,7 @@ import ExpertVisit from './screens/ExpertVisit';
 import Executive from './screens/Executive';
 import SuperAdminDashboard from './screens/SuperAdminDashboard';
 import Footer from "./screens/Footer";
+import Authenticate from './screens/Authenticate';
 
 function App() {
     return (
@@ -17,9 +18,11 @@ function App() {
                 <Route path="/" element={<Login />} />
                 <Route path="/applications" element={<Applications />} />
                 <Route path="/scrutiny/:applicationId" element={<ApplicationDetail />} />
+                <Route path="/Authenticate" element={<Authenticate />} />
                 <Route path="/evc/:applicationId" element={<ExpertVisit />} />
                 <Route path="/executive/:applicationId" element={<Executive />} />
                 <Route path="/superAdmin" element={<SuperAdminDashboard />} />
+                
             </Routes>
         </Router>
         <Footer/>

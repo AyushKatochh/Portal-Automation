@@ -1,0 +1,60 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+  }
+  
+  .webcam-frame {
+    border: 2px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+  
+  .button:hover {
+    background-color: #0056b3;
+  }
+  
+  .button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+  }
+
+
+  .webcam-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .captured-image-container {
+    margin-left: 20px; /* Space between webcam and image */
+  }
+  
+  .captured-image-container img {
+    max-width: 300px;
+    max-height: 200px;
+  }
+  
+  /* Style for the buttons container */
+  .buttons-container {
+    margin-top: 20px; /* Space above buttons */
+    display: flex; 
+  }
+  
+  .buttons-container .button {
+    margin-right: 10px; /* Space between buttons */
+  }
