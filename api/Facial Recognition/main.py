@@ -101,7 +101,7 @@ class FaceAuthSystem:
     
     async def validate_face(self, file):
         
-        reference_image = file_image(await file.read())
+        reference_image = file_image(file.read())
         # Load and encode reference image
         reference_face_locations = face_recognition.face_locations(reference_image)
         
