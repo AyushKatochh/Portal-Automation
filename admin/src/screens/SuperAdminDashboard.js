@@ -23,7 +23,7 @@ const SuperAdminDashboard = () => {
 
     const handleSearch = () => {
         if (applicationId) {
-            navigate(`/applications/${applicationId}`);
+            navigate(`/superAdmin/${applicationId}`);
         } else {
             alert('Please enter an Application ID.');
         }

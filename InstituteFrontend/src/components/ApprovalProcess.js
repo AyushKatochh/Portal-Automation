@@ -47,7 +47,7 @@ const ApprovalProcess = () => {
     'Programme',
     'Land Details',
     'Bank Details',
-    'Upl0ad File'
+    'Upload File'
   ];
 
   useEffect(() => {

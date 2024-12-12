@@ -59,7 +59,7 @@ const Chat = () => {
   const handleQueryApprovalProcess = async (userQuestion) => {
     setisLoading(true)
     try {
-      const response = await axios.post('http://192.168.68.32:8000/document_chat', {
+      const response = await axios.post('http://172.16.10.249:8000/document_chat', {
         question: userQuestion,
         chat_history: [],
       });
@@ -104,7 +104,7 @@ const Chat = () => {
     const handleStatusProcess = async (userQuestion) => {
       setisLoading(true)
       try {
-        const responsex = await axios.post('http://192.168.68.32:8000/status_chat', {  
+        const responsex = await axios.post('http://172.16.10.249:8000/status_chat', {  
           application_id: id,
           query: userQuestion,
         });

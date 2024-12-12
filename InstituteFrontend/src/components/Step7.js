@@ -18,6 +18,7 @@ const Step7 = ({ application, applicationId, updateApplication }) => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [previewDoc, setPreviewDoc] = useState(null);
   const [file, setFile] = useState(null);
+  const [isLoading, setisLoading] = useState(false)
 
 
   useEffect(() => {
@@ -54,6 +55,7 @@ const Step7 = ({ application, applicationId, updateApplication }) => {
   const handleDocumentSubmit = async () => {
     if (!file || !selectedOption) return;
 
+    setisLoading(true)
     try {
       const formData = new FormData();
       formData.append('file', file);
@@ -65,6 +67,7 @@ const Step7 = ({ application, applicationId, updateApplication }) => {
       });
 
       if (response.status === 200) {
+        setisLoading(false)
         alert(`${selectedOption.label} document saved successfully.`);
         setUploadedDocuments((prev) => ({
           ...prev,
@@ -74,7 +77,10 @@ const Step7 = ({ application, applicationId, updateApplication }) => {
         setSelectedOption(null);
         setFile(null);
       }
+      setisLoading(false)
     } catch (error) {
+      setisLoading(false)
+      alert("Document is not digitally signed")
       console.error('Error submitting document:', error);
     }
   };
@@ -125,7 +131,7 @@ const Step7 = ({ application, applicationId, updateApplication }) => {
                   <input type="file" onChange={handleFileUpload} />
                 </label>
                 <button className={styles.submitButton} onClick={handleDocumentSubmit}>
-                  Submit
+                  {isLoading? "Validating":"Submit"}
                 </button>
               </div>
             )}

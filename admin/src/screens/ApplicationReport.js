@@ -38,8 +38,8 @@ const ApplicationReport = () => {
 
   return (
     <>
-    <Navbar name={'Report'} activeKey={instituteName}/>
-    <div className={styles.container} style={{marginTop:'80px'}}>
+    {/* <Navbar name={'Report'} activeKey={instituteName}/> */}
+    <div className={styles.container} >
       <h1 className={styles.title}>Application Report</h1>
       <div className={styles.details}>
         <p><strong>Institution Name:</strong> {instituteName}</p>

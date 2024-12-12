@@ -18,7 +18,7 @@ export default function ApplicationStatus() {
   useEffect(() => {
     const fetchApplication = async () => {
       try {
-        const response = await axios.get(`http://192.168.68.32:5000/api/track-application/${id}`);
+        const response = await axios.get(`http://172.16.10.249:5000/api/track-application/${id}`);
         const data = response.data.logs_id;
         // console.log('Fetched Application Data:', data);
 

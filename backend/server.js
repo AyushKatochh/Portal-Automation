@@ -101,11 +101,12 @@ app.post('/authenticate', async (req, res) => {
       return res.status(404).json({ message: 'Institute not found' });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, institute.password);
 
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
+
 
     res.status(200).json({ message: 'Authentication successful', institute });
   } catch (error) {
@@ -157,6 +158,7 @@ app.post('/validate-document', uploadMiddleware, async (req, res) => {
     const uploadedFile = req.file;
     const uploadPath = path.join(__dirname, 'uploads', uploadedFile.name);
     const { applicationId, docName } = req.body; 
+    console.log(docName)
 
     uploadedFile.mv(uploadPath, async (err) => {
       if (err) {
@@ -168,15 +170,18 @@ app.post('/validate-document', uploadMiddleware, async (req, res) => {
       formData.append('file', fs.createReadStream(uploadPath));
       formData.append('document_type', docName); // Example document type
 
-      if(!docName=="site_plan"){
+      if(docName=="fire_safety_certificate" ||docName=="land_conversion_certificate"||docName=="affidavit"||docName=="bank_certificate"||docName=="architect_certificate"|| docName=="mou_document"){
         try {
           // Validate the document
+          console.log("came to other document validation");
+          console.log(formData)
           const response = await axios.post(
             'http://localhost:8000/process-and-validate/',
             formData,
             { headers: formData.getHeaders() }
           );
   
+          console.log(response.data)
           // If validation is successful, upload to S3
           const bucketName = 'aicte-portal';
           const s3Key = `${docName}/${uploadedFile.name}`;
@@ -233,9 +238,9 @@ app.post('/validate-document', uploadMiddleware, async (req, res) => {
           const s3Key = `${docName}/${uploadedFile.name}`;
   
           await uploadPdfToS3(bucketName, uploadPath, s3Key);
+          console.log(response.data)
   
           const docId = await saveValidationResponse(applicationId, response.data.analysis);
-  
           // Update application uploads
           await addUploadToApplication(
             applicationId,

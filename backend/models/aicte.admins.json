@@ -1,0 +1,191 @@
+[{
+  "_id": {
+    "$oid": "6751f199aad0e809e433b002"
+  },
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "password": "hashedpassword1",
+  "userName": "johndoe123",
+  "committee": "Scrutiny",
+  "__v": 4,
+  "applications": [
+    {
+      "application_id": {
+        "$oid": "675a471fa355c8f1955755fd"
+      },
+      "deadline": {
+        "$date": {
+          "$numberLong": "-62135445208000"
+        }
+      },
+      "status": "Pending",
+      "_id": {
+        "$oid": "675a4bd1ef6a6793e2696ed1"
+      }
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6751f199aad0e809e433b003"
+  },
+  "name": "Jane Smith",
+  "email": "jane.smith@example.com",
+  "password": "hashedpassword2",
+  "userName": "janesmith321",
+  "committee": "Rescrutiny"
+},
+{
+  "_id": {
+    "$oid": "6751f199aad0e809e433b006"
+  },
+  "name": "Michael Wilson",
+  "email": "michael.wilson@example.com",
+  "password": "hashedpassword5",
+  "userName": "michaelwilson654",
+  "committee": "Scrutiny",
+  "__v": 3,
+  "applications": [
+    {
+      "application_id": {
+        "$oid": "675a677b7d3a2b6949077b44"
+      },
+      "deadline": {
+        "$date": {
+          "$numberLong": "-62135445208000"
+        }
+      },
+      "status": "Pending",
+      "_id": {
+        "$oid": "675a683c7d3a2b6949077b54"
+      }
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6751f199aad0e809e433b005"
+  },
+  "name": "Emily Davis",
+  "email": "emily.davis@example.com",
+  "password": "hashedpassword4",
+  "userName": "emilydavis456",
+  "committee": "Scrutiny",
+  "__v": 2
+},
+{
+  "_id": {
+    "$oid": "6751f199aad0e809e433b008"
+  },
+  "name": "James Anderson",
+  "email": "james.anderson@example.com",
+  "password": "hashedpassword7",
+  "userName": "jamesanderson852",
+  "committee": "Expert Visit",
+  "__v": 4,
+  "applications": [
+    {
+      "application_id": {
+        "$oid": "675a471fa355c8f1955755fd"
+      },
+      "deadline": {
+        "$date": {
+          "$numberLong": "-62135445208000"
+        }
+      },
+      "status": "Pending",
+      "_id": {
+        "$oid": "675a5adf7d3a2b6949077940"
+      }
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6751f199aad0e809e433b004"
+  },
+  "name": "Robert Brown",
+  "email": "robert.brown@example.com",
+  "password": "hashedpassword3",
+  "userName": "robertbrown789",
+  "committee": "Expert Visit",
+  "__v": 4
+},
+{
+  "_id": {
+    "$oid": "6751f199aad0e809e433b009"
+  },
+  "name": "Olivia Taylor",
+  "email": "olivia.taylor@example.com",
+  "password": "hashedpassword8",
+  "userName": "oliviataylor951",
+  "committee": "Executive",
+  "__v": 3,
+  "applications": [
+    {
+      "application_id": {
+        "$oid": "675a471fa355c8f1955755fd"
+      },
+      "deadline": {
+        "$date": "2024-12-15T03:49:48.727Z"
+      },
+      "status": "Pending",
+      "_id": {
+        "$oid": "675a5d5c7d3a2b69490779e8"
+      }
+    },
+    {
+      "application_id": {
+        "$oid": "675a471fa355c8f1955755fd"
+      },
+      "deadline": {
+        "$date": "2024-12-15T03:49:59.454Z"
+      },
+      "status": "Pending",
+      "_id": {
+        "$oid": "675a5d677d3a2b69490779f5"
+      }
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "6751f199aad0e809e433b007"
+  },
+  "name": "Sophia Martinez",
+  "email": "sophia.martinez@example.com",
+  "password": "hashedpassword6",
+  "userName": "sophiamartinez987",
+  "committee": "Rescrutiny"
+},
+{
+  "_id": {
+    "$oid": "6751f199aad0e809e433b00a"
+  },
+  "name": "William Thomas",
+  "email": "william.thomas@example.com",
+  "password": "hashedpassword9",
+  "userName": "williamthomas753",
+  "committee": "Scrutiny",
+  "__v": 2
+},
+{
+  "_id": {
+    "$oid": "6751f199aad0e809e433b00b"
+  },
+  "name": "Mia Johnson",
+  "email": "mia.johnson@example.com",
+  "password": "hashedpassword10",
+  "userName": "miajohnson159",
+  "committee": "Rescrutiny"
+},
+{
+  "_id": {
+    "$oid": "675496a67f2bbfb07cfe95c1"
+  },
+  "name": "Joy",
+  "email": "joy@gmail.com",
+  "password": "123457",
+  "username": "Joy Jack",
+  "committee": "super admin"
+}]
