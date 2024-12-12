@@ -1,16 +1,15 @@
 /* ApplicationDetail.module.css */
-
 .container {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center content horizontally */
-  justify-content: center; /* Center content vertically */
+  align-items: center;
+  justify-content: flex-start; /* Align items to the top */
   padding: 20px;
   font-family: sans-serif;
-  min-height: 100vh; /* Ensure it covers the full height of the page */
-  box-sizing: border-box; /* Include padding in width/height calculations */
-  width: 100%; /* Cover 80% of the viewport */
-  margin: auto; /* Automatically center the container */
+  min-height: 100vh;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0 auto; /* Remove top/bottom margin for better control */
 }
 
 .detailsBox {
@@ -18,71 +17,129 @@
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 30px;
-  width: 100%; /* Set width to the full size of the container */
-  text-align: left;
   width: 80%;
+  text-align: left;
+  margin: 20px auto; /* Add top/bottom margin and center */
 }
 
 .title {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+  color: #007bff;
+  font-size: 1.8rem;
 }
 
 .section {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
-.section h2,
+.section h2 {
+  margin-bottom: 5px; /* Reduced margin */
+  font-size: 1.2rem; /* Smaller font size */
+  font-weight: 600; /* Slightly bolder */
+  color: #333; /* Darker text color */
+}
+
 .section h3 {
-  margin-bottom: 10px;
+  margin-bottom: 5px; /* Reduced margin */
+  font-size: 1.1rem; /* Slightly smaller font size */
+  color: #555; /* Slightly lighter text color */
+}
+
+.section span {
+  font-weight: 400;
+  color: #777;
 }
 
 .section h4 {
   margin-bottom: 10px;
   color: #333;
+  text-align: center;
 }
+
 .contactDetails {
   display: flex;
-  flex-direction: column; 
-  gap: 8px; 
+  flex-direction: column;
+  gap: 8px;
+  margin: 20px auto;
+  max-width: 500px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
 }
 
 .contactDetails p {
-  margin: 0; 
-  align-items: center; 
+  margin: 0;
+  display: flex;
+  align-items: flex-start;
+  font-size: 16px;
+  color: #555;
+  line-height: 1.4;
+  word-wrap: break-word;
 }
 
 .contactDetails svg {
-  margin-right: 8px; 
+  margin-right: 10px;
+  font-size: 18px;
+  color: #777;
+  flex-shrink: 0;
+  margin-top: 3px;
 }
+
 
 .uploads {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive columns */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
+  margin-top: 20px;
 }
 
 .uploadCard {
-
   padding: 20px;
   border-radius: 8px;
+  display: flex; /* Enable flexbox for centering */
+  flex-direction: column; /* Stack content vertically */
+  align-items: center; /* Center horizontally */
+  text-align: center; /* Center text within the card */
 }
 
 .uploadCard p {
+  margin-bottom: 5px; /* Slightly reduced margin */
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 15px; /* Slightly increased font size */
+  color: #444; /* Darker text color */
+  word-wrap: break-word; /* Ensure long filenames wrap */
+}
+
+.uploadCard p strong { /* Style for "Filename:" and "DocResult:" labels */
+  font-weight: 600; /* Make the labels bolder */
+  color: #333; /* Darker color for labels */
+  margin-right: 5px; /* Add spacing between label and value */
+}
+
+.uploadCard a {
   margin-bottom: 10px;
 }
 
-/* General styling for document result container */
-docResultContainer {
+.docResultContainer {
   margin-top: 10px;
   padding: 10px;
-  /* Remove the border line from here */
-  border: none;  /* Remove border */
+  border: none;
+  width: 100%; /* Ensure it takes full width */
+  box-sizing: border-box;
 }
 
-/* Specific styling for document_type */
+.docResultContainer p {
+  font-size: 14px;
+  color: #555;
+}
+
 .documentType {
-  background-color: #f0f8ff; /* Light blue background */
+  background-color: #f0f8ff;
   padding: 10px;
   border-radius: 5px;
   margin: 5px 0;
@@ -90,45 +147,44 @@ docResultContainer {
 
 .documentTypeLabel {
   font-weight: bold;
-  color: #007acc; /* Dark blue for key text */
+  color: #007acc;
   font-size: 16px;
 }
 
 .documentTypeValue {
-  color: #00509e; /* Slightly darker blue for value text */
+  color: #00509e;
   font-size: 14px;
   margin-left: 10px;
 }
 
-
 .nestedObject {
   margin-bottom: 10px;
-  display: flex;           /* Use flexbox for alignment */
-  align-items: flex-start; /* Align items to the top */
+  display: flex;
+  align-items: flex-start;
 }
 
 .docResultLabel {
-  flex: 0 0 200px;       /* Give the label a fixed width */
-  margin-right: 10px; 
+  flex: 0 0 200px;
+  margin-right: 10px;
   font-weight: bold;
   margin-bottom: 5px;
 }
 
 .nestedFields {
   flex: 1;
-  margin-left: 20px; 
+  margin-left: 20px;
 }
 
 .buttonContainer {
   display: flex;
-  justify-content: center; /* Centers buttons horizontally */
-  gap: 15px; /* Space between buttons */
-  margin-top: 20px; /* Optional: space from the top section */
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
 }
 
 .approveButton,
 .rejectButton {
-  background-color: #4CAF50; /* Green */
+  background-color: #4CAF50;
   border: none;
   color: white;
   padding: 10px 20px;
@@ -136,26 +192,26 @@ docResultContainer {
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  margin: 10px 5px; 
+  margin: 10px 5px;
   cursor: pointer;
   border-radius: 4px;
 }
 
 .rejectButton {
-  background-color: #f44336; /* Red */
+  background-color: #f44336;
 }
 
 .potentialIssues {
   margin-top: 10px;
   padding: 10px;
-  background-color: #ffe5e5; /* Light red background for highlighting */
-  border: 1px solid #ffcccc; /* Border matching the background */
+  background-color: #ffe5e5;
+  border: 1px solid #ffcccc;
   border-radius: 5px;
 }
 
 .potentialIssues h5 {
   margin: 0 0 5px 0;
-  color: #cc0000; /* Dark red text color for heading */
+  color: #cc0000;
   font-size: 16px;
 }
 
@@ -166,114 +222,101 @@ docResultContainer {
 }
 
 .potentialIssues li {
-  color: #333; /* Neutral text color for issues */
+  color: #333;
   font-size: 14px;
 }
 
-/* OCR Extraction Container */
 .ocrExtraction {
-  background-color: #f9f9f9; /* Light gray background for OCR fields */
-  padding: 15px; /* Padding around the field */
-  border: 1px solid #ccc; /* Subtle border for distinction */
-  border-radius: 8px; /* Rounded corners */
-  margin-top: 15px; /* Add spacing above */
+  background-color: #f9f9f9;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-top: 15px;
+  width: 100%; /* Occupy full width of the parent */
+  box-sizing: border-box;
 }
 
-/* Label for OCR Extraction */
 .ocrExtractionLabel {
   font-weight: bold;
-  color: #007acc; /* Dark blue color for key */
+  color: #007acc;
+  text-align: center; /* Center the label */
+  margin-bottom: 10px; /* Add some spacing below the label */
 }
 
-/* OCR Extraction Container */
-.ocrExtraction {
-  background-color: #f9f9f9; /* Light gray background for OCR fields */
-  padding: 15px; /* Padding around the field */
-  border: 1px solid #ddd; /* Subtle border for distinction */
-  border-radius: 8px; /* Rounded corners */
-  margin-top: 15px; /* Add spacing above */
+.ocrExtractionFields {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the content horizontally */
+  width: 100%; /* Ensure fields take full width */
 }
 
-
-
-/* Validity Field */
 .validityField {
-  margin-top: 10px; /* Add spacing for clarity */
-  padding: 10px; /* Padding around the field */
-  border: 1px solid #ddd; /* Subtle border */
-  border-radius: 8px; /* Rounded corners */
-  background-color: #f0f8ff; /* Light blue background */
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f0f8ff;
+  width: 100%;
+  max-width: 500px;
+  box-sizing: border-box;
 }
 
 .validityDetails {
   display: flex;
-  flex-direction: column; /* Arrange validity details vertically */
-  gap: 8px; /* Add spacing between items */
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
 }
 
-/* General OCR Field Styles */
+.ocrField:last-child {
+  border-bottom: none; /* Remove border from last item */
+}
+
 .ocrField {
-  display: flex; /* Align key and value side by side */
-  justify-content: space-between; /* Space between key and value */
-  margin-bottom: 8px; /* Add spacing between rows */
+  display: flex;
+  align-items: flex-start; /* Align items to top */
+  width: 100%; /* Occupy full width of the container */
+  max-width: 500px; /* Set a maximum width */
+  box-sizing: border-box;
+  margin-bottom: 8px;
+  padding: 5px;
+  border-bottom: 1px solid #eee; /* Add a subtle bottom border */
 }
 
 .ocrFieldKey {
   font-weight: bold;
-  color: #333; /* Dark color for keys */
-  font-size: 14px;
+  margin-right: 10px;
+  width: 150px; /* Fixed width for keys */
+  text-align: left; /* Align keys to the left */
+  flex-shrink: 0; /* Prevent key from shrinking */
 }
 
 .ocrFieldValue {
-  color: #555; /* Neutral text color for values */
+  color: #555;
   font-size: 14px;
+  flex-grow: 1; /* Allow value to take up available space */
+  text-align: left;
+  word-wrap: break-word;
 }
 
-/* ApplicationDetail.module.css */
-
-
-/* ApplicationDetail.module.css */
-
-/* ... your existing styles ... */
-
-.validityField {
-  margin-bottom: 10px;  /* Add spacing between fields */
-}
-
-.validityDetails {
-  margin-left: 20px;   /* Indent the validity details */
-}
-
-.ocrField {
-  display: flex;
-  align-items: center; /* Align key-value pairs */
-}
-
-.ocrFieldKey {
-  font-weight: bold;
-  margin-right: 10px; /* Space between key and value */
-  flex: 0 0 150px;    /* Give keys a fixed width */
-}
-
-/* Field Validations */
 .fieldValidations {
-  margin-top: 20px; /* Add space above field validations */
-  padding: 15px; /* Padding around the content */
-  background-color: #f9f9f9; /* Light grey background */
-  border: 1px solid #ccc; /* Subtle border */
-  border-radius: 8px; /* Rounded corners */
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 8px;
 }
 
 .fieldValidationsLabel {
   font-weight: bold;
-  color: #007acc; /* Dark blue for the label */
+  color: #007acc;
   font-size: 16px;
 }
 
 .fieldValidationsContent {
-  margin-top: 10px; /* Add space between label and content */
+  margin-top: 10px;
   font-size: 14px;
-  color: #333; /* Text color */
+  color: #333;
 }
 
 .validationField {
@@ -285,17 +328,14 @@ docResultContainer {
   margin-right: 5px;
 }
 
-.validFieldValid {
-  color: green; /* Green color for valid fields */
+.validationFieldValue { /* Style for the validation status */
   font-weight: bold;
+  margin-left: 5px; /* Add some spacing between label and value */
 }
 
-.invalidField {
-  color: red; /* Red color for invalid fields */
-  font-weight: bold;
+.validationFieldNotes {
+  font-style: italic;
+  font-size: 14px;
+  color: #777;
+  margin-top: 5px;
 }
-
-
-
-
-
