@@ -264,3 +264,48 @@
 .closeButton {
   margin-right: 20px;
 }
+
+/* SuperAdminDashboard.module.css */
+/* SuperAdminDashboard.module.css */
+.searchContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  max-width: 100%; /* Ensure it doesn't exceed the sidebar's width */
+  width: 100%;
+}
+
+.searchInput {
+  flex-grow: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px 0 0 4px;
+  font-size: 14px;
+  border-right: none;
+  box-sizing: border-box;
+  min-width: 0; /* Crucial for shrinking */
+}
+
+.searchButton {
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+  border-left: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+
+.searchButton:hover {
+  background-color: #0056b3;
+}
+
+.searchButton:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}

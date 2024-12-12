@@ -7,7 +7,7 @@ import {
 } from "recharts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faUser, faClipboardList, faStethoscope, faBriefcase
+    faClipboardList, faStethoscope, faBriefcase, faMagnifyingGlass
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./SuperAdminDashboard.module.css";
 import Navbar from './Navbar';
@@ -17,8 +17,17 @@ const SuperAdminDashboard = () => {
     const [userName, setUserName] = useState("");
     const [error, setError] = useState(null);
     const [selectedSection, setSelectedSection] = useState("");
+    const [applicationId, setApplicationId] = useState('');
     const [selectedMember, setSelectedMember] = useState(null);
     const navigate = useNavigate();
+
+    const handleSearch = () => {
+        if (applicationId) {
+            navigate(`/applications/${applicationId}`);
+        } else {
+            alert('Please enter an Application ID.');
+        }
+    };
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -109,6 +118,19 @@ const SuperAdminDashboard = () => {
           <div className={styles.contentWrapper}>
               <div className={styles.sidebar}>
               <ul className={styles.sidebarMenu}>
+              <li className={styles.searchContainer}>
+                        <input
+                            type="text"
+                            placeholder="Application ID"
+                            value={applicationId}
+                            onChange={(e) => setApplicationId(e.target.value)}
+                            className={styles.searchInput}
+                        />
+                        <button onClick={handleSearch} className={styles.searchButton}>
+                            <FontAwesomeIcon icon={faMagnifyingGlass} />
+                            Search
+                        </button>
+                    </li>
                         <li
                             className={`${styles.sidebarItem} ${selectedSection === "Scrutiny" ? styles.active : ''}`}
                             onClick={() => handleSectionSelect("Scrutiny")}

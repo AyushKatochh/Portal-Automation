@@ -41,6 +41,8 @@ const ApplicationDetail = () => {
         setIsModalOpen(true);
     };
 
+
+
     const handleModalResponse = async (confirm, remark, action) => {
         setIsModalOpen(false);
 
@@ -119,6 +121,23 @@ const ApplicationDetail = () => {
       }
     };
 
+    const fieldValidationLabels = {
+        document_type: "Document Type",
+        certificate_number: "Certificate Number",
+        issuing_authority: "Issuing Authority",
+        issuance_date: "Issuance Date",
+        expiry_date: "Expiry Date",
+        fire_equipment_details: "Fire Equipment Details",
+        signatures: "Digital Signature",
+        signer_name: "Signer Name",
+        signing_time: "Signing Time",
+        "certificate.validity.not_before": "Certificate Valid From",
+        "certificate.validity.not_after": "Certificate Valid To",
+        "certificate.issuer": "Certificate Issuer",
+        "certificate.subject.common_name": "Certificate Holder",
+        "certificate.subject.serial_number": "Certificate Serial Number",
+    };
+
     return (
       <div>
       <Navbar name="Scrutiny" activeKey={'Document Verification'} />
@@ -187,16 +206,16 @@ const ApplicationDetail = () => {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: 0.1 * index + 0.6 }} 
                             >
-                                <p>Filename: {upload.filename}</p>
+                                <p><strong>Filename:</strong> {upload.filename}</p>
                                 <a href={upload.url} target="_blank" rel="noopener noreferrer">View Document</a>
-                                <p>DocResult:</p>
+                                <p><strong>Document Result:</strong></p>
                                 <div className={styles.docResultContainer}>
 
 
     {/* Extract and style combined_result -> ocr_extraction */}
     {upload.docResult.combined_result?.ocr_extraction && (
         <div className={styles.ocrExtraction}>
-            <p className={styles.ocrExtractionLabel}>OCR Extraction:</p>
+            <p className={styles.ocrExtractionLabel}>  Details :</p>
             <div className={styles.ocrExtractionFields}>
                 {Object.entries(upload.docResult.combined_result.ocr_extraction).map(([subKey, subValue]) => (
                     subKey === "validity" && typeof subValue === "object" ? (
@@ -236,28 +255,28 @@ const ApplicationDetail = () => {
 
     {/* Extract and style field_validations with is_valid */}
     {upload.docResult.validation_result?.field_validations && (
-        <div className={styles.fieldValidations}>
-            <h5>Field Validations:</h5>
-            {Object.entries(upload.docResult.validation_result.field_validations).map(
-                ([fieldKey, fieldValue]) => (
-                    <div key={fieldKey} className={styles.validationField}>
-                        <p className={styles.validationFieldLabel}>{fieldKey}:</p>
-                        <div
-                            className={styles.validationFieldValue}
-                            style={{
-                                color: fieldValue.is_valid ? "green" : "red",
-                            }}
-                        >
-                            {fieldValue.is_valid ? "Valid" : "Invalid"}
-                        </div>
-                        {fieldValue.notes && (
-                            <p className={styles.validationFieldNotes}>{fieldValue.notes}</p>
-                        )}
+    <div className={styles.fieldValidations}>
+        <h5>Field Validations:</h5>
+        {Object.entries(upload.docResult.validation_result.field_validations).map(
+            ([fieldKey, fieldValue]) => (
+                <div key={fieldKey} className={styles.validationField}>
+                    <p className={styles.validationFieldLabel}>
+                        {fieldValidationLabels[fieldKey] || fieldKey}: {/* Use the label or the original key if not found */}
+                    </p>
+                    <div
+                        className={styles.validationFieldValue}
+                        style={{ color: fieldValue.is_valid ? "green" : "red" }}
+                    >
+                        {fieldValue.is_valid ? "Valid" : "Invalid"}
                     </div>
-                )
-            )}
-        </div>
-    )}
+                    {fieldValue.notes && (
+                        <p className={styles.validationFieldNotes}>{fieldValue.notes}</p>
+                    )}
+                </div>
+            )
+        )}
+    </div>
+)}
 
     {/* Rendering Potential Issues */}
     {upload.docResult?.validation_result?.potential_issues && (
