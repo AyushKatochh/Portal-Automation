@@ -65,7 +65,7 @@ app.post('/upload', (req, res) => {
 
 // MongoDB Connection
 mongoose
-  .connect('mongodb+srv://AyushKatoch:ayush2002@cluster0.72gtk.mongodb.net/aicte', {})
+  .connect('Your_uri', {})
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
