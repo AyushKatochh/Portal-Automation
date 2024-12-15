@@ -1,6 +1,4 @@
 import os
-import io
-import fitz  # PyMuPDF
 import base64
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
@@ -10,13 +8,9 @@ from dotenv import load_dotenv
 from datetime import datetime
 import uvicorn
 
-# Import existing utility functions (these would be in a separate utils.py)
-from utils import (
+# Import existing utility functions
+from codefiles.AI_Validator import (
     get_pdf_signatures,
-    verify_signature,
-    extract_first_image_from_pdf,
-    detect_text,
-    analyze_architectural_plan,
     process_document_for_ocr,
     cleanup_file,
     DOCUMENT_KEYWORDS,
@@ -24,16 +18,25 @@ from utils import (
     DocumentValidationRequest,
     extract_document_info,
     validator,
+)
+from codefiles.Dimension import (
+    verify_signature,
+    extract_first_image_from_pdf,
+    detect_text,
+    analyze_architectural_plan,
+)
+from codefiles.Scheduler import (
     get_members_expert,
     get_members_scrutiny,
-    allocate_task,
-    ChatRequestDocument,
-    ChatResponse,
+    allocate_task
+)
+from codefiles.DocumentChat import(
     PDFProcessor,
     ChatBot,
-    
+    ChatRequestDocument,
+    ChatResponse
 )
-from ChatBot import(
+from codefiles.StatusChat import(
     load_status_chat,
     ChatRequestStatus
 )
@@ -276,7 +279,7 @@ async def process_document_comprehensively(file: UploadFile = File(...), documen
             is_pdf=(file.content_type == "application/pdf")
         )
 
-        # Perform information extraction
+        # # Perform information extraction
         extracted_info = extract_document_info(
             extracted_text,
             keyword_list,
