@@ -1,4 +1,5 @@
 /* ApplicationDetail.module.css */
+<<<<<<< HEAD
 .container {
   display: flex;
   flex-direction: column;
@@ -155,10 +156,31 @@
   color: #00509e;
   font-size: 14px;
   margin-left: 10px;
+=======
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align items to the top */
+  height: 100vh;
+  background-color: #f4f6f9;
+  padding: 20px;
+  overflow-y: auto; 
+}
+
+.detailsBox {
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 95%; /* Increased width */
+  max-width: 90%; /* Increased max-width */
+>>>>>>> main
 }
 
 .nestedObject {
   margin-bottom: 10px;
+<<<<<<< HEAD
   display: flex;
   align-items: flex-start;
 }
@@ -339,3 +361,117 @@
   color: #777;
   margin-top: 5px;
 }
+=======
+  border: 1px solid #eee;
+  padding: 10px;
+  overflow-x: auto;  /* Added horizontal scrollbar */
+}
+
+.nestedFields {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  align-items: start;
+  min-width: 800px; /* Ensure minimum width for the grid */
+}
+
+.title {
+  text-align: center;
+  color: #2c3e50;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.section {
+  margin-bottom: 20px;
+  text-align: center; /* Add this to center the content */
+}
+
+.contactDetails p {
+  margin: 10px 0;
+  font-size: 1.1rem;
+  text-align: center; /* Add this to center each line */
+}
+
+h2, h3, h4 {
+  color: #2980b9;
+}
+
+h2 span, h3 span, h4 span {
+  color: #34495e;
+  font-weight: bold;
+}
+
+
+.contactDetails p span {
+  color: #7f8c8d;
+}
+
+.uploads {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.uploadCard {
+  background-color: #ecf0f1;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.uploadCard a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+.uploadCard p {
+  font-size: 1rem;
+  margin: 5px 0;
+}
+
+.approveButton, .rejectButton {
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.rejectButton {
+  background-color: #e74c3c;
+}
+
+.approveButton:hover, .rejectButton:hover {
+  opacity: 0.8;
+}
+
+h6 {
+  color: #2ecc71;
+  font-size: 1.1rem;
+  margin-top: 10px;
+}
+
+.nestedFieldContainer { 
+  border: 1px solid #eee; 
+  padding: 10px;
+  border-radius: 4px;
+  overflow: hidden; 
+}
+
+.nestedLabel {
+  font-weight: bold;
+  margin-bottom: 5px;
+  white-space: nowrap; 
+  display: inline-block;
+  margin-right: 10px; 
+}
+
+.nestedValue {
+  font-size: 14px;
+  color: #333;
+  white-space: pre-wrap;
+}
+>>>>>>> main

@@ -1,6 +1,7 @@
 /* General Page Styling */
 .page {
   display: flex;
+<<<<<<< HEAD
   flex-direction: column;
   align-items: center;
   height: 100vh;
@@ -24,11 +25,76 @@
   gap: 10px;
   width: 100%;
   max-width: 1200px;
+=======
+  height: 100vh;
+  background-color: #f8f9fa;
+  font-family: Arial, sans-serif;
+}
+
+/* Sidebar Styling */
+.sidebar {
+  width: 200px; /* Reduced sidebar width */
+  background-color: #e9ecef;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar .heading {
+  color: #343a40;
+  font-size: 20px;
+  margin-bottom: 20px; /* Increased margin */
+}
+
+.sidebar .userDetails {
+  font-size: 14px;
+  color: #6c757d;
+  margin-bottom: 15px; /* Increased margin */
+}
+
+/* Main Content Area */
+.mainContent {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+/* Navbar Styling */
+.navbar {
+  display: flex; /* Use flexbox in navbar */
+  justify-content: space-between; /* Align items to left and right */
+  align-items: center; /* Vertically center content */
+  width: 97%;
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  margin-bottom: 20px;
+}
+
+.navbar .heading { /* Style for heading in navbar */
+  text-align: left; /* Align heading to the left */
+  margin: 0; /* Remove default margin */
+}
+
+.navbar .userDetails {
+  text-align: right; /* Align user details to the right */
+  width: 150px; /* Adjust width as needed */
+}
+
+/* Grid Styling */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 20px;
+  justify-content: space-around; /* Distribute cards evenly */
+>>>>>>> main
 }
 
 /* Card Styling */
 .card {
   background-color: #ffffff;
+<<<<<<< HEAD
   border-radius: 15px;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
   overflow: hidden;
@@ -91,4 +157,42 @@
 
 .button:hover {
   background-color: #388e3c;
+=======
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+}
+
+.cardTitle {
+  font-size: 18px;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.cardText {
+  font-size: 14px;
+  color: #495057;
+  margin-bottom: 8px;
+}
+
+.icon {
+  font-size: 40px;
+  color: #6c757d;
+  margin-bottom: 10px;
+}
+
+.button {
+  background-color: #28a745;
+  color: #fff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.button:hover {
+  background-color: #218838;
+>>>>>>> main
 }

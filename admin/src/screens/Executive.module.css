@@ -3,7 +3,11 @@
   display: flex;
   height: 100vh;
   font-family: Arial, sans-serif;
+<<<<<<< HEAD
   background-color: #f9fafa; /* Dark background for the whole container */
+=======
+  background-color: #181818; /* Dark background for the whole container */
+>>>>>>> main
   color: white; /* Light text color */
 }
 
@@ -11,10 +15,17 @@
 .sidebar {
   width: 300px;
   padding: 20px;
+<<<<<<< HEAD
   display: flex;
   flex-direction: column;
   background-color: #fff;
   top: 50%;
+=======
+  background-color: #242424; /* Darker background for sidebar */
+  border-right: 2px solid #333; /* Slightly lighter border */
+  display: flex;
+  flex-direction: column;
+>>>>>>> main
 }
 
 .sidebar h2 {
@@ -29,12 +40,16 @@
   font-size: 18px;
   margin-bottom: 30px;
   text-align: center;
+<<<<<<< HEAD
   margin-bottom: 10px;
+=======
+>>>>>>> main
 }
 
 .options {
   display: flex;
   flex-direction: column;
+<<<<<<< HEAD
   gap: 10px;
   align-items: center;
   justify-content: center;
@@ -52,12 +67,29 @@
   transition: background-color 0.3s ease, transform 0.2s;
   margin-top: 20px;
   border: 2px solid #00b0ff;
+=======
+  gap: 15px;
+}
+
+.optionButton {
+  background-color: #00b0ff; /* Bright blue */
+  color: white;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.2s;
+>>>>>>> main
 }
 
 .optionButton:hover {
   background-color: #0081c1;
   transform: translateY(-2px);
+<<<<<<< HEAD
   color: #fff;
+=======
+>>>>>>> main
 }
 
 .optionButton:focus {
@@ -73,7 +105,11 @@
 .mainContent {
   flex: 1;
   padding: 40px 20px;
+<<<<<<< HEAD
   background-color: #fff; /* Dark background for main content */
+=======
+  background-color: #121212; /* Dark background for main content */
+>>>>>>> main
   overflow-y: auto;
 }
 
@@ -90,7 +126,11 @@ h3 {
   font-size: 22px;
   margin-bottom: 20px;
   color: white;
+<<<<<<< HEAD
   /* background-color: #333333; Darker background for section headers */
+=======
+  background-color: #333333; /* Darker background for section headers */
+>>>>>>> main
   padding: 12px;
   text-align: center;
   border-radius: 5px;
@@ -104,8 +144,13 @@ h3 {
   margin: 30px auto; /* Center the table */
   border-collapse: collapse;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+<<<<<<< HEAD
   border: 3px solid #053d56; /* Bright blue border */
   background-color: #dcdada; /* Dark background for the table */
+=======
+  border: 3px solid #00b0ff; /* Bright blue border */
+  background-color: #1d1d1d; /* Dark background for the table */
+>>>>>>> main
 }
 
 .stageTable th,
@@ -122,13 +167,21 @@ h3 {
 }
 
 .stageTable td {
+<<<<<<< HEAD
   background-color: #fff; /* Dark background for cells */
+=======
+  background-color: #1d1d1d; /* Dark background for cells */
+>>>>>>> main
   color: white;
   font-size: 16px;
 }
 
 .stageTable tr:nth-child(even) {
+<<<<<<< HEAD
   background-color: #fff; /* Slightly lighter dark background for even rows */
+=======
+  background-color: #242424; /* Slightly lighter dark background for even rows */
+>>>>>>> main
 }
 
 .stageTable tr:hover {
@@ -166,9 +219,12 @@ h3 {
 .status.unknown {
   color: gray;
 }
+<<<<<<< HEAD
 
 
 
 .detailsHeader {
   background-color: #00b0ff;
 }
+=======
+>>>>>>> main

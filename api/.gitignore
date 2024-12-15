@@ -1,3 +1,6 @@
 .env
+<<<<<<< HEAD
 __pycache__/
 value.json
+=======
+>>>>>>> main

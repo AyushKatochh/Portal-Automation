@@ -63,7 +63,7 @@ app.add_middleware(
 # Directory to temporarily store uploaded files
 UPLOAD_FOLDER = "./uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-MONGO_URI = os.getenv('MONGO_URI')
+MONGO_URI = os.getenv('')
 client = MongoClient(MONGO_URI)
 db = client['aicte']
 admins_collection = db['admins']
