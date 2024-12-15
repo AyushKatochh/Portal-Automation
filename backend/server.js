@@ -154,8 +154,8 @@ const uploadMiddleware = (req, res, next) => {
 
 const s3 = new AWS.S3({
 <<<<<<< HEAD
-  accessKeyId: 'AKIARHQBNPCADJETSQ7P', 
-  secretAccessKey: '2ybN3f7+cXtD8Ynyc0ENhCR6ZVYSdtpc8LV4db2w',
+  accessKeyId: 'your access id', 
+  secretAccessKey: 'access key',
 });
 =======
   accessKeyId: process.env.AWSID, 
