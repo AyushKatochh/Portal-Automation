@@ -1,86 +1,246 @@
-# Portal Automation
+# AICTE Approval System
 
-## Project Overview
-The **Portal Automation** project aims to streamline the document verification process on portals like the AICTE portal. Currently, the process involves manual validation by admin members, which is time-consuming and prone to human error. Our solution leverages **AI** and **OCR (Optical Character Recognition)** technologies to automate this workflow.
+## 🚀 Project Overview
+An AI-driven system to transform the AICTE institutional approval process, developed by Team 9POINTERS to address critical challenges in institutional submissions and evaluations.
 
-## Problem Statement
-Institutes are required to upload various documents, such as:
-- Affidavits
-- Fire safety certificates
-- Land conversion documents
+## 📌 Problem Statement
+The current AICTE approval process suffers from multiple inefficiencies:
+- Delays in manual validation of institutional submissions
+- Inefficient document verification
+- Inequitable evaluator allocation
+- Limited infrastructure compliance validation
+- Poor communication and transparency
 
-These documents are manually reviewed by admin members to check their validity. This manual approach is inefficient and increases the likelihood of delays and errors in document validation.
+## Key Features
+- AI-based document verification
+- Intelligent task scheduling
+- Real-time application status tracking
+- Comprehensive infrastructure compliance monitoring
+- Secure authentication with facial recognition
 
-## Proposed Solution
-Our system automates this process by:
-1. **Extracting Keywords**: Using OCR to extract relevant information from uploaded documents.
-2. **Generating Summaries**: AI processes the extracted data to create concise summaries.
-3. **Reporting**: Admin members are presented with reports summarizing key findings and highlighting any discrepancies.
+## Technical Stack
+- **Frontend**: React.js, React Native
+- **Backend**: Node.js with Express, Python (FastAPI)
+- **Database**: MongoDB, AWS S3
+- **AI & Analytics**: TensorFlow, Large Language Models, NLP, Tesseract OCR
+- **Security**: Role-Based Access Control, JWT, OpenCV
 
-This solution ensures a faster, more accurate, and scalable document verification process.
+## Architectural Plan
+For a detailed architectural overview, please refer to our Architectural Plan
+![Project Architecture Diagram](Diagrams/SIH.gif)
 
-## Features
-- **AI-Powered OCR**: Extracts text and relevant keywords from scanned documents and images.
-- **Document Validation**: Automatically checks for critical information and flags missing or invalid data.
-- **Summary Reports**: Generates easy-to-read summaries for admin members.
-- **Streamlined Workflow**: Reduces the manual effort required for document review.
+Also , here is a detailed Point Of View with respect to the Admin Members and New Institutes
+[Admin POV](Diagrams/AdminPOV.gif) | [New Institute POV](Diagrams/NewInstitutePOV.gif)
 
-## Technologies Used
-- **Frontend**: React (or any other chosen framework for UI visualization)
-- **Backend**: Node.js / Python (Flask or Django)
-- **AI/OCR**: 
-  - OCR: Tesseract OCR / Google Vision API
-  - AI: TensorFlow / PyTorch
-- **Database**: PostgreSQL / MongoDB
 
-## Installation
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/AyushKatochh/Portal-Automation
-   cd portal-automation
-   ```
+## Repository Structure
+```
+aicte-approval-system/
+│
+├── InstituteFrontend/
+│   ├── public/
+|   |    ├── favicon.ico
+|   |    ├── index.html
+|   |    ├── logo192.png
+|   |    ├── logo512.png
+|   |    ├── manifest.json
+|   |    └── robots.txt
+│   └── src/
+|        ├── Cont ext/
+│        ├── assets/
+|        ├── components/
+|        ├── screens/
+|        ├── App.css
+|        ├── App.js
+|        ├── index.css
+|        └── index.js
+|
+├── admin/
+│   ├── public/
+|   |    ├── favicon.ico
+|   |    ├── index.html
+|   |    ├── logo192.png
+|   |    ├── logo512.png
+|   |    ├── manifest.json
+|   |    └── robots.txt
+│   └── src/
+|        ├── Cont ext/
+│        ├── assets/
+|        ├── components/
+|        ├── screens/
+|        ├── App.css
+|        ├── App.js
+|        ├── index.css
+|        └── index.js
+│
+├── api/
+│   ├── Document/
+│   │   └── AICTE Doc.pdf
+│   ├── codefiles/
+│   |   ├── AI_Validator.py
+│   |   ├── Dimension.py 
+│   |   ├── DocumentChat.py
+│   |   ├── Prompts.py
+│   |   ├── Scheduler.py
+│   |   └── StatusChat.py
+|   ├── faiss_index/
+|   ├── uploads/ 
+|   ├── app.py
+|   ├── docker-compose.yaml
+|   ├── Dockefile
+|   └──  requirements.txt
+|   
+├── backend/
+│   ├── documents/
+|   ├── models/
+│   |   ├── MoongooseConnection.js
+│   |   ├── admin.js
+│   |   ├── admindata.json
+│   |   ├── aicte.admins.json
+│   |   ├── applications.js
+│   |   ├── docResult.js
+│   |   ├── institute.js
+│   |   ├── logs.js
+│   |   └── superAdmin.js
+|   ├── routes/
+│   |   ├── adminapplications.js
+│   |   ├── createApplication.js
+│   |   ├── getData.js
+│   |   ├── login.js
+│   |   ├── newApplication.js
+│   |   └── verifications.js
+|   ├── uploads/
+|   ├── utils
+│   |   ├── saveDocResult.js
+│   |   └──updateApplicationUploads.js
+|   ├── package-lock.json
+|   ├── package.json
+│   └── server.js
+│
+├── mobile/
+│   ├── app
+│   |   ├── (tabs)
+|   │   |   ├── _layout.tsx
+|   │   |   ├── index.tsx
+|   │   |   └── profile.tsx
+│   |   ├── application/[id]
+|   │   |   ├── Chat.jsx
+|   │   |   ├── Status.jsx
+|   │   |   └── _layout.jsx
+|   |   ├── assets
+|   │   |   ├── +not-found.tsx
+|   │   |   ├── _layout.tsx
+|   │   |   └── signIn.jsx
+|   ├── assets/
+│   |   ├── fonts
+│   |   └── images
+|   ├── components/
+|   ├── constants/
+|   ├── hooks/
+│   |   ├── useColorScheme.ts
+│   |   ├── useColorScheme.web.ts
+│   |   └── useThemeColor.ts
+|   ├── scripts/
+│   |   ├── reset-project.js
+|   ├── app.json
+|   ├── package-lock.json
+|   ├── package.json
+│   └── tsconfig.json
+│
+└── README.md
 
-2. Install dependencies:
-   ```bash
-   npm install        # For frontend/backend dependencies
-   pip install -r requirements.txt  # For AI/OCR dependencies (if using Python)
-   ```
+```
 
-3. Set up the database:
-   - Create a new database in your preferred DBMS.
-   - Run database migrations (instructions depend on the framework used).
+## Setup and Installation
 
-4. Start the application:
-   - Frontend:
-     ```bash
-     npm start
-     ```
-   - Backend:
-     ```bash
-     npm run start-server  # Or python app.py (if using Python)
-     ```
+### Prerequisites
+- Node.js (v16+ recommended)
+- Docker Desktop
+- Python 3.8+
+- npm (v8+)
 
-## Usage
-1. Log in to the portal and upload the required documents.
-2. The system automatically processes the uploaded files.
-3. View the summarized report generated for each document.
-4. Download or share the generated report as needed.
+### Frontend Installations
 
-## Screenshots
-_Add screenshots or GIFs showcasing the UI and workflow._
+1. Institute Frontend Setup
+```
+# Navigate to institute frontend directory
+cd InstituteFrontend
 
-## Roadmap
-- Add multi-language support for OCR.
-- Implement advanced AI models for improved validation accuracy.
-- Enable real-time notifications for document status.
+# Install dependencies
+npm install
+
+# Start development server
+npm start
+```
+2. Admin Frontend Setup
+```
+# Navigate to admin frontend directory
+cd admin
+
+# Install dependencies
+npm install
+
+# Start development server
+npm start
+```
+3. Mobile Setup
+```
+# Navigate to mobile app directory
+cd mobile
+
+# Install dependencies
+npm install
+
+# Start Metro bundler (for React Native)
+npm start
+```
+4. Backend Setup
+```
+# Navigate to backend directory
+cd backend
+
+# Install dependencies
+npm install
+
+# Start development server
+npm start
+``` 
+5. Python API Setup
+  ```
+  # Navigate to api directory
+  cd api
+
+  # Setup the enviornment file
+  # Add the following in  .env file
+
+    # Groq Configuration API Key
+      GROQ_API_KEY= 'add your key here'
+  
+    # Google Configuration API Key
+      GOOGLE_API_KEY= 'add your key here'
+    
+    # Google Vision Configuration API Key
+      GOOGLE_APPLICATION_CREDENTIALS= 'add path to your vision secret jey json file'
+    
+    # MongoDB Configuration API Key
+      MONGO_URI= 'add your key here'
+  
+
+  # Now start the docker Daemon and run 
+  docker compose up --build
+  ```
+
+## Our Team
+![](Diagrams/Team-9Pointers.jpeg)
+
+**Our LinkedIn**
+[Aftaab](https://www.linkedin.com/in/mohammad-aftaab-b49a5624a/) | [Harsh](https://www.linkedin.com/in/hashtagharsh/) | [Ayon](https://www.linkedin.com/in/ayonsomaddar/) | [Gaurav](https://www.linkedin.com/in/gaurav-sanwal-3263b3221/) | [Ayush](https://www.linkedin.com/in/ayush-katoch-00197021a/) | [Anushka](https://www.linkedin.com/in/anushka-gupta-90a660318/)
 
 ## Contributing
-Contributions are welcome! Please follow the steps below:
-1. Fork the repository.
-2. Create a new branch for your feature or bugfix.
-3. Commit your changes and submit a pull request.
+Please read CONTRIBUTING.md for details on our code of conduct and the process for submitting pull requests.
 
-## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-
+## Future Enhancements
+- Enhanced security with TLS Encryption, WAF
+- Improved AI validation using NER and AI modeling
+- Microservice architecture development
+- Expanded data storage and management capabilities
