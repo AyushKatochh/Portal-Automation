@@ -213,8 +213,11 @@ aicte-approval-system/
 |   ├── package-lock.json
 |   ├── package.json
 │   └── tsconfig.json
-│
+│   
+├── CONTRIBUTION.md
+|
 └── README.md
+
 
 ```
 
